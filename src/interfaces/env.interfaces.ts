@@ -4,4 +4,6 @@ export interface IEnv {
   dbUri: string;
   debug: boolean;
   trustProxy: boolean;
+  bitqueryApiKey: string;
+  bitqueryEndpoint: string;
 }

@@ -2,10 +2,16 @@
 GET http://localhost:5001/ping HTTP/1.1
 
 ### search token
-POST http://127.0.0.1:5001/bitquery HTTP/1.1
+POST http://127.0.0.1:5001 HTTP/1.1
 Content-Type: application/json
 
 {
-    "network": "ethereum",
-    "string": "USDC"
+    "method": "searchCoin",
+    "args": {
+        "network": "ethereum",
+        "string": "USDC",
+        "fromBitquery": true,
+        "limit": 10,
+        "offset": 273
+    }
 }

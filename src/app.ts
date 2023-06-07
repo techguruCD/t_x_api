@@ -5,7 +5,7 @@ import morgan from 'morgan';
 
 import env from './env';
 import errorHandler from './middlewares/errorHandler.middleware';
-import router from './routes/index.routes';
+import router from './route';
 
 const app = express();
 

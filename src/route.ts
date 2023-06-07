@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import bitqueryRoutes from './bitquery.routes';
+import controller from './controller';
 
 const router = Router();
 
@@ -7,6 +7,6 @@ router.get('/ping', (_req, res) => {
   return res.status(200).json({ msg: 'OK' });
 });
 
-router.use('/bitquery', bitqueryRoutes);
+router.use('/', controller);
 
 export default router;

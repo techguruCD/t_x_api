@@ -43,6 +43,47 @@ async function searchToken(params: {
   }
 }
 
+async function searchPairs(params: {
+  network: 'ethereum' | 'bsc';
+  currency: string;
+  limit: number;
+  offset: number;
+}) {
+  try {
+    const { network, limit, offset, currency } = params;
+    const query = queries.searchPairsByCurrency({
+      network,
+      currency,
+      limit,
+      offset,
+    });
+    const postData = JSON.stringify({ query: query, variable: {} });
+    const data = await bitqueryAxios.post('/', postData);
+
+    const pairs = data.data.data?.ethereum?.dexTrades;
+
+    if (pairs && Array.isArray(pairs) && pairs.length > 0) {
+      const filteredData = pairs.map((p: any) => {
+        return {
+          network,
+          address: p.smartContract.address.address,
+          baseCurrency: p.baseCurrency,
+          quoteCurrency: p.quoteCurrency,
+          quotePrice: p.quotePrice,
+        };
+      });
+      return filteredData;
+    }
+    return [];
+  } catch (error: any) {
+    if (isAxiosError(error)) {
+      return error.response ? error.response.data : null;
+    }
+    return { data: error.message };
+  }
+}
+
 export default {
   searchToken,
+  searchPairs,
 };

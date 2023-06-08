@@ -43,6 +43,7 @@
     "graphql-ws": "^5.13.1",
     "mongoose": "^7.2.2",
     "morgan": "^1.10.0",
+    "superstruct": "^1.0.3",
     "ws": "^8.13.0"
   }
 }

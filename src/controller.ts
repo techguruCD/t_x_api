@@ -4,6 +4,7 @@ import RequestValidator from './validators/request.validator';
 import { ExpressError } from './utils/error.utils';
 import coinSearchService from './services/coinSearch.service';
 import pairSearchService from './services/pairSearch.service';
+import priceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
   try {
@@ -25,6 +26,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'searchPairs') {
       data = await pairSearchService(body.args);
+    }
+
+    if (body.method === 'setPairPriceAlert') {
+      data = await priceSubscriptionService(body.args);
     }
 
     return _res.status(200).json(data);

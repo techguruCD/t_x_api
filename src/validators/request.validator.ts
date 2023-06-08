@@ -10,11 +10,19 @@ import {
   boolean,
 } from 'superstruct';
 
-const methods = enums(['searchCoin']);
+const methods = enums(['searchCoin', 'searchPairs']);
 
 const SearchCoinParams = object({
   network: enums(['ethereum', 'bsc']),
   string: string(),
+  limit: optional(number()),
+  offset: optional(number()),
+  fromBitquery: boolean(),
+});
+
+const SearchPairParams = object({
+  network: enums(['ethereum', 'bsc']),
+  currency: string(),
   limit: optional(number()),
   offset: optional(number()),
   fromBitquery: boolean(),
@@ -32,6 +40,10 @@ const RequestValidator = refine(
     const { method, args } = value;
 
     if (method === 'searchCoin' && !is(args, SearchCoinParams)) {
+      return msg;
+    }
+
+    if (method === 'searchPairs' && !is(args, SearchPairParams)) {
       return msg;
     }
 

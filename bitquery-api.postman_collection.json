@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "0d8a6393-0097-41b3-ad74-4cee88fe48d1",
+		"name": "bitquery-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5790263"
+	},
+	"item": [
+		{
+			"name": "ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrlRemote}}/ping",
+					"host": [
+						"{{baseUrlRemote}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search-token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"USDC\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrlRemote}}",
+					"host": [
+						"{{baseUrlRemote}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search-pair",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"currency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"limit\": 10,\n        \"offset\": 0,\n        \"fromBitquery\": true\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrlRemote}}",
+					"host": [
+						"{{baseUrlRemote}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set-alert",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"setPairPriceAlert\",\n    \"args\": {\n        \"network\": \"eth\",\n        \"buyCurrency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"sellCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrlRemote}}",
+					"host": [
+						"{{baseUrlRemote}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrlRemote",
+			"value": "http://45.79.117.177:3001",
+			"type": "string"
+		},
+		{
+			"key": "baseUrlLocal",
+			"value": "http://127.0.0.1:5001",
+			"type": "string"
+		}
+	]
+}

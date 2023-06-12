@@ -29,7 +29,8 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     }
 
     if (body.method === 'setPairPriceAlert') {
-      data = await priceSubscriptionService(body.args);
+      return _res.status(200).json({ message: 'SUCCESS' });
+      // data = await priceSubscriptionService(body.args);
     }
 
     return _res.status(200).json(data);

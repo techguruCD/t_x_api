@@ -2,10 +2,7 @@ import { isAxiosError } from 'axios';
 import cgAxios from './cgAxios';
 import { ExpressError } from '../utils/error.utils';
 
-async function tokenPrice(params: {
-  id: 'ethereum' | 'binance-smart-chain';
-  contractAddresses: string[];
-}) {
+async function tokenPrice(params: { id: string; contractAddresses: string[] }) {
   try {
     const url = `/simple/token_price/${params.id}`;
     const queryParams = {

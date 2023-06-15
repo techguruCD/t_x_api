@@ -2,12 +2,28 @@ import { isAxiosError } from 'axios';
 import cgAxios from './cgAxios';
 import { ExpressError } from '../utils/error.utils';
 
-async function tokenPrice(params: { id: string; contractAddresses: string[] }) {
+type TStringBoolean = 'true' | 'false';
+
+async function tokenPrice(params: {
+  id: string;
+  contract_addresses: string[];
+  vs_currencies: string[];
+  include_market_cap?: TStringBoolean;
+  include_24hr_vol?: TStringBoolean;
+  include_24hr_change?: TStringBoolean;
+  include_last_updated_at?: TStringBoolean;
+  precision?: string;
+}) {
   try {
     const url = `/simple/token_price/${params.id}`;
     const queryParams = {
-      contract_addresses: params.contractAddresses.toString(),
-      vs_currencies: 'usd',
+      contract_addresses: params.contract_addresses.toString(),
+      vs_currencies: params.vs_currencies.toString(),
+      include_market_cap: params.include_market_cap ?? 'false',
+      include_24hr_vol: params.include_24hr_vol ?? 'false',
+      include_24hr_change: params.include_24hr_change ?? 'false',
+      include_last_updated_at: params.include_last_updated_at ?? 'false',
+      precision: params.precision ?? 'full',
     };
 
     const cgResponse = await cgAxios.get(url, {

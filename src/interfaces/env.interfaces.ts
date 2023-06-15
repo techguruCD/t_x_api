@@ -10,5 +10,6 @@ export interface IEnv {
   accessJwtSecret: string;
   refreshJwtSecret: string;
   cryptoSecret: string;
+  cgBaseUrl: string;
   cgApiKey: string;
 }

@@ -6,4 +6,7 @@ export interface IEnv {
   trustProxy: boolean;
   bitqueryApiKey: string;
   bitqueryEndpoint: string;
+  accessJwtSecret: string;
+  refreshJwtSecret: string;
+  cryptoSecret: string;
 }

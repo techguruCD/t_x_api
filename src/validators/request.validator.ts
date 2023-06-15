@@ -10,7 +10,13 @@ import {
   boolean,
 } from 'superstruct';
 
-const methods = enums(['searchCoin', 'searchPairs', 'setPairPriceAlert']);
+const methods = enums([
+  'searchCoin',
+  'searchPairs',
+  'setPairPriceAlert',
+  'tokenCreate',
+  'tokenRefresh',
+]);
 
 const SearchCoinParams = object({
   network: enums(['ethereum', 'bsc']),
@@ -34,6 +40,15 @@ const SetPriceAlertParams = object({
   sellCurrency: string(),
 });
 
+const TokenCreateParams = object({
+  userId: string(),
+  deviceId: string(),
+});
+
+const TokenRefreshParams = object({
+  refreshToken: string(),
+});
+
 const RequestValidator = refine(
   object({
     method: methods,
@@ -54,6 +69,14 @@ const RequestValidator = refine(
     }
 
     if (method === 'setPairPriceAlert' && !is(args, SetPriceAlertParams)) {
+      return msg;
+    }
+
+    if (method === 'tokenCreate' && !is(args, TokenCreateParams)) {
+      return msg;
+    }
+
+    if (method === 'tokenRefresh' && !is(args, TokenRefreshParams)) {
       return msg;
     }
 

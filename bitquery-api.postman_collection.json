@@ -7,6 +7,137 @@
 	},
 	"item": [
 		{
+			"name": "publicMethods",
+			"item": [
+				{
+					"name": "token-create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"testUser\",\n        \"deviceId\": \"testDevice\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}/public",
+							"host": [
+								"{{baseUrlLocal}}"
+							],
+							"path": [
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "token-refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"tokenRefresh\",\n    \"args\": {\n        \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODY2NjA3MjksImV4cCI6MTY4NzI2NTUyOX0.9FSayaBgwiY5mWEsIaUx0yNnc5ZrcHgk4L_Ks5UfWW4\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}/public",
+							"host": [
+								"{{baseUrlLocal}}"
+							],
+							"path": [
+								"public"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "privateMethods",
+			"item": [
+				{
+					"name": "search-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"USDC\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search-pair",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"currency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"limit\": 10,\n        \"offset\": 0,\n        \"fromBitquery\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "set-alert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"setPairPriceAlert\",\n    \"args\": {\n        \"network\": \"eth\",\n        \"buyCurrency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"sellCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "ping",
 			"request": {
 				"method": "GET",
@@ -22,77 +153,23 @@
 				}
 			},
 			"response": []
-		},
-		{
-			"name": "search-token",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"USDC\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrlRemote}}",
-					"host": [
-						"{{baseUrlRemote}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "search-pair",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"currency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"limit\": 10,\n        \"offset\": 0,\n        \"fromBitquery\": true\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrlRemote}}",
-					"host": [
-						"{{baseUrlRemote}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "set-alert",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"method\": \"setPairPriceAlert\",\n    \"args\": {\n        \"network\": \"eth\",\n        \"buyCurrency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"sellCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrlRemote}}",
-					"host": [
-						"{{baseUrlRemote}}"
-					]
-				}
-			},
-			"response": []
 		}
 	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "authorization",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -122,6 +199,11 @@
 		{
 			"key": "baseUrlLocal",
 			"value": "http://127.0.0.1:5001",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4NjY1OTgxMSwiZXhwIjoxNjg2NjYwNzExfQ.YGzpjSoHuO8QQHC5PmNlReRIjtkMv0_ZY0Ajki8n9rA",
 			"type": "string"
 		}
 	]

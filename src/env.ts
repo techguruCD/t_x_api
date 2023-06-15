@@ -44,6 +44,7 @@ export function initEnv() {
     accessJwtSecret: process.env['ACCESS_JWT_SECRET'],
     refreshJwtSecret: process.env['REFRESH_JWT_SECRET'],
     cryptoSecret: process.env['CRYPTO_SECRET'],
+    cgBaseUrl: 'https://pro-api.coingecko.com/api/v3',
     cgApiKey: process.env['CG_API_KEY'],
   };
 

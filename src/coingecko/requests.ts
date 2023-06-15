@@ -84,14 +84,15 @@ async function tokenCurrentData(params: {
   }
 }
 
-async function ohlc(params: {
+async function marketChart(params: {
   id: string;
   vs_currency: string;
   days: string;
+  interval?: string;
   precision?: string;
 }) {
   try {
-    const url = `/coins/${params.id}/ohlc`;
+    const url = `/coins/${params.id}/market_chart`;
     const queryParams = {
       vs_currency: params.vs_currency,
       days: params.days,
@@ -121,7 +122,7 @@ async function ohlc(params: {
 const cgRequests = {
   tokenPrice,
   tokenCurrentData,
-  ohlc,
+  marketChart,
 };
 
 export default cgRequests;

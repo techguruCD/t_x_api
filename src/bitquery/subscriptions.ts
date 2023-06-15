@@ -15,7 +15,7 @@ class MyWebSocket extends WebSocket {
 }
 
 const client = createClient({
-  url: 'wss://streaming.bitquery.io/graphql',
+  url: env().bitqueryWs,
   webSocketImpl: MyWebSocket,
 });
 

@@ -27,6 +27,11 @@ export function initEnv() {
     process.exit(0);
   }
 
+  if (!process.env['CG_API_KEY']) {
+    console.log('[error] CG_API_KEY is not set in the env');
+    process.exit(0);
+  }
+
   _env = {
     dbUri: process.env['DB_URI'] ?? 'mongodb://127.0.0.1:27017/bitquery',
     debug: Boolean(process.env['DEBUG']) ?? true,
@@ -34,10 +39,12 @@ export function initEnv() {
     port: process.env['PORT'] ?? 5001,
     trustProxy: Boolean(process.env['PROXY']) ?? false,
     bitqueryEndpoint: 'https://graphql.bitquery.io',
+    bitqueryWs: 'wss://streaming.bitquery.io/graphql',
     bitqueryApiKey: process.env['BITQUERY_API_KEY'],
     accessJwtSecret: process.env['ACCESS_JWT_SECRET'],
     refreshJwtSecret: process.env['REFRESH_JWT_SECRET'],
     cryptoSecret: process.env['CRYPTO_SECRET'],
+    cgApiKey: process.env['CG_API_KEY'],
   };
 
   if (_env.debug) {

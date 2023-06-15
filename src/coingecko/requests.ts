@@ -1,6 +1,6 @@
 import { isAxiosError } from 'axios';
-import cgAxios from './cgAxios';
 import { ExpressError } from '../utils/error.utils';
+import cgAxios from './cgAxios';
 
 async function tokenPrice(params: {
   id: string;
@@ -84,9 +84,44 @@ async function tokenCurrentData(params: {
   }
 }
 
+async function ohlc(params: {
+  id: string;
+  vs_currency: string;
+  days: string;
+  precision?: string;
+}) {
+  try {
+    const url = `/coins/${params.id}/ohlc`;
+    const queryParams = {
+      vs_currency: params.vs_currency,
+      days: params.days,
+      precision: params.precision ?? 'full',
+    };
+
+    const cgResponse = await cgAxios.get(url, {
+      params: queryParams,
+    });
+    return cgResponse.data;
+  } catch (error: any) {
+    if (isAxiosError(error) && error.response) {
+      throw new ExpressError(
+        'CGE00003',
+        error.response.data.error,
+        error.response.status
+      );
+    }
+    throw new ExpressError(
+      'CGE00004',
+      error.message ?? 'Something Went Wrong',
+      400
+    );
+  }
+}
+
 const cgRequests = {
   tokenPrice,
   tokenCurrentData,
+  ohlc,
 };
 
 export default cgRequests;

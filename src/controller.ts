@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { is, validate } from 'superstruct';
-import RequestValidator from './validators/request.validator';
-import { ExpressError } from './utils/error.utils';
 import bitqueryCoinSearchService from './services/bitqueryCoinSearch.service';
 import bitqueryPairSearchService from './services/bitqueryPairSearch.service';
+import coinFavService from './services/coinFav.service';
+import { ExpressError } from './utils/error.utils';
+import RequestValidator from './validators/request.validator';
 // import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
@@ -26,6 +27,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'searchPairs') {
       data = await bitqueryPairSearchService(body.args);
+    }
+
+    if (body.method === 'setFavCoin') {
+      data = await coinFavService.setFavCoin(body.args);
     }
 
     if (body.method === 'setPairPriceAlert') {

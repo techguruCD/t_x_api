@@ -13,6 +13,7 @@ import {
 const methods = enums([
   'searchCoin',
   'searchPairs',
+  'setFavCoin',
   'setPairPriceAlert',
   'tokenCreate',
   'tokenRefresh',
@@ -32,6 +33,10 @@ const SearchPairParams = object({
   limit: optional(number()),
   offset: optional(number()),
   fromBitquery: boolean(),
+});
+
+const SetFavCoinParams = object({
+  address: string(),
 });
 
 const SetPriceAlertParams = object({
@@ -65,6 +70,10 @@ const RequestValidator = refine(
     }
 
     if (method === 'searchPairs' && !is(args, SearchPairParams)) {
+      return msg;
+    }
+
+    if (method === 'setFavCoin' && !is(args, SetFavCoinParams)) {
       return msg;
     }
 

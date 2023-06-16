@@ -99,9 +99,19 @@ async function getFavCoin(params: {
   return data;
 }
 
+async function removeFavCoin(params: { userId: string; addresses: string[] }) {
+  const deleteOperations = params.addresses.map((address) => ({
+    deleteOne: { filter: { address, userId: params.userId } },
+  }));
+
+  const result = await favCoinsModel.bulkWrite(deleteOperations);
+  return { success: result.isOk };
+}
+
 const coinFavService = {
   setFavCoin,
   getFavCoin,
+  removeFavCoin,
 };
 
 export default coinFavService;

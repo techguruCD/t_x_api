@@ -30,7 +30,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     }
 
     if (body.method === 'setFavCoin') {
-      data = await coinFavService.setFavCoin(body.args);
+      data = await coinFavService.setFavCoin({
+        ...body.args,
+        userId: _req.user.userId,
+      });
     }
 
     if (body.method === 'setPairPriceAlert') {

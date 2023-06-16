@@ -44,29 +44,14 @@ async function tokenPrice(params: {
   }
 }
 
-async function tokenCurrentData(params: {
+async function tokenInfoFromAddress(params: {
   id: string;
-  localization?: boolean;
-  tickers?: boolean;
-  market_data?: boolean;
-  community_data?: boolean;
-  developer_data?: boolean;
-  sparkline?: boolean;
+  contract_address: string;
 }) {
   try {
-    const url = `/coins/${params.id}`;
-    const queryParams = {
-      localization: params.localization ?? true,
-      tickers: params.tickers ?? true,
-      market_data: params.market_data ?? true,
-      community_data: params.community_data ?? true,
-      developer_data: params.developer_data ?? true,
-      sparkline: params.sparkline ?? false,
-    };
+    const url = `/coins/${params.id}/contract/${params.contract_address}`;
 
-    const cgResponse = await cgAxios.get(url, {
-      params: queryParams,
-    });
+    const cgResponse = await cgAxios.get(url);
     return cgResponse.data;
   } catch (error: any) {
     if (isAxiosError(error) && error.response) {
@@ -84,15 +69,15 @@ async function tokenCurrentData(params: {
   }
 }
 
-async function marketChart(params: {
+async function marketChartFromAddress(params: {
   id: string;
+  contract_address: string;
   vs_currency: string;
   days: string;
-  interval?: string;
   precision?: string;
 }) {
   try {
-    const url = `/coins/${params.id}/market_chart`;
+    const url = `/coins/${params.id}/contract/${params.contract_address}/market_chart/`;
     const queryParams = {
       vs_currency: params.vs_currency,
       days: params.days,
@@ -121,8 +106,8 @@ async function marketChart(params: {
 
 const cgRequests = {
   tokenPrice,
-  tokenCurrentData,
-  marketChart,
+  tokenInfoFromAddress,
+  marketChartFromAddress,
 };
 
 export default cgRequests;

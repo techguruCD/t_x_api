@@ -8,9 +8,9 @@ export default function errorHandler(
   _res: Response,
   _next: NextFunction
 ) {
-  return _res.status(_err.statusCode).json({
-    message: _err.message,
-    code: _err.code,
-    statusCode: _err.statusCode,
+  return _res.status(_err.statusCode ?? 500).json({
+    message: _err.message ?? 'Something Went Wrong',
+    code: _err.code ?? 'EHG00001',
+    statusCode: _err.statusCode ?? 500,
   });
 }

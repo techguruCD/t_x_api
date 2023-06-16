@@ -8,12 +8,15 @@ import {
   optional,
   number,
   boolean,
+  array,
 } from 'superstruct';
 
 const methods = enums([
   'searchCoin',
   'searchPairs',
   'setFavCoin',
+  'getFavCoin',
+  'removeFavCoin',
   'setPairPriceAlert',
   'tokenCreate',
   'tokenRefresh',
@@ -37,6 +40,18 @@ const SearchPairParams = object({
 
 const SetFavCoinParams = object({
   address: string(),
+});
+
+const GetFavCoinParams = object({
+  address: optional(string()),
+  tokenPrice: optional(boolean()),
+  tokenInfo: optional(boolean()),
+  marketChart: optional(boolean()),
+  marketData: optional(boolean()),
+});
+
+const RemoveFavCoinParams = object({
+  addresses: array(string()),
 });
 
 const SetPriceAlertParams = object({
@@ -74,6 +89,14 @@ const RequestValidator = refine(
     }
 
     if (method === 'setFavCoin' && !is(args, SetFavCoinParams)) {
+      return msg;
+    }
+
+    if (method === 'getFavCoin' && !is(args, GetFavCoinParams)) {
+      return msg;
+    }
+
+    if (method === 'removeFavCoin' && !is(args, RemoveFavCoinParams)) {
       return msg;
     }
 

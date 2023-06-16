@@ -36,6 +36,20 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       });
     }
 
+    if (body.method === 'getFavCoin') {
+      data = await coinFavService.getFavCoin({
+        ...body.args,
+        userId: _req.user.userId,
+      });
+    }
+
+    if (body.method === 'removeFavCoin') {
+      data = await coinFavService.removeFavCoin({
+        ...body.args,
+        userId: _req.user.userId,
+      });
+    }
+
     if (body.method === 'setPairPriceAlert') {
       return _res.status(200).json({ message: 'SUCCESS' });
       // data = await bitqueryPriceSubscriptionService(body.args);

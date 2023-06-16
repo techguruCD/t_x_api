@@ -105,7 +105,7 @@ async function removeFavCoin(params: { userId: string; addresses: string[] }) {
   }));
 
   const result = await favCoinsModel.bulkWrite(deleteOperations);
-  return { success: result.isOk };
+  return { success: result.isOk() };
 }
 
 const coinFavService = {

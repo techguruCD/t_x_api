@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"tokenRefresh\",\n    \"args\": {\n        \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODY2NjA3MjksImV4cCI6MTY4NzI2NTUyOX0.9FSayaBgwiY5mWEsIaUx0yNnc5ZrcHgk4L_Ks5UfWW4\"\n    }\n}",
+							"raw": "{\n    \"method\": \"tokenRefresh\",\n    \"args\": {\n        \"refreshToken\": \"{{refreshToken}}\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -73,7 +73,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"USDC\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"Wrapped Ethe\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 10\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,7 +96,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"currency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"limit\": 10,\n        \"offset\": 0,\n        \"fromBitquery\": true\n    }\n}",
+							"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"currency\": \"0x4DB5a66E937A9F4473fA95b1cAF1d1E1D62E29EA\",\n        \"limit\": 10,\n        \"offset\": 0,\n        \"fromBitquery\": true\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -104,9 +104,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlRemote}}",
+							"raw": "{{baseUrlLocal}}",
 							"host": [
-								"{{baseUrlRemote}}"
+								"{{baseUrlLocal}}"
 							]
 						}
 					},
@@ -130,6 +130,75 @@
 							"raw": "{{baseUrlRemote}}",
 							"host": [
 								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "set-fav-coin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"address\": \"0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-fav-coin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"getFavCoin\",\n    \"args\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove-fav-coin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"addresses\": [\"0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea\"]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
 							]
 						}
 					},
@@ -160,7 +229,7 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "{{token}}",
+				"value": "{{accessToken}}",
 				"type": "string"
 			},
 			{
@@ -202,8 +271,13 @@
 			"type": "string"
 		},
 		{
-			"key": "token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4NjY1OTgxMSwiZXhwIjoxNjg2NjYwNzExfQ.YGzpjSoHuO8QQHC5PmNlReRIjtkMv0_ZY0Ajki8n9rA",
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4NjkxMDkxNiwiZXhwIjoxNjg2OTExODE2fQ.9hjMGnbHeZO7T4FSMdXrfGeRN2kIRNndM1WIfJSNMsQ",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODY4OTg0MzMsImV4cCI6MTY4NzUwMzIzM30.2yyZ60mmYVvcBeQHAUXW9exrgwYqmL2JKpCAH4eV5MM",
 			"type": "string"
 		}
 	]

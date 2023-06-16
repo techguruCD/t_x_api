@@ -23,6 +23,7 @@ async function coinSearchService(params: {
   const { fromBitquery, network, string } = params;
   const regexPattern = new RegExp(params.string, 'i');
   const searchQuery = {
+    network: params.network,
     $or: [{ name: regexPattern }, { symbol: regexPattern }],
   };
   const offset = params.offset ?? 0;

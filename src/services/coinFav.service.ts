@@ -3,7 +3,9 @@ import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
 
 async function setFavCoin(params: { userId: string; address: string }) {
-  const coin = await coinsModel.findOne({ address: params.address }).lean();
+  const coin = await coinsModel
+    .findOne({ address: params.address.toLowerCase() })
+    .lean();
 
   if (!coin) {
     throw new ExpressError('CNF00001', 'Coin Not Found', 404);
@@ -14,12 +16,12 @@ async function setFavCoin(params: { userId: string; address: string }) {
   let assetPlatform = 'ethereum';
 
   if (network === 'bsc') {
-    assetPlatform === 'binance-smart-chain';
+    assetPlatform = 'binance-smart-chain';
   }
 
   const favCoin = await favCoinsModel
     .findOne({
-      address,
+      address: address.toLowerCase(),
       assetPlatform: assetPlatform,
       userId: params.userId,
     })
@@ -30,7 +32,7 @@ async function setFavCoin(params: { userId: string; address: string }) {
   }
 
   const newFavCoin = await new favCoinsModel({
-    address: params.address,
+    address: params.address.toLowerCase(),
     assetPlatform,
     userId: params.userId,
   }).save();
@@ -38,8 +40,68 @@ async function setFavCoin(params: { userId: string; address: string }) {
   return newFavCoin.toObject();
 }
 
+async function getFavCoin(params: {
+  userId: string;
+  address?: string;
+  tokenPrice?: boolean;
+  tokenInfo?: boolean;
+  marketChart?: boolean;
+  marketData?: boolean;
+}) {
+  const projection: Record<string, number> = {
+    userId: 1,
+    address: 1,
+    assetPlatform: 1,
+  };
+
+  if (params.tokenPrice) {
+    projection['cgTokenPrice'] = 1;
+  }
+
+  if (params.tokenInfo) {
+    projection['cgTokenInfo'] = 1;
+  }
+
+  if (params.marketChart) {
+    projection['cgMarketChart'] = 1;
+  }
+
+  if (params.marketData) {
+    projection['cgMarketData'] = 1;
+  }
+
+  if (params.address) {
+    const data = await favCoinsModel
+      .findOne({ userId: params.userId, address: params.address }, projection)
+      .lean();
+    return data;
+  }
+
+  const data = await favCoinsModel.aggregate([
+    {
+      $match: {
+        userId: params.userId,
+      },
+    },
+    {
+      $project: projection,
+    },
+    {
+      $group: {
+        _id: '$assetPlatform',
+        coins: {
+          $push: '$$ROOT',
+        },
+      },
+    },
+  ]);
+
+  return data;
+}
+
 const coinFavService = {
   setFavCoin,
+  getFavCoin,
 };
 
 export default coinFavService;

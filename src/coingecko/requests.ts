@@ -2,6 +2,7 @@ import { isAxiosError } from 'axios';
 import { ExpressError } from '../utils/error.utils';
 import cgAxios from './cgAxios';
 
+// /simple/token_price/{id}
 async function tokenPrice(params: {
   id: string;
   contract_addresses: string[];
@@ -44,6 +45,7 @@ async function tokenPrice(params: {
   }
 }
 
+// /coins/{id}/contract/{contract_address}
 async function tokenInfoFromAddress(params: {
   id: string;
   contract_address: string;
@@ -69,6 +71,7 @@ async function tokenInfoFromAddress(params: {
   }
 }
 
+// /coins/{id}/contract/{contract_address}/market_chart/
 async function marketChartFromAddress(params: {
   id: string;
   contract_address: string;
@@ -91,13 +94,62 @@ async function marketChartFromAddress(params: {
   } catch (error: any) {
     if (isAxiosError(error) && error.response) {
       throw new ExpressError(
-        'CGE00003',
+        'CGE00005',
         error.response.data.error,
         error.response.status
       );
     }
     throw new ExpressError(
-      'CGE00004',
+      'CGE00006',
+      error.message ?? 'Something Went Wrong',
+      400
+    );
+  }
+}
+
+// /coins/markets
+async function coinMarketData(params: {
+  ids?: string[];
+  category?: string;
+  per_page?: string;
+  page?: string;
+  precision?: string;
+}) {
+  try {
+    const url = `/coins/markets`;
+    const queryParams: Record<string, string> = {
+      vs_currency: 'usd',
+      order: 'market_cap_desc',
+      per_page: params.per_page ?? '100',
+      page: params.page ?? '1',
+      sparkline: 'true',
+      price_change_percentage: '1h,24h,7d,14d,30d',
+      locale: 'en',
+      precision: params.precision ?? 'full',
+    };
+
+    if (params.ids && params.ids.length > 0) {
+      queryParams['ids'] = params.ids.toString();
+    }
+
+    if (params.category) {
+      queryParams['category'] = params.category;
+    }
+
+    const cgResponse = await cgAxios.get(url, {
+      params: queryParams,
+    });
+    return cgResponse.data;
+  } catch (error: any) {
+    if (isAxiosError(error) && error.response) {
+      throw new ExpressError(
+        'CGE00007',
+        error.response.data.error,
+        error.response.status
+      );
+    }
+    throw new ExpressError(
+      'CGE00008',
       error.message ?? 'Something Went Wrong',
       400
     );
@@ -108,6 +160,7 @@ const cgRequests = {
   tokenPrice,
   tokenInfoFromAddress,
   marketChartFromAddress,
+  coinMarketData,
 };
 
 export default cgRequests;

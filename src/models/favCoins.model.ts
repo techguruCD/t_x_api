@@ -11,6 +11,10 @@ const favCoinSchema = new mongoose.Schema({
     required: true,
     ref: 'Coins',
   },
+  assetPlatform: {
+    type: String,
+    required: true,
+  },
   cgTokenPrice: {
     type: mongoose.Schema.Types.Mixed,
   },

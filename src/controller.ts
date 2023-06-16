@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import { is, validate } from 'superstruct';
 import RequestValidator from './validators/request.validator';
 import { ExpressError } from './utils/error.utils';
-import coinSearchService from './services/coinSearch.service';
-import pairSearchService from './services/pairSearch.service';
-// import priceSubscriptionService from './services/priceSubscription.service';
+import bitqueryCoinSearchService from './services/bitqueryCoinSearch.service';
+import bitqueryPairSearchService from './services/bitqueryPairSearch.service';
+// import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
   try {
@@ -21,16 +21,16 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     let data = null;
 
     if (body.method === 'searchCoin') {
-      data = await coinSearchService(body.args);
+      data = await bitqueryCoinSearchService(body.args);
     }
 
     if (body.method === 'searchPairs') {
-      data = await pairSearchService(body.args);
+      data = await bitqueryPairSearchService(body.args);
     }
 
     if (body.method === 'setPairPriceAlert') {
       return _res.status(200).json({ message: 'SUCCESS' });
-      // data = await priceSubscriptionService(body.args);
+      // data = await bitqueryPriceSubscriptionService(body.args);
     }
 
     return _res.status(200).json(data);

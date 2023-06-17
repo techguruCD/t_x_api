@@ -66,7 +66,8 @@ async function pairSearchService(params: {
   offset?: number;
   fromBitquery: boolean;
 }) {
-  const { fromBitquery, network, currency } = params;
+  let { fromBitquery, network, currency } = params;
+  currency = currency.toLowerCase();
   const offset = params.offset ?? 0;
   const limit = params.limit ?? 10;
 

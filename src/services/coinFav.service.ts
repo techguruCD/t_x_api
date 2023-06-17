@@ -72,7 +72,10 @@ async function getFavCoin(params: {
 
   if (params.address) {
     const data = await favCoinsModel
-      .findOne({ userId: params.userId, address: params.address }, projection)
+      .findOne(
+        { userId: params.userId, address: params.address.toLowerCase() },
+        projection
+      )
       .lean();
     return data;
   }
@@ -101,7 +104,9 @@ async function getFavCoin(params: {
 
 async function removeFavCoin(params: { userId: string; addresses: string[] }) {
   const deleteOperations = params.addresses.map((address) => ({
-    deleteOne: { filter: { address, userId: params.userId } },
+    deleteOne: {
+      filter: { address: address.toLowerCase(), userId: params.userId },
+    },
   }));
 
   const result = await favCoinsModel.bulkWrite(deleteOperations);

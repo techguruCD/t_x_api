@@ -73,7 +73,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"Wrapped Ethe\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 10\n    }\n}",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"The DONS\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -85,7 +85,8 @@
 							"host": [
 								"{{baseUrlLocal}}"
 							]
-						}
+						},
+						"description": "**Note: this method requires** **`authorization`** **header and it should be the access token retrieved from** **`token-create`** **or** **`token-refresh`** **methods.**"
 					},
 					"response": []
 				},
@@ -108,7 +109,8 @@
 							"host": [
 								"{{baseUrlLocal}}"
 							]
-						}
+						},
+						"description": "**Note: this method requires** **`authorization`** **header and it should be the access token retrieved from** **`token-create`** **or** **`token-refresh`** **methods.**"
 					},
 					"response": []
 				},
@@ -189,6 +191,121 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"addresses\": [\"0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea\"]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"updateUser\",\n    \"args\": {\n        \"twitterUsername\": \"rahultrivedi181\",\n        \"discordUsername\": \"rahultrivedi180\",\n        \"walletAddress\": \"0x17265d8Ea26a56C38018B8763994386EF5ae13c3\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"getUser\",\n    \"args\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "set-alert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"baseCurrency\": \"0x17265d8Ea26a56C38018B8763994386EF5ae13c3\",\n        \"quoteCurrency\": \"0x17265d8Ea26a56C38018B8763994386EF5ae13c3\",\n        \"price\": 500,\n        \"side\": \"up\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove-alerts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"deleteAlert\",\n    \"args\": {\n        \"alertId\": \"649016060f9683cb26baa76e\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlLocal}}",
+							"host": [
+								"{{baseUrlLocal}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-alerts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"getAlerts\",\n    \"args\": {}\n}",
 							"options": {
 								"raw": {
 									"language": "json"

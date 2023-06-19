@@ -23,6 +23,9 @@ const methods = enums([
   'tokenRefresh',
   'updateUser',
   'getUser',
+  'setAlert',
+  'deleteAlert',
+  'getAlerts',
 ]);
 
 const ValidTwitterUsername = pattern(string(), /^[A-Za-z0-9_]{1,15}$/);
@@ -82,6 +85,17 @@ const UpdateUserParams = object({
   walletAddress: optional(ValidWalletAddress),
 });
 
+const SetAlertParams = object({
+  baseCurrency: ValidWalletAddress,
+  quoteCurrency: optional(ValidWalletAddress),
+  price: number(),
+  side: enums(['up', 'down']),
+});
+
+const DeleteAlertParams = object({
+  alertId: string(),
+});
+
 const RequestValidator = refine(
   object({
     method: methods,
@@ -126,6 +140,14 @@ const RequestValidator = refine(
     }
 
     if (method === 'updateUser' && !is(args, UpdateUserParams)) {
+      return msg;
+    }
+
+    if (method === 'setAlert' && !is(args, SetAlertParams)) {
+      return msg;
+    }
+
+    if (method === 'deleteAlert' && !is(args, DeleteAlertParams)) {
       return msg;
     }
 

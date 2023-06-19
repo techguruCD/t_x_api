@@ -6,6 +6,7 @@ import coinFavService from './services/coinFav.service';
 import { ExpressError } from './utils/error.utils';
 import RequestValidator from './validators/request.validator';
 import userService from './services/user.service';
+import alertService from './services/alert.service';
 // import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
@@ -67,6 +68,24 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       data = await userService.getUserService({
         userId: _req.user.userId,
       });
+    }
+
+    if (body.method === 'setAlert') {
+      data = await alertService.setAlert({
+        ...body.args,
+        userId: _req.user.userId,
+      });
+    }
+
+    if (body.method === 'deleteAlert') {
+      data = await alertService.deleteAlert({
+        ...body.args,
+        userId: _req.user.userId,
+      });
+    }
+
+    if (body.method === 'getAlerts') {
+      data = await alertService.getAlerts({ userId: _req.user.userId });
     }
 
     return _res.status(200).json(data);

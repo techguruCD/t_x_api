@@ -5,6 +5,7 @@ import bitqueryPairSearchService from './services/bitqueryPairSearch.service';
 import coinFavService from './services/coinFav.service';
 import { ExpressError } from './utils/error.utils';
 import RequestValidator from './validators/request.validator';
+import userService from './services/user.service';
 // import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
@@ -53,6 +54,19 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     if (body.method === 'setPairPriceAlert') {
       return _res.status(200).json({ message: 'SUCCESS' });
       // data = await bitqueryPriceSubscriptionService(body.args);
+    }
+
+    if (body.method === 'updateUser') {
+      data = await userService.updateUserService({
+        ...body.args,
+        userId: _req.user.userId,
+      });
+    }
+
+    if (body.method === 'getUser') {
+      data = await userService.getUserService({
+        userId: _req.user.userId,
+      });
     }
 
     return _res.status(200).json(data);

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import RequestValidator from './validators/request.validator';
+import RequestValidator from '../validators/request.validator';
 import { is, validate } from 'superstruct';
-import { ExpressError } from './utils/error.utils';
-import tokenCreateService from './services/tokenCreate.service';
-import tokenRefreshService from './services/tokenRefresh.service';
+import { ExpressError } from '../utils/error.utils';
+import tokenCreateService from '../services/tokenCreate.service';
+import tokenRefreshService from '../services/tokenRefresh.service';
 
 async function publicController(
   _req: Request,

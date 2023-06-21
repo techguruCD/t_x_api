@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { is, validate } from 'superstruct';
-import bitqueryCoinSearchService from './services/bitqueryCoinSearch.service';
-import bitqueryPairSearchService from './services/bitqueryPairSearch.service';
-import coinFavService from './services/coinFav.service';
-import { ExpressError } from './utils/error.utils';
-import RequestValidator from './validators/request.validator';
-import userService from './services/user.service';
-import alertService from './services/alert.service';
+import bitqueryCoinSearchService from '../services/bitqueryCoinSearch.service';
+import bitqueryPairSearchService from '../services/bitqueryPairSearch.service';
+import coinFavService from '../services/coinFav.service';
+import { ExpressError } from '../utils/error.utils';
+import RequestValidator from '../validators/request.validator';
+import userService from '../services/user.service';
+import alertService from '../services/alert.service';
 // import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {

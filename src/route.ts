@@ -11,7 +11,7 @@ router.get('/ping', (_req, res) => {
 });
 
 router.post('/public', publicController);
-router.post('/twitter-callback', twitterController);
+router.get('/twitter-callback', twitterController);
 
 router.use('/', authMiddleware, controller);
 

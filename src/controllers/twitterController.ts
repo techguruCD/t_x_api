@@ -9,10 +9,9 @@ async function twitterController(
   _next: NextFunction
 ) {
   try {
-    const { body, url, params, query } = _req;
+    const { url, params, query } = _req;
     const log = {
       url,
-      body,
       params,
       query,
     };

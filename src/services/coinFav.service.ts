@@ -1,3 +1,4 @@
+import { PipelineStage } from 'mongoose';
 import coinsModel from '../models/coins.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
@@ -33,7 +34,7 @@ async function setFavCoin(params: { userId: string; address: string }) {
 async function getFavCoin(params: {
   userId: string;
   address?: string;
-  projection: {
+  projection?: {
     cgTokenPrice: boolean;
     cgTokenInfo: boolean;
     cgMarketChart: boolean;
@@ -44,29 +45,29 @@ async function getFavCoin(params: {
     _id: 1,
     address: 1,
     assetPlatform: 1,
-    decimal: 1,
+    decimals: 1,
     name: 1,
     network: 1,
     symbol: 1,
   };
 
-  if (params.projection.cgTokenPrice) {
+  if (params.projection?.cgTokenPrice) {
     projection['cgTokenPrice'] = 1;
   }
 
-  if (params.projection.cgTokenInfo) {
+  if (params.projection?.cgTokenInfo) {
     projection['cgTokenInfo'] = 1;
   }
 
-  if (params.projection.cgMarketChart) {
+  if (params.projection?.cgMarketChart) {
     projection['cgMarketChart'] = 1;
   }
 
-  if (params.projection.cgMarketData) {
+  if (params.projection?.cgMarketData) {
     projection['cgMarketData'] = 1;
   }
 
-  const query: Record<string, any>[] = [
+  const query: PipelineStage[] = [
     {
       $match: {
         userId: params.userId,
@@ -87,12 +88,12 @@ async function getFavCoin(params: {
       },
     },
     {
-      $project: projection,
-    },
-    {
       $replaceRoot: {
         newRoot: '$info',
       },
+    },
+    {
+      $project: projection,
     },
     // {
     //   $group: {
@@ -105,10 +106,10 @@ async function getFavCoin(params: {
   ];
 
   if (params.address) {
-    query[0]['$match']['address'] = params.address;
+    (query[0] as any)['$match']['address'] = params.address;
   }
 
-  const data = await favCoinsModel.aggregate();
+  const data = await favCoinsModel.aggregate(query);
   return data;
 }
 

@@ -24,7 +24,11 @@ async function coinSearchService(params: {
   const regexPattern = new RegExp(params.string, 'i');
   const searchQuery = {
     network: params.network,
-    $or: [{ name: regexPattern }, { symbol: regexPattern }],
+    $or: [
+      { name: regexPattern },
+      { symbol: regexPattern },
+      { address: regexPattern },
+    ],
   };
   const offset = params.offset ?? 0;
   const limit = params.limit ?? 10;
@@ -36,8 +40,18 @@ async function coinSearchService(params: {
       offset,
       string,
     });
-    await upsertCoins(coinsFromBitquery);
-    return coinsFromBitquery;
+    const coins = coinsFromBitquery.map((coin: any) => {
+      if (coin.tokenType) {
+        delete coin.tokenType;
+      }
+      return {
+        ...coin,
+        assetPlatform:
+          coin.network === 'bsc' ? 'binance-smart-chain' : 'ethereum',
+      };
+    });
+    await upsertCoins(coins);
+    return coins;
   }
 
   const coinsInDb = await coinsModel

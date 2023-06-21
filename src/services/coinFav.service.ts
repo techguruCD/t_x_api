@@ -11,94 +11,104 @@ async function setFavCoin(params: { userId: string; address: string }) {
     throw new ExpressError('CNF00001', 'Coin Not Found', 404);
   }
 
-  const { address, network } = coin;
-
-  let assetPlatform = 'ethereum';
-
-  if (network === 'bsc') {
-    assetPlatform = 'binance-smart-chain';
-  }
-
   const favCoin = await favCoinsModel
     .findOne({
-      address: address.toLowerCase(),
-      assetPlatform: assetPlatform,
+      address: coin.address.toLowerCase(),
       userId: params.userId,
     })
     .lean();
 
   if (favCoin) {
-    return favCoin;
+    return { success: true };
   }
 
-  const newFavCoin = await new favCoinsModel({
+  await new favCoinsModel({
     address: params.address.toLowerCase(),
-    assetPlatform,
     userId: params.userId,
   }).save();
 
-  return newFavCoin.toObject();
+  return { success: true };
 }
 
 async function getFavCoin(params: {
   userId: string;
   address?: string;
-  tokenPrice?: boolean;
-  tokenInfo?: boolean;
-  marketChart?: boolean;
-  marketData?: boolean;
+  projection: {
+    cgTokenPrice: boolean;
+    cgTokenInfo: boolean;
+    cgMarketChart: boolean;
+    cgMarketData: boolean;
+  };
 }) {
   const projection: Record<string, number> = {
-    userId: 1,
+    _id: 1,
     address: 1,
     assetPlatform: 1,
+    decimal: 1,
+    name: 1,
+    network: 1,
+    symbol: 1,
   };
 
-  if (params.tokenPrice) {
+  if (params.projection.cgTokenPrice) {
     projection['cgTokenPrice'] = 1;
   }
 
-  if (params.tokenInfo) {
+  if (params.projection.cgTokenInfo) {
     projection['cgTokenInfo'] = 1;
   }
 
-  if (params.marketChart) {
+  if (params.projection.cgMarketChart) {
     projection['cgMarketChart'] = 1;
   }
 
-  if (params.marketData) {
+  if (params.projection.cgMarketData) {
     projection['cgMarketData'] = 1;
   }
 
-  if (params.address) {
-    const data = await favCoinsModel
-      .findOne(
-        { userId: params.userId, address: params.address.toLowerCase() },
-        projection
-      )
-      .lean();
-    return data;
-  }
-
-  const data = await favCoinsModel.aggregate([
+  const query: Record<string, any>[] = [
     {
       $match: {
         userId: params.userId,
       },
     },
     {
+      $lookup: {
+        from: 'Coins',
+        localField: 'address',
+        foreignField: 'address',
+        as: 'info',
+      },
+    },
+    {
+      $unwind: {
+        path: '$info',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
       $project: projection,
     },
     {
-      $group: {
-        _id: '$assetPlatform',
-        coins: {
-          $push: '$$ROOT',
-        },
+      $replaceRoot: {
+        newRoot: '$info',
       },
     },
-  ]);
+    // {
+    //   $group: {
+    //     _id: '$assetPlatform',
+    //     coins: {
+    //       $push: '$$ROOT',
+    //     },
+    //   },
+    // },
+  ];
 
+  if (params.address) {
+    query[0]['$match']['address'] = params.address;
+  }
+
+  const data = await favCoinsModel.aggregate();
   return data;
 }
 

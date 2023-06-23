@@ -7,6 +7,7 @@ import { ExpressError } from '../utils/error.utils';
 import RequestValidator from '../validators/request.validator';
 import userService from '../services/user.service';
 import alertService from '../services/alert.service';
+import coinService from '../services/coin.service';
 // import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
@@ -86,6 +87,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'getAlerts') {
       data = await alertService.getAlerts({ userId: _req.user.userId });
+    }
+
+    if (body.method === 'coinInfo') {
+      data = await coinService.getCoinInfo(body.args);
     }
 
     return _res.status(200).json(data);

@@ -26,6 +26,7 @@ const methods = enums([
   'setAlert',
   'deleteAlert',
   'getAlerts',
+  'coinInfo',
 ]);
 
 const ValidTwitterUsername = pattern(string(), /^[A-Za-z0-9_]{1,15}$/);
@@ -54,10 +55,14 @@ const SetFavCoinParams = object({
 
 const GetFavCoinParams = object({
   address: optional(string()),
-  tokenPrice: optional(boolean()),
-  tokenInfo: optional(boolean()),
-  marketChart: optional(boolean()),
-  marketData: optional(boolean()),
+  projection: optional(
+    object({
+      cgTokenPrice: optional(boolean()),
+      cgTokenInfo: optional(boolean()),
+      cgMarketChart: optional(boolean()),
+      cgMarketData: optional(boolean()),
+    })
+  ),
 });
 
 const RemoveFavCoinParams = object({
@@ -94,6 +99,16 @@ const SetAlertParams = object({
 
 const DeleteAlertParams = object({
   alertId: string(),
+});
+
+const CoinInfoParams = object({
+  address: string(),
+  projection: object({
+    cgTokenPrice: optional(boolean()),
+    cgTokenInfo: optional(boolean()),
+    cgMarketChart: optional(boolean()),
+    cgMarketData: optional(boolean()),
+  }),
 });
 
 const RequestValidator = refine(
@@ -148,6 +163,10 @@ const RequestValidator = refine(
     }
 
     if (method === 'deleteAlert' && !is(args, DeleteAlertParams)) {
+      return msg;
+    }
+
+    if (method === 'coinInfo' && !is(args, CoinInfoParams)) {
       return msg;
     }
 

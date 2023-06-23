@@ -33,7 +33,6 @@ async function setFavCoin(params: { userId: string; address: string }) {
 
 async function getFavCoin(params: {
   userId: string;
-  address?: string;
   projection?: {
     cgTokenPrice: boolean;
     cgTokenInfo: boolean;
@@ -104,11 +103,6 @@ async function getFavCoin(params: {
     //   },
     // },
   ];
-
-  if (params.address) {
-    (query[0] as any)['$match']['address'] = params.address;
-  }
-
   const data = await favCoinsModel.aggregate(query);
   return data;
 }

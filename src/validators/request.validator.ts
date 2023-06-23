@@ -54,7 +54,6 @@ const SetFavCoinParams = object({
 });
 
 const GetFavCoinParams = object({
-  address: optional(string()),
   projection: optional(
     object({
       cgTokenPrice: optional(boolean()),

@@ -77,6 +77,8 @@ Example Body:
 }
 ```
 
+---
+
 ### Method: `updateUser`
 
 Description: Update user data with social and wallet details
@@ -193,6 +195,8 @@ Args:
 | Name        | Type     | Description                                                                                                | Required |
 | ----------- | -------- | ---------------------------------------------------------------------------------------------------------- | -------- |
 | `addresses` | string[] | `addresses` is a array of string and it should include addresses of coins to be removed from favorite list | Yes      |
+
+---
 
 ### Method: `coinInfo`
 

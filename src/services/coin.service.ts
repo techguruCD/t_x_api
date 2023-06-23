@@ -47,7 +47,7 @@ async function getCoinInfo(params: {
 
   const responseData = { ...coin };
 
-  if (params.projection.cgTokenPrice) {
+  if (!responseData.cgTokenPrice && params.projection.cgTokenPrice) {
     const cgTokenPrice = await cgRequests.tokenPrice({
       id: coin.assetPlatform,
       contract_addresses: [coin.address],
@@ -60,7 +60,7 @@ async function getCoinInfo(params: {
     responseData.cgTokenPrice = cgTokenPrice;
   }
 
-  if (params.projection.cgTokenInfo) {
+  if (!responseData.cgTokenInfo && params.projection.cgTokenInfo) {
     const cgTokenInfo = await cgRequests.tokenInfoFromAddress({
       id: coin.assetPlatform,
       contract_address: coin.address,
@@ -68,7 +68,7 @@ async function getCoinInfo(params: {
     responseData.cgTokenInfo = cgTokenInfo;
   }
 
-  if (params.projection.cgMarketChart) {
+  if (!responseData.cgMarketChart && params.projection.cgMarketChart) {
     const cgMarketChart = await cgRequests.marketChartFromAddress({
       id: coin.assetPlatform,
       contract_address: coin.address,
@@ -78,7 +78,7 @@ async function getCoinInfo(params: {
     responseData.cgMarketChart = cgMarketChart;
   }
 
-  if (params.projection.cgMarketData) {
+  if (!responseData.cgMarketData && params.projection.cgMarketData) {
     const cgMarketData = await cgRequests.coinMarketData({
       ids: [responseData.cgTokenInfo.id || coin.cgTokenInfo.id],
     });

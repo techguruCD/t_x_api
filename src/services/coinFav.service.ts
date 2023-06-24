@@ -1,4 +1,3 @@
-import { PipelineStage } from 'mongoose';
 import coinsModel from '../models/coins.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
@@ -31,42 +30,8 @@ async function setFavCoin(params: { userId: string; address: string }) {
   return { success: true };
 }
 
-async function getFavCoin(params: {
-  userId: string;
-  projection?: {
-    cgTokenPrice: boolean;
-    cgTokenInfo: boolean;
-    cgMarketChart: boolean;
-    cgMarketData: boolean;
-  };
-}) {
-  const projection: Record<string, number> = {
-    _id: 1,
-    address: 1,
-    assetPlatform: 1,
-    decimals: 1,
-    name: 1,
-    network: 1,
-    symbol: 1,
-  };
-
-  if (params.projection?.cgTokenPrice) {
-    projection['cgTokenPrice'] = 1;
-  }
-
-  if (params.projection?.cgTokenInfo) {
-    projection['cgTokenInfo'] = 1;
-  }
-
-  if (params.projection?.cgMarketChart) {
-    projection['cgMarketChart'] = 1;
-  }
-
-  if (params.projection?.cgMarketData) {
-    projection['cgMarketData'] = 1;
-  }
-
-  const query: PipelineStage[] = [
+async function getFavCoin(params: { userId: string }) {
+  const data = await favCoinsModel.aggregate([
     {
       $match: {
         userId: params.userId,
@@ -92,18 +57,17 @@ async function getFavCoin(params: {
       },
     },
     {
-      $project: projection,
+      $project: {
+        address: 1,
+        name: 1,
+        image: '$cgTokenInfo.image.small',
+        price: '$cgTokenInfo.market_data.current_price.usd',
+        priceChangeInPercentage:
+          '$cgTokenInfo.market_data.price_change_percentage_1h_in_currency.usd',
+        updatedAt: 1,
+      },
     },
-    // {
-    //   $group: {
-    //     _id: '$assetPlatform',
-    //     coins: {
-    //       $push: '$$ROOT',
-    //     },
-    //   },
-    // },
-  ];
-  const data = await favCoinsModel.aggregate(query);
+  ]);
   return data;
 }
 

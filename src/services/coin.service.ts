@@ -16,7 +16,16 @@ async function getCoinInfo(params: { address: string }) {
   };
 
   const coin = await coinsModel
-    .findOne({ address: params.address }, projection)
+    .findOne(
+      { address: params.address },
+      {
+        ...projection,
+        cgTokenPrice: 1,
+        cgTokenInfo: 1,
+        cgMarketChart: 1,
+        cgMarketData: 1,
+      }
+    )
     .lean();
 
   if (!coin) {
@@ -68,16 +77,7 @@ async function getCoinInfo(params: { address: string }) {
     { $set: responseData },
     {
       new: true,
-      projection: {
-        adress: 1,
-        name: 1,
-        image: '$cgTokenInfo.image.small',
-        price: '$cgTokenInfo.market_data.current_price.usd',
-        priceChangeInPercentage:
-          '$cgTokenInfo.market_data.price_change_percentage_1h_in_currency.usd',
-        chartData: '$cgMarketChart.prices',
-        updatedAt: 1,
-      },
+      projection,
     }
   );
 

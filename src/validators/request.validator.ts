@@ -102,12 +102,6 @@ const DeleteAlertParams = object({
 
 const CoinInfoParams = object({
   address: string(),
-  projection: object({
-    cgTokenPrice: optional(boolean()),
-    cgTokenInfo: optional(boolean()),
-    cgMarketChart: optional(boolean()),
-    cgMarketData: optional(boolean()),
-  }),
 });
 
 const RequestValidator = refine(

@@ -3,14 +3,16 @@ import coinsModel from '../models/coins.model';
 import { ExpressError } from '../utils/error.utils';
 
 async function getCoinInfo(params: { address: string }) {
-  const projection: Record<string, number> = {
-    _id: 1,
+  const projection: Record<string, number | string> = {
     address: 1,
-    assetPlatform: 1,
-    decimal: 1,
     name: 1,
-    network: 1,
-    symbol: 1,
+    assetPlatform: 1,
+    image: '$cgTokenInfo.image.small',
+    price: '$cgTokenInfo.market_data.current_price.usd',
+    priceChangeInPercentage:
+      '$cgTokenInfo.market_data.price_change_percentage_1h_in_currency.usd',
+    chartData: '$cgMarketChart.prices',
+    updatedAt: 1,
   };
 
   const coin = await coinsModel
@@ -78,6 +80,10 @@ async function getCoinInfo(params: { address: string }) {
       },
     }
   );
+
+  if (!updatedCoin) {
+    throw new ExpressError('CSE00002', 'coin not found', 404);
+  }
 
   return updatedCoin;
 }

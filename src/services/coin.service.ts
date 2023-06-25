@@ -2,15 +2,7 @@ import cgRequests from '../coingecko/requests';
 import coinsModel from '../models/coins.model';
 import { ExpressError } from '../utils/error.utils';
 
-async function getCoinInfo(params: {
-  address: string;
-  projection: {
-    cgTokenPrice: boolean;
-    cgTokenInfo: boolean;
-    cgMarketChart: boolean;
-    cgMarketData: boolean;
-  };
-}) {
+async function getCoinInfo(params: { address: string }) {
   const projection: Record<string, number> = {
     _id: 1,
     address: 1,
@@ -20,22 +12,6 @@ async function getCoinInfo(params: {
     network: 1,
     symbol: 1,
   };
-
-  if (params.projection.cgTokenPrice) {
-    projection['cgTokenPrice'] = 1;
-  }
-
-  if (params.projection.cgTokenInfo) {
-    projection['cgTokenInfo'] = 1;
-  }
-
-  if (params.projection.cgMarketChart) {
-    projection['cgMarketChart'] = 1;
-  }
-
-  if (params.projection.cgMarketData) {
-    projection['cgMarketData'] = 1;
-  }
 
   const coin = await coinsModel
     .findOne({ address: params.address }, projection)
@@ -47,7 +23,7 @@ async function getCoinInfo(params: {
 
   const responseData = { ...coin };
 
-  if (!responseData.cgTokenPrice && params.projection.cgTokenPrice) {
+  if (!responseData.cgTokenPrice) {
     const cgTokenPrice = await cgRequests.tokenPrice({
       id: coin.assetPlatform,
       contract_addresses: [coin.address],
@@ -60,7 +36,7 @@ async function getCoinInfo(params: {
     responseData.cgTokenPrice = cgTokenPrice;
   }
 
-  if (!responseData.cgTokenInfo && params.projection.cgTokenInfo) {
+  if (!responseData.cgTokenInfo) {
     const cgTokenInfo = await cgRequests.tokenInfoFromAddress({
       id: coin.assetPlatform,
       contract_address: coin.address,
@@ -68,7 +44,7 @@ async function getCoinInfo(params: {
     responseData.cgTokenInfo = cgTokenInfo;
   }
 
-  if (!responseData.cgMarketChart && params.projection.cgMarketChart) {
+  if (!responseData.cgMarketChart) {
     const cgMarketChart = await cgRequests.marketChartFromAddress({
       id: coin.assetPlatform,
       contract_address: coin.address,
@@ -78,7 +54,7 @@ async function getCoinInfo(params: {
     responseData.cgMarketChart = cgMarketChart;
   }
 
-  if (!responseData.cgMarketData && params.projection.cgMarketData) {
+  if (!responseData.cgMarketData) {
     const cgMarketData = await cgRequests.coinMarketData({
       ids: [responseData.cgTokenInfo.id || coin.cgTokenInfo.id],
     });
@@ -88,7 +64,19 @@ async function getCoinInfo(params: {
   const updatedCoin = await coinsModel.findOneAndUpdate(
     { address: coin.address },
     { $set: responseData },
-    { new: true, projection }
+    {
+      new: true,
+      projection: {
+        adress: 1,
+        name: 1,
+        image: '$cgTokenInfo.image.small',
+        price: '$cgTokenInfo.market_data.current_price.usd',
+        priceChangeInPercentage:
+          '$cgTokenInfo.market_data.price_change_percentage_1h_in_currency.usd',
+        chartData: '$cgMarketChart.prices',
+        updatedAt: 1,
+      },
+    }
   );
 
   return updatedCoin;

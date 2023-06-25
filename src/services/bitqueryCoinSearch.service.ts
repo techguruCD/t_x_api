@@ -55,7 +55,15 @@ async function coinSearchService(params: {
   }
 
   const coinsInDb = await coinsModel
-    .find(searchQuery)
+    .find(searchQuery, {
+      network: 1,
+      address: 1,
+      name: 1,
+      symbol: 1,
+      decimals: 1,
+      assetPlatform: 1,
+      updatedAt: 1,
+    })
     .skip(offset)
     .limit(limit)
     .lean();

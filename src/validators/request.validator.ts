@@ -26,6 +26,7 @@ const methods = enums([
   'setAlert',
   'deleteAlert',
   'getAlerts',
+  'getAlert',
   'coinInfo',
 ]);
 
@@ -100,6 +101,10 @@ const DeleteAlertParams = object({
   alertId: string(),
 });
 
+const GetAlertParams = object({
+  alertId: string(),
+});
+
 const CoinInfoParams = object({
   address: string(),
 });
@@ -156,6 +161,10 @@ const RequestValidator = refine(
     }
 
     if (method === 'deleteAlert' && !is(args, DeleteAlertParams)) {
+      return msg;
+    }
+
+    if (method === 'getAlert' && !is(args, GetAlertParams)) {
       return msg;
     }
 

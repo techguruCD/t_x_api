@@ -89,6 +89,13 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       data = await alertService.getAlerts({ userId: _req.user.userId });
     }
 
+    if (body.method === 'getAlert') {
+      data = await alertService.getAlert({
+        ...body.args,
+        userId: _req.user.userId,
+      });
+    }
+
     if (body.method === 'coinInfo') {
       data = await coinService.getCoinInfo({
         ...body.args,

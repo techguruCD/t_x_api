@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import alertModel from '../models/alert.model';
 import coinsModel from '../models/coins.model';
 import { ExpressError } from '../utils/error.utils';
@@ -60,14 +61,87 @@ async function deleteAlert(params: { userId: string; alertId: string }) {
 }
 
 async function getAlerts(params: { userId: string }) {
-  const alerts = await alertModel.find({ userId: params.userId }).lean();
+  const alerts = await alertModel.aggregate([
+    {
+      $match: {
+        userId: params.userId,
+      },
+    },
+    {
+      $lookup: {
+        from: 'Coins',
+        localField: 'alertBaseCurrency',
+        foreignField: 'address',
+        as: 'info',
+      },
+    },
+    {
+      $unwind: {
+        path: '$info',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        userId: 1,
+        alertBaseCurrency: 1,
+        alertPrice: 1,
+        alertPercentage: 1,
+        alertSide: 1,
+        alertExecutionStatus: 1,
+        name: '$info.name',
+        image: '$info.cgTokenInfo.image.small',
+        currentPrice: '$info.cgTokenInfo.market_data.current_price.usd',
+      },
+    },
+  ]);
   return alerts;
+}
+
+async function getAlert(params: { userId: string; alertId: string }) {
+  const alert = await alertModel.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(params.alertId),
+        userId: params.userId,
+      },
+    },
+    {
+      $lookup: {
+        from: 'Coins',
+        localField: 'alertBaseCurrency',
+        foreignField: 'address',
+        as: 'info',
+      },
+    },
+    {
+      $unwind: {
+        path: '$info',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        userId: 1,
+        alertBaseCurrency: 1,
+        alertPrice: 1,
+        alertPercentage: 1,
+        alertSide: 1,
+        alertExecutionStatus: 1,
+        name: '$info.name',
+        image: '$info.cgTokenInfo.image.small',
+        currentPrice: '$info.cgTokenInfo.market_data.current_price.usd',
+      },
+    },
+  ]);
+  return alert;
 }
 
 const alertService = {
   setAlert,
   deleteAlert,
   getAlerts,
+  getAlert,
 };
 
 export default alertService;

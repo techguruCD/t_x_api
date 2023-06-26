@@ -6,23 +6,28 @@ const alertSchema = new Schema({
     required: true,
     ref: 'Users',
   },
-  baseCurrency: {
+  alertBaseCurrency: {
     type: String,
     required: true,
     ref: 'Coins',
   },
-  quoteCurrency: {
-    type: String,
-    required: true,
-    ref: 'Coins',
-  },
-  price: {
+  alertPrice: {
     type: Number,
     default: null,
   },
-  side: {
+  alertPercentage: {
+    type: Number,
+    default: null,
+  },
+  alertSide: {
     type: String,
     enum: ['up', 'down'],
+    required: true,
+  },
+  alertExecutionStatus: {
+    type: String,
+    enums: ['pending', 'executed'],
+    default: 'pending',
   },
 });
 

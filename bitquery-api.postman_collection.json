@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "0d8a6393-0097-41b3-ad74-4cee88fe48d1",
+		"_postman_id": "87916f14-6712-4bdf-b7b5-d52866a26cdb",
 		"name": "bitquery-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "5790263"
+		"_exporter_id": "27962830",
+		"_collection_link": "https://genx-development.postman.co/workspace/3cff3d62-6d95-4eb4-9dd3-d28a07f0fbcc/collection/27962830-87916f14-6712-4bdf-b7b5-d52866a26cdb?action=share&creator=27962830&source=collection_link"
 	},
 	"item": [
 		{
@@ -24,14 +25,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}/public",
+							"raw": "{{baseUrlRemote}}/public",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							],
 							"path": [
 								"public"
 							]
-						}
+						},
+						"description": "## Method: tokenCreate\n\n## Args:\n\n- `userId`\n    - **Type:** string\n    - **Required:** true\n    - **Description:** `userId` should be email id if provided by the specific social login provider\n- `deviceId`\n    - **Type:** string\n    - **Required:** true\n    - **Description:** `deviceId` should be provided by the FCM which is specific per device.\n\n## Expected Response Status:\n\nSuccess Response\n\n``` json\n{\n    accessToken: string,\n    refreshToken: string\n}\n\n```\n\nFailure Response\n\n``` json\n{\n    message: string,\n    code: string\n    statusCode: number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -50,12 +52,42 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}/public",
+							"raw": "{{baseUrlRemote}}/public",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							],
 							"path": [
 								"public"
+							]
+						},
+						"description": "## Method: tokenRefresh\n\n## Args:\n\n- `refreshToken`\n    - **Type:** string\n    - **Required:** true\n    - **Description:** `refreshToken` can be obtained from `token-create` response. It should be stored safely on the client side along with `accessToken`\n\n## Expected Response Status:\n\nSuccess Response\n\n``` json\n{\n    refreshToken: string\n}\n\n```\n\nFailure Response\n\n``` json\n{\n    message: string,\n    code: string\n    statusCode: number\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "twitter-callback",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}/twitter-callback",
+							"host": [
+								"{{baseUrlRemote}}"
+							],
+							"path": [
+								"twitter-callback"
 							]
 						}
 					},
@@ -67,13 +99,13 @@
 			"name": "privateMethods",
 			"item": [
 				{
-					"name": "search-token",
+					"name": "search-coin",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"The DONS\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"fromBitquery\": false,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -86,54 +118,7 @@
 								"{{baseUrlLocal}}"
 							]
 						},
-						"description": "**Note: this method requires** **`authorization`** **header and it should be the access token retrieved from** **`token-create`** **or** **`token-refresh`** **methods.**"
-					},
-					"response": []
-				},
-				{
-					"name": "search-pair",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"currency\": \"0x4DB5a66E937A9F4473fA95b1cAF1d1E1D62E29EA\",\n        \"limit\": 10,\n        \"offset\": 0,\n        \"fromBitquery\": true\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlLocal}}",
-							"host": [
-								"{{baseUrlLocal}}"
-							]
-						},
-						"description": "**Note: this method requires** **`authorization`** **header and it should be the access token retrieved from** **`token-create`** **or** **`token-refresh`** **methods.**"
-					},
-					"response": []
-				},
-				{
-					"name": "set-alert",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"method\": \"setPairPriceAlert\",\n    \"args\": {\n        \"network\": \"eth\",\n        \"buyCurrency\": \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\",\n        \"sellCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlRemote}}",
-							"host": [
-								"{{baseUrlRemote}}"
-							]
-						}
+						"description": "**Note: this method requires** **`authorization`** **header and it should be the access token retrieved from** **`token-create`** **or** **`token-refresh`** **methods.**\n\n## Method: searchPairs............\n\n## Args:\n\n- `network`:\n    - **Type:** string. `ethereum` or `bsc`\n    - **Required:** true\n- `currency`:\n    - **Type:** string\n    - **Required:** true\n    - **Description:** `currency` should be a coin address\n- `limit`:\n    - **Type:** number\n    - **Required:** false\n    - **Description:** pagination parameter to fetch specific length of records\n- `offset`:\n    - **Type:** number\n    - **Required:** false\n    - **Description:** pagination parameter to skip specific number of records\n- `fromBitquery`:\n    - **Type:** boolean\n    - **Required:** false\n    - **Description:** parameter to indicate whether or not to fetch data from bitquery. it should be used when client doesn't get any records when `fromBitquery` is not set or if it is false."
 					},
 					"response": []
 				},
@@ -144,7 +129,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"address\": \"0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea\"\n    }\n}",
+							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"address\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -152,9 +137,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -175,9 +160,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -190,7 +175,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"addresses\": [\"0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea\"]\n    }\n}",
+							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"addresses\": [\"0x95c91eef65f50570cfc3f269961a00108cf7bf59\", \"0x07814b55b9d71f058d434de0beb40cf8b931d9a2\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -198,9 +183,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -221,9 +206,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -244,9 +229,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -259,7 +244,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"baseCurrency\": \"0x17265d8Ea26a56C38018B8763994386EF5ae13c3\",\n        \"quoteCurrency\": \"0x17265d8Ea26a56C38018B8763994386EF5ae13c3\",\n        \"price\": 500,\n        \"side\": \"up\"\n    }\n}",
+							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 1000\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -267,16 +252,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "remove-alerts",
+					"name": "delete-alert",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -290,9 +275,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -313,9 +298,55 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-alert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"getAlert\",\n    \"args\": {\n        \"alertId\": \"64996ac5cb157918450918e0\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "coin-info",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"address\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -389,12 +420,12 @@
 		},
 		{
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4NjkxMDkxNiwiZXhwIjoxNjg2OTExODE2fQ.9hjMGnbHeZO7T4FSMdXrfGeRN2kIRNndM1WIfJSNMsQ",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4Nzc3ODk5NywiZXhwIjoxNjg3Nzc5ODk3fQ.041VmhjSxdGz-HrfkY1X-BKQzfr7uZCOiueiknPcwvQ",
 			"type": "string"
 		},
 		{
 			"key": "refreshToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODY4OTg0MzMsImV4cCI6MTY4NzUwMzIzM30.2yyZ60mmYVvcBeQHAUXW9exrgwYqmL2JKpCAH4eV5MM",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODc1OTIyOTQsImV4cCI6MTY4ODE5NzA5NH0.2T7IIutUfT0reHjTCeoHER5A19OYKW4jJUPqW358x9s",
 			"type": "string"
 		}
 	]

@@ -58,9 +58,9 @@ Example Body:
 }
 ```
 
-## Public Methods
+## Private Methods
 
-**NOTE: Public methods required auth. So, api call requires `authorization` header and the value of it should be the access token retrieved from `tokenCreate` or `tokenRefresh` methods.**
+**NOTE: Private methods required auth. So, api call requires `authorization` header and the value of it should be the access token retrieved from `tokenCreate` or `tokenRefresh` methods.**
 
 ### Method: `getUser`
 
@@ -164,23 +164,14 @@ Example Body:
 
 Description: Get list of favorite coins of a specific user. Projection can be described in `projection` property as described below. However, projection is not recommended to be used for this method because it can send a huge amount of data. Still, it can be used if the data is necessary
 
-Args:
-
-| Name         | Type   | Description                                                                                                                                                                                                                                                 | Required |
-| ------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `projection` | object | peroperties under `projection` should be used to describe whether to include specified data in response or not all the properties are `boolean`. Properties under projection are as follows: `cgTokenPrice`, `cgTokenInfo`, `cgMarketChart`, `cgMarketData` | No       |
+Args: None
 
 Example Body:
 
 ```json
 {
   "method": "getFavCoin",
-  "args": {
-    "projection": {
-      "cgTokenInfo": true,
-      "cgMarketChart": true
-    }
-  }
+  "args": {}
 }
 ```
 
@@ -196,6 +187,20 @@ Args:
 | ----------- | -------- | ---------------------------------------------------------------------------------------------------------- | -------- |
 | `addresses` | string[] | `addresses` is a array of string and it should include addresses of coins to be removed from favorite list | Yes      |
 
+Example Body:
+
+```json
+{
+  "method": "removeFavCoin",
+  "args": {
+    "addresses": [
+      "0x95c91eef65f50570cfc3f269961a00108cf7bf59",
+      "0x07814b55b9d71f058d434de0beb40cf8b931d9a2"
+    ]
+  }
+}
+```
+
 ---
 
 ### Method: `coinInfo`
@@ -204,10 +209,9 @@ Description: Fetch information for a specific coin. Use projection to get requir
 
 Args:
 
-| Name         | Type   | Description                                                                                                                                                                                                                                                 | Required |
-| ------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `address`    | string | `address` of a specific token                                                                                                                                                                                                                               | Yes      |
-| `projection` | object | peroperties under `projection` should be used to describe whether to include specified data in response or not all the properties are `boolean`. Properties under projection are as follows: `cgTokenPrice`, `cgTokenInfo`, `cgMarketChart`, `cgMarketData` | No       |
+| Name      | Type   | Description                   | Required |
+| --------- | ------ | ----------------------------- | -------- |
+| `address` | string | `address` of a specific token | Yes      |
 
 Example Body:
 
@@ -215,10 +219,96 @@ Example Body:
 {
   "method": "coinInfo",
   "args": {
-    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    "projection": {
-      "cgTokenInfo": true
-    }
+    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+  }
+}
+```
+
+---
+
+### Method: `setAlert`
+
+Description: Used to set alert for a specific coin
+
+Args:
+
+| Name                | Type   | Description                                                                   | Required |
+| ------------------- | ------ | ----------------------------------------------------------------------------- | -------- |
+| `alertBaseCurrency` | string | `address` of a specific token                                                 | Yes      |
+| `alertSide`         | string | Must be either `up` or `down`                                                 | Yes      |
+| `alertPrice`        | number | price to fire alert. **It cannot be less than 0**                             | No       |
+| `alertPercentage`   | number | x percentage up or down from the current price. **It can not be less han 0%** | No       |
+
+Example Body:
+
+```json
+{
+  "method": "setAlert",
+  "args": {
+    "alertBaseCurrency": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "alertSide": "down",
+    "alertPercentage": 1000
+  }
+}
+```
+
+---
+
+### Method: `getAlerts`
+
+Description: Get all the alerts set by the user
+
+Args: None
+
+Example Body:
+
+```json
+{
+  "method": "getAlerts",
+  "args": {}
+}
+```
+
+### Method: `getAlert`
+
+Description: Get a specific alert set by the user
+
+Args:
+
+| Name      | Type   | Description                                                                                | Required |
+| --------- | ------ | ------------------------------------------------------------------------------------------ | -------- |
+| `alertId` | string | `alertId` of a specific alert. It is `_id` from the list of alerts in `getAlerts` response | Yes      |
+
+Example Body:
+
+```json
+{
+  "method": "getAlert",
+  "args": {
+    "alertId": "64996ac5cb157918450918e0"
+  }
+}
+```
+
+---
+
+### Method: `deleteAlert`
+
+Description: Delete a specific alert set by the user
+
+Args:
+
+| Name      | Type   | Description                                                                                | Required |
+| --------- | ------ | ------------------------------------------------------------------------------------------ | -------- |
+| `alertId` | string | `alertId` of a specific alert. It is `_id` from the list of alerts in `getAlerts` response | Yes      |
+
+Example Body:
+
+```json
+{
+  "method": "deleteAlert",
+  "args": {
+    "alertId": "649016060f9683cb26baa76e"
   }
 }
 ```

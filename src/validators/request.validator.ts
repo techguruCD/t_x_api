@@ -90,10 +90,10 @@ const UpdateUserParams = object({
 });
 
 const SetAlertParams = object({
-  baseCurrency: ValidWalletAddress,
-  quoteCurrency: optional(ValidWalletAddress),
-  price: number(),
-  side: enums(['up', 'down']),
+  alertBaseCurrency: ValidWalletAddress,
+  alertSide: enums(['up', 'down']),
+  alertPrice: optional(number()),
+  alertPercentage: optional(number()),
 });
 
 const DeleteAlertParams = object({

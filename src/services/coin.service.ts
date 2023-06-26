@@ -1,8 +1,9 @@
 import cgRequests from '../coingecko/requests';
 import coinsModel from '../models/coins.model';
+import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
 
-async function getCoinInfo(params: { address: string }) {
+async function getCoinInfo(params: { userId: string; address: string }) {
   const projection: Record<string, number | string> = {
     address: 1,
     name: 1,
@@ -15,18 +16,23 @@ async function getCoinInfo(params: { address: string }) {
     updatedAt: 1,
   };
 
-  const coin = await coinsModel
-    .findOne(
-      { address: params.address },
-      {
-        ...projection,
-        cgTokenPrice: 1,
-        cgTokenInfo: 1,
-        cgMarketChart: 1,
-        cgMarketData: 1,
-      }
-    )
-    .lean();
+  const [coin, isFav] = await Promise.all([
+    coinsModel
+      .findOne(
+        { address: params.address },
+        {
+          ...projection,
+          cgTokenPrice: 1,
+          cgTokenInfo: 1,
+          cgMarketChart: 1,
+          cgMarketData: 1,
+        }
+      )
+      .lean(),
+    favCoinsModel
+      .exists({ userId: params.userId, address: params.address })
+      .lean(),
+  ]);
 
   if (!coin) {
     throw new ExpressError('CSE00001', 'coin not found', 404);
@@ -85,7 +91,20 @@ async function getCoinInfo(params: { address: string }) {
     throw new ExpressError('CSE00002', 'coin not found', 404);
   }
 
-  return updatedCoin;
+  const response: Record<string, any> = {
+    ...updatedCoin.toObject(),
+  };
+
+  response['isFav'] = Boolean(isFav);
+
+  if (response['chartData']) {
+    response['chartData'] = response['chartData'].map((data: number[]) => ({
+      key: data[0],
+      value: data[1],
+    }));
+  }
+
+  return response;
 }
 
 const coinService = {

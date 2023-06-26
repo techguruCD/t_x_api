@@ -90,7 +90,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     }
 
     if (body.method === 'coinInfo') {
-      data = await coinService.getCoinInfo(body.args);
+      data = await coinService.getCoinInfo({
+        ...body.args,
+        userId: _req.user.userId,
+      });
     }
 
     return _res.status(200).json(data);

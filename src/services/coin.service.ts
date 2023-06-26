@@ -1,3 +1,4 @@
+import moment from 'moment';
 import cgRequests from '../coingecko/requests';
 import coinsModel from '../models/coins.model';
 import favCoinsModel from '../models/favCoins.model';
@@ -99,7 +100,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
 
   if (response['chartData']) {
     response['chartData'] = response['chartData'].map((data: number[]) => ({
-      key: data[0],
+      key: moment.utc(data[0]).format('DD-MM-YYYY h:mm A'),
       value: data[1],
     }));
   }

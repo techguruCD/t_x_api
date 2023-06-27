@@ -78,6 +78,8 @@ const SetPriceAlertParams = object({
 const TokenCreateParams = object({
   userId: string(),
   deviceId: string(),
+  emailId: optional(string()),
+  name: optional(string()),
 });
 
 const TokenRefreshParams = object({
@@ -85,6 +87,7 @@ const TokenRefreshParams = object({
 });
 
 const UpdateUserParams = object({
+  name: optional(string()),
   twitterUsername: optional(ValidTwitterUsername),
   discordUsername: optional(ValidDiscordUsername),
   walletAddress: optional(ValidWalletAddress),

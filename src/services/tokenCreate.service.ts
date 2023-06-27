@@ -7,6 +7,7 @@ import jwtUtils from '../utils/jwt.utils';
 async function tokenCreateService(params: {
   userId: string;
   deviceId: string;
+  emailId?: string;
 }) {
   try {
     const [user, device] = await Promise.all([
@@ -17,7 +18,13 @@ async function tokenCreateService(params: {
     ]);
 
     if (!user) {
-      await new usersModel({ userId: params.userId }).save();
+      if (!params.emailId) {
+        throw new ExpressError('TSC00001', 'emailId is missing', 400);
+      }
+      await new usersModel({
+        userId: params.userId,
+        emailId: params.emailId,
+      }).save();
     }
 
     const accessToken = jwtUtils.generateToken({

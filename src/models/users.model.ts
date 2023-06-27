@@ -8,6 +8,11 @@ const userSchema = new Schema(
       unique: true,
       index: true,
     },
+    name: String,
+    emailId: {
+      type: String,
+      required: true,
+    },
     twitterUsername: {
       type: String,
       unique: true,

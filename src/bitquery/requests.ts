@@ -83,7 +83,27 @@ async function searchPairs(params: {
   }
 }
 
-export default {
+async function searchTokenPriceInUSD(params: {
+  network: 'ethereum' | 'bsc';
+  address: string;
+}) {
+  const query = queries.searchTokenPriceInUSD(params);
+  const postData = JSON.stringify({ query, variables: {} });
+  const data = await bitqueryAxios.post('/', postData);
+
+  const price = data.data.data?.ethereum?.dexTrades;
+
+  if (!price || !Array.isArray(price) || price.length < 1) {
+    return null;
+  }
+
+  return Number(price[0].priceInUSD);
+}
+
+const bitqueryRequests = {
   searchToken,
   searchPairs,
+  searchTokenPriceInUSD,
 };
+
+export default bitqueryRequests;

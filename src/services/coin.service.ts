@@ -3,12 +3,16 @@ import cgRequests from '../coingecko/requests';
 import coinsModel from '../models/coins.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
+import bitqueryRequests from '../bitquery/requests';
 
 async function getCoinInfo(params: { userId: string; address: string }) {
   const projection: Record<string, number | string> = {
     address: 1,
     name: 1,
     assetPlatform: 1,
+    network: 1,
+    symbol: 1,
+    decimals: 1,
     image: '$cgTokenInfo.image.small',
     price: '$cgTokenInfo.market_data.current_price.usd',
     priceChangeInPercentage:
@@ -43,7 +47,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
 
   if (!responseData.cgTokenPrice) {
     const cgTokenPrice = await cgRequests.tokenPrice({
-      id: coin.assetPlatform,
+      id: coin.network === 'ethereum' ? 'ethereum' : 'binance-smart-chain',
       contract_addresses: [coin.address],
       vs_currencies: ['usd'],
       include_24hr_change: true,
@@ -55,16 +59,32 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   }
 
   if (!responseData.cgTokenInfo) {
-    const cgTokenInfo = await cgRequests.tokenInfoFromAddress({
-      id: coin.assetPlatform,
-      contract_address: coin.address,
-    });
-    responseData.cgTokenInfo = cgTokenInfo;
+    try {
+      const cgTokenInfo = await cgRequests.tokenInfoFromAddress({
+        id: coin.network === 'ethereum' ? 'ethereum' : 'binance-smart-chain',
+        contract_address: coin.address,
+      });
+      responseData.cgTokenInfo = cgTokenInfo;
+    } catch (error) {
+      if (error instanceof ExpressError && error.code === 'CGE00003') {
+        const priceFromBitquery = await bitqueryRequests.searchTokenPriceInUSD({
+          address: params.address,
+          network: coin.network as any,
+        });
+        if (responseData.cgTokenPrice) {
+          delete responseData.cgTokenPrice;
+        }
+        return {
+          ...responseData,
+          price: priceFromBitquery,
+        };
+      }
+    }
   }
 
   if (!responseData.cgMarketChart) {
     const cgMarketChart = await cgRequests.marketChartFromAddress({
-      id: coin.assetPlatform,
+      id: coin.network === 'ethereum' ? 'ethereum' : 'binance-smart-chain',
       contract_address: coin.address,
       days: '30',
       vs_currency: 'usd',

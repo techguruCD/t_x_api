@@ -177,9 +177,48 @@ function searchTokenPriceInUSD(params: {
   return query;
 }
 
+function searchPairByAddress(params: {
+  network: 'ethereum' | 'bsc';
+  address: string;
+}) {
+  const query = `
+  {
+    EVM(network: ${params.address}, dataset: combined) {
+      sell: DEXTrades(
+        limit: {count: 1}
+        where: {Trade: {Dex: {SmartContract: {is: "${params.address}"}}}}
+      ) {
+        Trade {
+          Sell {
+            Currency {
+              Symbol
+              Name
+              SmartContract
+            }
+            Price
+          }
+          Buy {
+            Currency {
+              Symbol
+              Name
+              SmartContract
+            }
+            Price
+          }
+        }
+      }
+    }
+  }
+
+  `;
+
+  return query;
+}
+
 export default {
   searchTokenByString,
   searchPairsByCurrency,
   priceSubscription,
   searchTokenPriceInUSD,
+  searchPairByAddress,
 };

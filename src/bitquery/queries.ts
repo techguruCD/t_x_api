@@ -130,8 +130,56 @@ function priceSubscription(params: {
   return query;
 }
 
+function searchTokenPriceInUSD(params: {
+  network: 'ethereum' | 'bsc';
+  address: string;
+}) {
+  let quoteCurrency = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'; // WETH
+
+  if (params.network === 'bsc') {
+    quoteCurrency = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'; // WBNB
+  }
+
+  const query = `
+  {
+    ethereum(network: ${params.network}) {
+      dexTrades(
+        baseCurrency: {is: "${params.address}"}
+        quoteCurrency: {is: "${quoteCurrency}"}
+        options: {desc: ["block.height", "transaction.index"], limit: 1}
+      ) {
+        block {
+          height
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+        }
+        transaction {
+          index
+        }
+        baseCurrency {
+          symbol
+          address
+        }
+        baseAmount
+        quoteAmount
+        quoteAmountInUSD: quoteAmount(in:USD)
+        priceInUSD: expression(get: "quoteAmountInUSD / baseAmount")
+        quoteCurrency {
+          symbol
+          address
+        }
+        quotePrice
+      }
+    }
+  }
+  `;
+  return query;
+}
+
 export default {
   searchTokenByString,
   searchPairsByCurrency,
   priceSubscription,
+  searchTokenPriceInUSD,
 };

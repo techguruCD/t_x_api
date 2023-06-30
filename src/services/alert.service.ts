@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import alertModel from '../models/alert.model';
 import coinsModel from '../models/coins.model';
 import { ExpressError } from '../utils/error.utils';
+import favCoinsModel from '../models/favCoins.model';
 
 async function setAlert(params: {
   userId: string;
@@ -134,6 +135,17 @@ async function getAlert(params: { userId: string; alertId: string }) {
       },
     },
   ]);
+
+  if (alert.length === 1) {
+    const isFav = await favCoinsModel.exists({
+      userId: params.userId,
+      address: alert[0].alertBaseCurrency,
+    });
+
+    if (isFav) {
+      alert[0].isFav = Boolean(isFav);
+    }
+  }
   return alert;
 }
 

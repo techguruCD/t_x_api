@@ -39,6 +39,7 @@ export function initEnv() {
     port: process.env['PORT'] ?? 5001,
     trustProxy: Boolean(process.env['PROXY']) ?? false,
     bitqueryEndpoint: 'https://graphql.bitquery.io',
+    bitqueryStreamingEndpoint: 'https://streaming.bitquery.io/graphql',
     bitqueryWs: 'wss://streaming.bitquery.io/graphql',
     bitqueryApiKey: process.env['BITQUERY_API_KEY'],
     accessJwtSecret: process.env['ACCESS_JWT_SECRET'],

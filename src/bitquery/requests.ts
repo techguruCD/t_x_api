@@ -1,5 +1,6 @@
 import { isAxiosError } from 'axios';
 import bitqueryAxios from './bitqueryAxios';
+import bitqueryStreamingAxios from './bitqueryStreamingAxios';
 import queries from './queries';
 
 async function searchToken(params: {
@@ -100,10 +101,36 @@ async function searchTokenPriceInUSD(params: {
   return Number(price[0].priceInUSD);
 }
 
+async function searchPairByAddress(params: {
+  network: 'ethereum' | 'bsc';
+  address: string;
+}) {
+  const query = queries.searchPairByAddress(params);
+  const postData = JSON.stringify({ query, variables: {} });
+  const data = await bitqueryStreamingAxios.post('/', postData);
+
+  const dexTrades = data.data?.data?.EVM.DEXTrades;
+
+  if (!dexTrades || !Array.isArray(dexTrades) || dexTrades.length < 1) {
+    return [];
+  }
+
+  const trade = dexTrades[0];
+
+  const pairData = {
+    address: params.address,
+    name: `${trade.Trade.Sell.Currency.Symbol}/${trade.Trade.Buy.Currency.Symbol}`,
+    price: `${trade.Trade.Sell.Price}/${trade.Trade.Buy.Price}`,
+  };
+
+  return [pairData];
+}
+
 const bitqueryRequests = {
   searchToken,
   searchPairs,
   searchTokenPriceInUSD,
+  searchPairByAddress,
 };
 
 export default bitqueryRequests;

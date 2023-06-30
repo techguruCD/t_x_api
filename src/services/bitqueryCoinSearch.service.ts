@@ -33,6 +33,11 @@ async function coinSearchService(params: {
   const offset = params.offset ?? 0;
   const limit = params.limit ?? 10;
 
+  const pair = await bitqueryRequests.searchPairByAddress({
+    network: params.network,
+    address: params.string,
+  });
+
   if (fromBitquery) {
     const coinsFromBitquery = await bitqueryRequests.searchToken({
       limit,
@@ -51,6 +56,7 @@ async function coinSearchService(params: {
       };
     });
     await upsertCoins(coins);
+    coins.push(...pair);
     return coins;
   }
 
@@ -67,6 +73,8 @@ async function coinSearchService(params: {
     .skip(offset)
     .limit(limit)
     .lean();
+
+  coinsInDb.push(...(pair as any));
 
   return coinsInDb;
 }

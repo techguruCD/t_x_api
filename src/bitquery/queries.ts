@@ -181,10 +181,9 @@ function searchPairByAddress(params: {
   network: 'ethereum' | 'bsc';
   address: string;
 }) {
-  const query = `
-  {
-    EVM(network: ${params.address}, dataset: combined) {
-      sell: DEXTrades(
+  const query = `{
+    EVM(network: ${params.network}, dataset: combined) {
+      DEXTrades(
         limit: {count: 1}
         where: {Trade: {Dex: {SmartContract: {is: "${params.address}"}}}}
       ) {

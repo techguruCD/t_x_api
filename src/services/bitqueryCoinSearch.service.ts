@@ -21,7 +21,7 @@ async function coinSearchService(params: {
   offset?: number;
   fromBitquery: boolean;
 }) {
-  const { fromBitquery, network, string } = params;
+  const { network, string } = params;
   const regexPattern = new RegExp(params.string, 'i');
   const searchQuery = {
     network: params.network,
@@ -45,30 +45,6 @@ async function coinSearchService(params: {
     console.log(`no pair found for address ${params.string}`);
   }
 
-  if (fromBitquery) {
-    const coinsFromBitquery = await bitqueryRequests.searchToken({
-      limit,
-      network,
-      offset,
-      string,
-    });
-    const coins = coinsFromBitquery.map((coin: any) => {
-      if (coin.tokenType) {
-        delete coin.tokenType;
-      }
-      return {
-        ...coin,
-        assetPlatform:
-          coin.network === 'bsc' ? 'binance-smart-chain' : 'ethereum',
-      };
-    });
-    await upsertCoins(coins);
-    if (pair) {
-      coins.push(pair);
-    }
-    return coins;
-  }
-
   const coinsInDb = await coinsModel
     .find(searchQuery, {
       network: 1,
@@ -85,6 +61,27 @@ async function coinSearchService(params: {
 
   if (pair) {
     coinsInDb.push(pair as any);
+  }
+
+  if (coinsInDb.length < 1) {
+    const coinsFromBitquery = await bitqueryRequests.searchToken({
+      limit,
+      network,
+      offset,
+      string,
+    });
+    const filteredCoins = coinsFromBitquery.map((coin: any) => {
+      return {
+        ...coinsFromBitquery,
+        assetPlatform:
+          coin.network === 'bsc' ? 'binance-smart-chain' : 'ethereum',
+      };
+    });
+    await upsertCoins(filteredCoins);
+    if (pair) {
+      filteredCoins.push(pair);
+    }
+    return filteredCoins;
   }
 
   return coinsInDb;

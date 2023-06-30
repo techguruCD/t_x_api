@@ -24,8 +24,8 @@ async function getPool(params: { network: 'bsc' | 'eth'; address: string }) {
       address: data.attributes.address,
       name: `${included[0].attributes.symbol}/${included[1].attributes.symbol}`,
       price: data.attributes.base_token_price_native_currency,
-      base: included[0].attributes,
-      quote: included[1].attributes,
+      // base: included[0].attributes,
+      // quote: included[1].attributes,
     };
   } catch (error: any) {
     if (isAxiosError(error) && error.response) {

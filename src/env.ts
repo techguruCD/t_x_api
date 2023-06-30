@@ -47,6 +47,7 @@ export function initEnv() {
     cryptoSecret: process.env['CRYPTO_SECRET'],
     cgBaseUrl: 'https://pro-api.coingecko.com/api/v3',
     cgApiKey: process.env['CG_API_KEY'],
+    geckoTerminalBaseUrl: 'https://api.geckoterminal.com/api/v2',
   };
 
   if (_env.debug) {

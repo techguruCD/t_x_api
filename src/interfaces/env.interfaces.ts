@@ -13,4 +13,5 @@ export interface IEnv {
   cryptoSecret: string;
   cgBaseUrl: string;
   cgApiKey: string;
+  geckoTerminalBaseUrl: string;
 }

@@ -1,5 +1,6 @@
 import coinsModel from '../models/coins.model';
 import bitqueryRequests from '../bitquery/requests';
+import geckoRequests from '../geckoTerminal/requests';
 
 async function upsertCoins(coins: any[]) {
   const operations = coins.map((coin) => ({
@@ -33,10 +34,16 @@ async function coinSearchService(params: {
   const offset = params.offset ?? 0;
   const limit = params.limit ?? 10;
 
-  const pair = await bitqueryRequests.searchPairByAddress({
-    network: params.network,
-    address: params.string,
-  });
+  let pair = null;
+
+  try {
+    pair = await geckoRequests.getPool({
+      network: params.network === 'ethereum' ? 'eth' : 'bsc',
+      address: params.string,
+    });
+  } catch (error) {
+    console.log(`no pair found for address ${params.string}`);
+  }
 
   if (fromBitquery) {
     const coinsFromBitquery = await bitqueryRequests.searchToken({
@@ -56,7 +63,9 @@ async function coinSearchService(params: {
       };
     });
     await upsertCoins(coins);
-    coins.push(...pair);
+    if (pair) {
+      coins.push(pair);
+    }
     return coins;
   }
 
@@ -74,7 +83,9 @@ async function coinSearchService(params: {
     .limit(limit)
     .lean();
 
-  coinsInDb.push(...(pair as any));
+  if (pair) {
+    coinsInDb.push(pair as any);
+  }
 
   return coinsInDb;
 }

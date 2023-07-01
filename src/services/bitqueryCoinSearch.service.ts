@@ -60,7 +60,7 @@ async function coinSearchService(params: {
     .lean();
 
   if (pair) {
-    coinsInDb.push(pair as any);
+    coinsInDb.push({ ...pair, pair: true } as any);
   }
 
   if (coinsInDb.length < 1) {
@@ -79,7 +79,7 @@ async function coinSearchService(params: {
     });
     await upsertCoins(filteredCoins);
     if (pair) {
-      filteredCoins.push(pair);
+      filteredCoins.push({ ...pair, pair: true });
     }
     return filteredCoins;
   }

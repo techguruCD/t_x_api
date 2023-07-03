@@ -143,7 +143,9 @@ async function getAlert(params: { userId: string; alertId: string }) {
     });
 
     if (isFav) {
-      alert[0].isFav = Boolean(isFav);
+      alert[0].isFav = true;
+    } else {
+      alert[0].isFav = false;
     }
   }
   return alert;

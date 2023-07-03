@@ -8,6 +8,8 @@ async function tokenCreateService(params: {
   userId: string;
   deviceId: string;
   emailId?: string;
+  username?: string;
+  photoUrl?: string;
 }) {
   try {
     const [user, device] = await Promise.all([
@@ -21,9 +23,14 @@ async function tokenCreateService(params: {
       if (!params.emailId) {
         throw new ExpressError('TSC00001', 'emailId is missing', 400);
       }
+      if (!params.username) {
+        throw new ExpressError('TSC00002', 'userId is missing', 400);
+      }
       await new usersModel({
         userId: params.userId,
         emailId: params.emailId,
+        username: params.username,
+        photoUrl: params.photoUrl ?? null,
       }).save();
     }
 

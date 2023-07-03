@@ -79,7 +79,8 @@ const TokenCreateParams = object({
   userId: string(),
   deviceId: string(),
   emailId: optional(string()),
-  name: optional(string()),
+  username: optional(string()),
+  photoUrl: optional(string()),
 });
 
 const TokenRefreshParams = object({
@@ -87,7 +88,6 @@ const TokenRefreshParams = object({
 });
 
 const UpdateUserParams = object({
-  name: optional(string()),
   twitterUsername: optional(ValidTwitterUsername),
   discordUsername: optional(ValidDiscordUsername),
   walletAddress: optional(ValidWalletAddress),

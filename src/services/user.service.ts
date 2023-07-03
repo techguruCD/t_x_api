@@ -2,16 +2,11 @@ import usersModel from '../models/users.model';
 
 async function updateUserService(params: {
   userId: string;
-  name?: string;
   twitterUsername?: string;
   discordUsername?: string;
   walletAddress?: string;
 }) {
   const updateObject: Record<string, string> = {};
-
-  if (params.name) {
-    updateObject['name'] = params.name;
-  }
 
   if (params.twitterUsername) {
     updateObject['twitterUsername'] = params.twitterUsername;

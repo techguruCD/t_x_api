@@ -23,6 +23,8 @@ Args:
 | `userId`   | string | `userId` should be email id if provided by the specific social login provider | Yes      |
 | `deviceId` | string | `deviceId` should be provided by the FCM which is specific per device         | Yes      |
 | `emailId`  | string | `emailId` should be provided by the respective social login provider.         | Yes      |
+| `username` | string | `username` should be provided by the respective social login provider.        | Yes      |
+| `photoUrl` | string | `photoUrl` should be provided by the respective social login provider.        | No       |
 
 Example Body:
 
@@ -31,7 +33,10 @@ Example Body:
   "method": "tokenCreate",
   "args": {
     "userId": "testUser",
-    "deviceId": "testDevice"
+    "deviceId": "testDevice",
+    "emailId": "elon@musk.com",
+    "username": "elonmusk",
+    "photoUrl": "https://twitter.com/doge.png"
   }
 }
 ```
@@ -88,7 +93,6 @@ Args:
 
 | Name              | Type   | Description                               | Required |
 | ----------------- | ------ | ----------------------------------------- | -------- |
-| `name`            | string | `name` of a user                          | No       |
 | `twitterUsername` | string | `twitterUsername` of a user (without `@`) | No       |
 | `discordUsername` | string | `discordusername` of a user               | No       |
 | `walletAddress`   | string | `walletAddress` of a user                 | No       |

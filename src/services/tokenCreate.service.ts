@@ -23,7 +23,7 @@ async function tokenCreateService(params: {
       throw new ExpressError('TSC00001', 'emailId is missing', 400);
     }
     if (!params.username) {
-      throw new ExpressError('TSC00002', 'userId is missing', 400);
+      throw new ExpressError('TSC00002', 'username is missing', 400);
     }
 
     if (!user) {
@@ -75,9 +75,9 @@ async function tokenCreateService(params: {
     };
   } catch (error: any) {
     throw new ExpressError(
-      'EIS00001',
+      error.code ?? 'EIS00001',
       error.message ?? 'Something Went Wrong',
-      500
+      error.statusCode ?? 500
     );
   }
 }

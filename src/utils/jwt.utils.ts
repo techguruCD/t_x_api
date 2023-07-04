@@ -8,7 +8,7 @@ function generateToken(params: {
   tokenType: 'ACCESS' | 'REFRESH';
 }) {
   if (params.tokenType === 'ACCESS') {
-    return jwt.sign(params, env().accessJwtSecret, { expiresIn: '15m' });
+    return jwt.sign(params, env().accessJwtSecret, { expiresIn: '7d' });
   }
   return jwt.sign(params, env().refreshJwtSecret, { expiresIn: '7d' });
 }

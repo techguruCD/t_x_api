@@ -36,12 +36,16 @@ async function tokenCreateService(params: {
     }
 
     if (user) {
-      await usersModel.findOneAndUpdate({
-        userId: params.userId,
-        emailId: params.emailId,
-        username: params.username,
-        photoUrl: params.photoUrl ?? null,
-      });
+      await usersModel.findOneAndUpdate(
+        { userId: params.userId },
+        {
+          $set: {
+            emailId: params.emailId,
+            username: params.username,
+            photoUrl: params.photoUrl ?? null,
+          },
+        }
+      );
     }
 
     const accessToken = jwtUtils.generateToken({

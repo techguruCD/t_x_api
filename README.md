@@ -118,13 +118,12 @@ Description: Search tokens by address, name or symbol
 
 Args:
 
-| Name           | Type    | Description                                                                                                                                                             | Required |
-| -------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `network`      | string  | `network` should be either `ethereum` or `bsc`                                                                                                                          | Yes      |
-| `string`       | string  | `string` can be either coin name, symbol or address                                                                                                                     | Yes      |
-| `limit`        | number  | pagination parameter to fetch specific length of records                                                                                                                | No       |
-| `offset`       | number  | pagination parameter to skip specific number of records                                                                                                                 | No       |
-| `fromBitquery` | boolean | parameter to indicate whether or not to fetch data from bitquery. it should be used when client doesn't get any records when fromBitquery is not set or if it is false. | No       |
+| Name      | Type   | Description                                              | Required |
+| --------- | ------ | -------------------------------------------------------- | -------- |
+| `network` | string | `network` should be either `ethereum` or `bsc`           | Yes      |
+| `string`  | string | `string` can be either coin name, symbol or address      | Yes      |
+| `limit`   | number | pagination parameter to fetch specific length of records | No       |
+| `offset`  | number | pagination parameter to skip specific number of records  | No       |
 
 Example Body:
 

@@ -72,7 +72,7 @@ async function coinSearchService(params: {
     });
     const filteredCoins = coinsFromBitquery.map((coin: any) => {
       return {
-        ...coinsFromBitquery,
+        ...coin,
         assetPlatform:
           coin.network === 'bsc' ? 'binance-smart-chain' : 'ethereum',
       };

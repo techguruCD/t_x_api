@@ -39,7 +39,6 @@ const SearchCoinParams = object({
   string: string(),
   limit: optional(number()),
   offset: optional(number()),
-  fromBitquery: boolean(),
 });
 
 const SearchPairParams = object({

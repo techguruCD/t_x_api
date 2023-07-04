@@ -19,19 +19,29 @@ async function tokenCreateService(params: {
         .lean(),
     ]);
 
+    if (!params.emailId) {
+      throw new ExpressError('TSC00001', 'emailId is missing', 400);
+    }
+    if (!params.username) {
+      throw new ExpressError('TSC00002', 'userId is missing', 400);
+    }
+
     if (!user) {
-      if (!params.emailId) {
-        throw new ExpressError('TSC00001', 'emailId is missing', 400);
-      }
-      if (!params.username) {
-        throw new ExpressError('TSC00002', 'userId is missing', 400);
-      }
       await new usersModel({
         userId: params.userId,
         emailId: params.emailId,
         username: params.username,
         photoUrl: params.photoUrl ?? null,
       }).save();
+    }
+
+    if (user) {
+      await usersModel.findOneAndUpdate({
+        userId: params.userId,
+        emailId: params.emailId,
+        username: params.username,
+        photoUrl: params.photoUrl ?? null,
+      });
     }
 
     const accessToken = jwtUtils.generateToken({

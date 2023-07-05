@@ -16,8 +16,10 @@ async function publicController(
     if (!is(body, RequestValidator)) {
       const [error] = validate(body, RequestValidator);
       if (!error) {
+        console.log(`1`);
         throw new ExpressError('E00002', 'Unexpected condition!', 400);
       }
+      console.log(`2`, error);
       throw new ExpressError('E00003', error.message, 400);
     }
 
@@ -33,6 +35,7 @@ async function publicController(
 
     return _res.status(200).json(data);
   } catch (error) {
+    console.log(`3`, error);
     _next(error);
     return;
   }

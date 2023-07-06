@@ -76,6 +76,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
         }
         return {
           ...responseData,
+          isFav: Boolean(isFav),
           price: priceFromBitquery,
         };
       }
@@ -117,6 +118,8 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   };
 
   response['isFav'] = Boolean(isFav);
+
+  console.log(`>>>`, response);
 
   if (response['chartData']) {
     response['chartData'] = response['chartData'].map((data: number[]) => ({

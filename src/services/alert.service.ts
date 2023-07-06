@@ -16,16 +16,20 @@ async function setAlert(params: {
     alertBaseCurrency: params.alertBaseCurrency,
     alertSide: params.alertSide,
   };
+  console.log(1, newAlertData);
 
   if (params.alertPrice) {
     if (params.alertPrice < 0) {
+      console.log(2);
       throw new ExpressError('AS00001', 'Alert cannot be negative', 400);
     }
+    console.log(3);
     newAlertData['alertPrice'] = params.alertPrice;
   }
 
   if (params.alertPercentage) {
     if (params.alertPercentage > 100 || params.alertPercentage < 0) {
+      console.log(4, newAlertData);
       throw new ExpressError(
         'AS00002',
         'Percentage should be between 0 & 100',
@@ -36,6 +40,7 @@ async function setAlert(params: {
     const coin = await coinsModel
       .findOne({ address: params.alertBaseCurrency })
       .lean();
+
     if (coin) {
       newAlertData['alertPercentage'] = params.alertPercentage;
       const priceInDb = coin.cgTokenInfo.market_data.current_price.usd;
@@ -50,6 +55,7 @@ async function setAlert(params: {
   }
 
   const newAlert = await new alertModel(newAlertData).save();
+  console.log(5, newAlert);
   return newAlert.toObject();
 }
 

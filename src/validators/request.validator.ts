@@ -53,17 +53,6 @@ const SetFavCoinParams = object({
   address: string(),
 });
 
-const GetFavCoinParams = object({
-  projection: optional(
-    object({
-      cgTokenPrice: optional(boolean()),
-      cgTokenInfo: optional(boolean()),
-      cgMarketChart: optional(boolean()),
-      cgMarketData: optional(boolean()),
-    })
-  ),
-});
-
 const RemoveFavCoinParams = object({
   addresses: array(string()),
 });
@@ -132,10 +121,6 @@ const RequestValidator = refine(
     }
 
     if (method === 'setFavCoin' && !is(args, SetFavCoinParams)) {
-      return msg;
-    }
-
-    if (method === 'getFavCoin' && !is(args, GetFavCoinParams)) {
       return msg;
     }
 

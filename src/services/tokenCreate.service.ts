@@ -7,6 +7,7 @@ import jwtUtils from '../utils/jwt.utils';
 async function tokenCreateService(params: {
   userId: string;
   deviceId: string;
+  oldDeviceId?: string;
   emailId?: string;
   username?: string;
   photoUrl?: string;
@@ -15,16 +16,14 @@ async function tokenCreateService(params: {
     const [user, device] = await Promise.all([
       usersModel.findOne({ userId: params.userId }).lean(),
       devicesModel
-        .findOne({ userId: params.userId, deviceId: params.deviceId })
+        .findOne({ userId: params.userId, deviceId: params.oldDeviceId })
         .lean(),
     ]);
 
     if (!params.emailId) {
-      console.log(`2.1`);
       throw new ExpressError('TSC00001', 'emailId is missing', 400);
     }
     if (!params.username) {
-      console.log(`2.2`);
       throw new ExpressError('TSC00002', 'username is missing', 400);
     }
 
@@ -64,8 +63,13 @@ async function tokenCreateService(params: {
 
     if (device) {
       await devicesModel.updateOne(
-        { userId: params.userId, deviceId: params.deviceId },
-        { $set: { refreshToken: btoa(JSON.stringify(encryptedRefreshToken)) } }
+        { userId: params.userId, deviceId: params.oldDeviceId },
+        {
+          $set: {
+            deviceId: params.deviceId,
+            refreshToken: btoa(JSON.stringify(encryptedRefreshToken)),
+          },
+        }
       );
     } else {
       await new devicesModel({
@@ -80,7 +84,6 @@ async function tokenCreateService(params: {
       refreshToken,
     };
   } catch (error: any) {
-    console.log(`2.3`, error);
     throw new ExpressError(
       error.code ?? 'EIS00001',
       error.message ?? 'Something Went Wrong',

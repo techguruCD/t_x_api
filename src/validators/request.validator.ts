@@ -77,6 +77,7 @@ const SetPriceAlertParams = object({
 const TokenCreateParams = object({
   userId: string(),
   deviceId: string(),
+  oldDeviceId: optional(string()),
   emailId: optional(string()),
   username: optional(string()),
   photoUrl: optional(string()),

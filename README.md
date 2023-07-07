@@ -18,13 +18,14 @@ Description: Create a new token for a user for specific device.
 
 Args:
 
-| Name       | Type   | Description                                                                   | Required |
-| ---------- | ------ | ----------------------------------------------------------------------------- | -------- |
-| `userId`   | string | `userId` should be email id if provided by the specific social login provider | Yes      |
-| `deviceId` | string | `deviceId` should be provided by the FCM which is specific per device         | Yes      |
-| `emailId`  | string | `emailId` should be provided by the respective social login provider.         | Yes      |
-| `username` | string | `username` should be provided by the respective social login provider.        | Yes      |
-| `photoUrl` | string | `photoUrl` should be provided by the respective social login provider.        | No       |
+| Name          | Type   | Description                                                                                                                                                                                                                                                    | Required |
+| ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `userId`      | string | `userId` should be email id if provided by the specific social login provider                                                                                                                                                                                  | Yes      |
+| `deviceId`    | string | `deviceId` should be provided by the FCM which is specific per device                                                                                                                                                                                          | Yes      |
+| `emailId`     | string | `emailId` should be provided by the respective social login provider.                                                                                                                                                                                          | Yes      |
+| `username`    | string | `username` should be provided by the respective social login provider.                                                                                                                                                                                         | Yes      |
+| `photoUrl`    | string | `photoUrl` should be provided by the respective social login provider.                                                                                                                                                                                         | No       |
+| `oldDeviceId` | string | `oldDeviceId` should be the previous device id which must be stored on user's device to refresh the device registration token on the backend side. **Not required for the new users but required when generating a new access and refresh token for the user** | No       |
 
 Example Body:
 
@@ -36,7 +37,8 @@ Example Body:
     "deviceId": "testDevice",
     "emailId": "elon@musk.com",
     "username": "elonmusk",
-    "photoUrl": "https://twitter.com/doge.png"
+    "photoUrl": "https://twitter.com/doge.png",
+    "oldDeviceId": "testDeviceToken"
   }
 }
 ```
@@ -236,12 +238,12 @@ Description: Used to set alert for a specific coin
 
 Args:
 
-| Name                | Type   | Description                                                                   | Required |
-| ------------------- | ------ | ----------------------------------------------------------------------------- | -------- |
-| `alertBaseCurrency` | string | `address` of a specific token                                                 | Yes      |
-| `alertSide`         | string | Must be either `up` or `down`                                                 | Yes      |
-| `alertPrice`        | number | price to fire alert. **It cannot be less than 0**                             | No       |
-| `alertPercentage`   | number | x percentage up or down from the current price. **It can not be less han 0%** | No       |
+| Name                | Type   | Description                                                                                                                        | Required |
+| ------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `alertBaseCurrency` | string | `address` of a specific token                                                                                                      | Yes      |
+| `alertSide`         | string | Must be either `up` or `down`                                                                                                      | Yes      |
+| `alertPrice`        | number | price to fire alert. **It cannot be less than 0** alertPrice is required, if this is not provided                                  | No       |
+| `alertPercentage`   | number | x percentage up or down from the current price. **It can not be less han 0%** alertPercentage is required, if this is not provided | No       |
 
 Example Body:
 
@@ -251,7 +253,8 @@ Example Body:
   "args": {
     "alertBaseCurrency": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
     "alertSide": "down",
-    "alertPercentage": 1000
+    "alertPercentage": 10, // optional, alertPrice is required, if this is not provided
+    "alertPrice": 100 // optional, alertPercentage is required, if this is not provided
   }
 }
 ```

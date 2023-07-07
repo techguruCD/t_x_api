@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"testUser\",\n        \"deviceId\": \"testDevice\",\n        \"emailId\": \"testUser@gmail.com\"\n    }\n}",
+							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"testUserId\",\n        \"username\": \"testUsername\",\n        \"oldDeviceId\": \"testDeviceToken\",\n        \"deviceId\": \"newTestDeviceToken\",\n        \"emailId\": \"test@device.com\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -51,9 +51,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}/public",
+							"raw": "{{baseUrlRemote}}/public",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							],
 							"path": [
 								"public"
@@ -104,31 +104,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"btc\",\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlRemote}}",
-							"host": [
-								"{{baseUrlRemote}}"
-							]
-						},
-						"description": "**Note: this method requires** **`authorization`** **header and it should be the access token retrieved from** **`token-create`** **or** **`token-refresh`** **methods.**\n\n## Method: searchPairs............\n\n## Args:\n\n- `network`:\n    - **Type:** string. `ethereum` or `bsc`\n    - **Required:** true\n- `currency`:\n    - **Type:** string\n    - **Required:** true\n    - **Description:** `currency` should be a coin address\n- `limit`:\n    - **Type:** number\n    - **Required:** false\n    - **Description:** pagination parameter to fetch specific length of records\n- `offset`:\n    - **Type:** number\n    - **Required:** false\n    - **Description:** pagination parameter to skip specific number of records\n- `fromBitquery`:\n    - **Type:** boolean\n    - **Required:** false\n    - **Description:** parameter to indicate whether or not to fetch data from bitquery. it should be used when client doesn't get any records when `fromBitquery` is not set or if it is false."
-					},
-					"response": []
-				},
-				{
-					"name": "search-pair",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchPairs\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"currency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"fromBitquery\": true,\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -221,7 +197,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"updateUser\",\n    \"args\": {\n        \"name\": \"Updated User\"\n    }\n}",
+							"raw": "{\n    \"method\": \"updateUser\",\n    \"args\": {\n        \"twitterUsername\": \"elonmusk\",\n        \"discordUsername\": \"elonmusk\",\n        \"walletAddress\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -267,7 +243,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 10\n    }\n}",
+							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 10, // optional, alertPrice is required, if this is not provided\n        \"alertPrice\": 100 // optional, alertPercentage is required, if this is not provided\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -321,9 +297,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -359,7 +335,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"address\": \"0x5feb5925b5575ef185be40a6c7f69d564a9722dc\"\n    }\n}",
+							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"address\": \"0x6982508145454ce325ddbe47a25d4ec3d2311933\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -367,9 +343,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlRemote}}",
+							"raw": "{{baseUrlLocal}}",
 							"host": [
-								"{{baseUrlRemote}}"
+								"{{baseUrlLocal}}"
 							]
 						}
 					},
@@ -443,12 +419,12 @@
 		},
 		{
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4ODQ3NzgxOSwiZXhwIjoxNjg4NDc4NzE5fQ.hDCNu-lg_F7f2-15hHAGRgemLwvvWa8FV6IXkABJP18",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4ODYyNjkzMywiZXhwIjoxNjg5MjMxNzMzfQ.KsJix3vl252zTqLc3A2_oDEwBi5U79Lhidb_lNIHuwY",
 			"type": "string"
 		},
 		{
 			"key": "refreshToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODg0MDM3MjQsImV4cCI6MTY4OTAwODUyNH0.Tbsv7IZ4_grvLLALfvBbE0wj71DLkw4OC8iw-lLCls0",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODg2MjY5MzMsImV4cCI6MTY4OTIzMTczM30.tt0j2A7eq-QctEjkaY4DJLbTyQo5Z9AxX5cYSnQrW_A",
 			"type": "string"
 		}
 	]

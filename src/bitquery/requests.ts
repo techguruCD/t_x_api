@@ -3,6 +3,16 @@ import bitqueryAxios from './bitqueryAxios';
 import bitqueryStreamingAxios from './bitqueryStreamingAxios';
 import queries from './queries';
 
+function getAssetPlatform(network: string) {
+  let assetPlatform = 'ethereum';
+
+  if (network === 'bsc') {
+    assetPlatform = 'binance-smart-chain';
+  }
+
+  return assetPlatform;
+}
+
 async function searchToken(params: {
   network: 'ethereum' | 'bsc';
   string: string;
@@ -31,6 +41,7 @@ async function searchToken(params: {
           symbol: s.subject.symbol,
           tokenType: s.subject.tokenType,
           decimals: s.subject.decimals,
+          assetPlatform: getAssetPlatform(s.network.network),
         };
       });
       return filteredData;

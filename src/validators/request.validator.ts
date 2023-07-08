@@ -32,7 +32,7 @@ const methods = enums([
 
 const ValidTwitterUsername = pattern(string(), /^[A-Za-z0-9_]{1,15}$/);
 const ValidDiscordUsername = pattern(string(), /^[A-Za-z0-9_.]{2,32}$/);
-const ValidWalletAddress = pattern(string(), /^(0x)?[0-9a-fA-F]{40}$/);
+export const ValidWalletAddress = pattern(string(), /^(0x)?[0-9a-fA-F]{40}$/);
 
 const SearchCoinParams = object({
   network: enums(['ethereum', 'bsc']),

@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
+import { is } from 'superstruct';
 import alertModel from '../models/alert.model';
 import coinsModel from '../models/coins.model';
-import { ExpressError } from '../utils/error.utils';
 import favCoinsModel from '../models/favCoins.model';
+import { ExpressError } from '../utils/error.utils';
+import { ValidWalletAddress } from '../validators/request.validator';
 
 async function setAlert(params: {
   userId: string;
@@ -11,51 +13,60 @@ async function setAlert(params: {
   alertPrice?: number;
   alertPercentage?: number;
 }) {
+  if (!is(params.alertBaseCurrency, ValidWalletAddress)) {
+    throw new ExpressError('ASIWA01', 'Invalid Currency Address', 400);
+  }
+
+  if (!params.alertPrice || !params.alertPercentage) {
+    throw new ExpressError(
+      'ASSA001',
+      'Invalid parameters. Alert price or Alert percentage is required',
+      400
+    );
+  }
+
+  const coin = await coinsModel
+    .findOne({ address: params.alertBaseCurrency })
+    .lean();
+
+  if (!coin) {
+    throw new ExpressError('ASCNF01', 'Coin Not Found', 404);
+  }
+
   const newAlertData: Record<string, any> = {
     userId: params.userId,
     alertBaseCurrency: params.alertBaseCurrency,
     alertSide: params.alertSide,
   };
-  console.log(1, newAlertData);
 
   if (params.alertPrice) {
     if (params.alertPrice < 0) {
-      console.log(2);
-      throw new ExpressError('AS00001', 'Alert cannot be negative', 400);
+      throw new ExpressError('AS00001', 'Alert price cannot be negative', 400);
     }
-    console.log(3);
     newAlertData['alertPrice'] = params.alertPrice;
   }
 
   if (params.alertPercentage) {
     if (params.alertPercentage > 100 || params.alertPercentage < 0) {
-      console.log(4, newAlertData);
       throw new ExpressError(
         'AS00002',
-        'Percentage should be between 0 & 100',
+        'Alert percentage should be between 0 & 100',
         400
       );
     }
 
-    const coin = await coinsModel
-      .findOne({ address: params.alertBaseCurrency })
-      .lean();
-
-    if (coin) {
-      newAlertData['alertPercentage'] = params.alertPercentage;
-      const priceInDb = coin.cgTokenInfo.market_data.current_price.usd;
-      if (params.alertSide === 'up') {
-        newAlertData['alertPrice'] =
-          priceInDb + priceInDb * (params.alertPercentage / 100);
-      } else {
-        newAlertData['alertPrice'] =
-          priceInDb - priceInDb * (params.alertPercentage / 100);
-      }
+    newAlertData['alertPercentage'] = params.alertPercentage;
+    const priceInDb = coin.cgTokenInfo.market_data.current_price.usd;
+    if (params.alertSide === 'up') {
+      newAlertData['alertPrice'] =
+        priceInDb + priceInDb * (params.alertPercentage / 100);
+    } else {
+      newAlertData['alertPrice'] =
+        priceInDb - priceInDb * (params.alertPercentage / 100);
     }
   }
 
   const newAlert = await new alertModel(newAlertData).save();
-  console.log(5, newAlert);
   return newAlert.toObject();
 }
 

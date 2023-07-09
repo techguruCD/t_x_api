@@ -30,7 +30,7 @@ async function upsertCoins(coins: any[]) {
   const operations = coins.map((coin) => ({
     updateOne: {
       filter: {
-        address: coin.address,
+        address: String(coin.address).toLowerCase(),
         network: coin.network,
         name: coin.name,
         symbol: coin.symbol,
@@ -69,9 +69,9 @@ async function getPool(network: 'ethereum' | 'bsc', searchString: string) {
       await new pairsModel({
         network,
         name: pair.name,
-        address: searchString,
-        baseCurrency: pair.base,
-        quoteCurrency: pair.quote,
+        address: String(searchString).toLowerCase(),
+        baseCurrency: String(pair.base).toLowerCase(),
+        quoteCurrency: String(pair.quote).toLowerCase(),
         quotePrice: pair.price,
       }).save();
     }
@@ -114,11 +114,6 @@ async function syncFromBitquery(
       string: searchString,
     });
 
-    /**
-     * Since, We had to query bitquery because no coins,
-     * We should store all the coins retrieved from bitquery.
-     * So, we can have data on our end next time.
-     */
     await upsertCoins(coinsFromBitquery);
   } catch (error) {
     console.log(`Sync Fail for ${searchString} on ${network} network`);
@@ -133,7 +128,6 @@ async function coinSearchService(params: {
   let pair = null;
 
   if (is(string, ValidWalletAddress)) {
-    // TODO: store pair in DB and first fetch it from db.
     pair = await getPool(network, string);
 
     if (pair) {

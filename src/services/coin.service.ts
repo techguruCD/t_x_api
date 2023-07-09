@@ -24,7 +24,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   const [coin, isFav] = await Promise.all([
     coinsModel
       .findOne(
-        { address: params.address },
+        { address: params.address.toLowerCase() },
         {
           ...projection,
           cgTokenPrice: 1,
@@ -40,7 +40,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   ]);
 
   if (!coin) {
-    throw new ExpressError('CSE00001', 'coin not found', 404);
+    throw new ExpressError('CSE00001', 'coin info not found', 404);
   }
 
   const responseData = { ...coin };
@@ -118,8 +118,6 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   };
 
   response['isFav'] = Boolean(isFav);
-
-  console.log(`>>>`, response);
 
   if (response['chartData']) {
     response['chartData'] = response['chartData'].map((data: number[]) => ({

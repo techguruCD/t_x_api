@@ -6,6 +6,10 @@ const pairsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
     address: {
       type: String,
       required: true,

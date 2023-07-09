@@ -55,7 +55,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
       include_last_updated_at: true,
       include_market_cap: true,
     });
-    responseData.cgTokenPrice = cgTokenPrice;
+    responseData.cgTokenPrice = cgTokenPrice[coin.address];
   }
 
   if (!responseData.cgTokenInfo) {

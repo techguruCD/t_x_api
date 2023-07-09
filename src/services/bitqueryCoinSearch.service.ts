@@ -3,6 +3,7 @@ import bitqueryRequests from '../bitquery/requests';
 import geckoRequests from '../geckoTerminal/requests';
 import coinsModel from '../models/coins.model';
 import { ValidWalletAddress } from '../validators/request.validator';
+import pairsModel from '../models/pairs.model';
 
 function prepareSearchQuery(network: 'ethereum' | 'bsc', searchString: string) {
   const regexPattern = new RegExp(searchString, 'i');
@@ -10,6 +11,18 @@ function prepareSearchQuery(network: 'ethereum' | 'bsc', searchString: string) {
   return {
     network,
     $or: [{ name: regexPattern }, { symbol: regexPattern }],
+  };
+}
+
+function getCoinSearchProjection() {
+  return {
+    network: 1,
+    address: 1,
+    name: 1,
+    symbol: 1,
+    decimals: 1,
+    assetPlatform: 1,
+    updatedAt: 1,
   };
 }
 
@@ -35,14 +48,41 @@ async function upsertCoins(coins: any[]) {
 async function getPool(network: 'ethereum' | 'bsc', searchString: string) {
   let pair = null;
   try {
+    const pairInDb = await pairsModel
+      .findOne({ network, address: searchString })
+      .lean();
+
+    if (pairInDb) {
+      return {
+        address: pairInDb.address,
+        name: pairInDb.name,
+        price: pairInDb.quotePrice,
+      };
+    }
+
     pair = await geckoRequests.getPool({
       network: network === 'ethereum' ? 'eth' : 'bsc',
       address: searchString,
     });
+
+    if (pair) {
+      await new pairsModel({
+        network,
+        name: pair.name,
+        address: searchString,
+        baseCurrency: pair.base,
+        quoteCurrency: pair.quote,
+        quotePrice: pair.price,
+      }).save();
+    }
   } catch (error) {
     console.log(`no pair found for address ${searchString}`);
   }
 
+  if (pair) {
+    delete pair.base;
+    delete pair.quote;
+  }
   return pair;
 }
 
@@ -83,18 +123,6 @@ async function syncFromBitquery(
   } catch (error) {
     console.log(`Sync Fail for ${searchString} on ${network} network`);
   }
-}
-
-function getCoinSearchProjection() {
-  return {
-    network: 1,
-    address: 1,
-    name: 1,
-    symbol: 1,
-    decimals: 1,
-    assetPlatform: 1,
-    updatedAt: 1,
-  };
 }
 
 async function coinSearchService(params: {

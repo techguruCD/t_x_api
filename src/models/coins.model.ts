@@ -9,7 +9,6 @@ const coinsSchema = new mongoose.Schema(
     address: {
       type: String,
       required: true,
-      unique: true,
       index: true,
     },
     name: {

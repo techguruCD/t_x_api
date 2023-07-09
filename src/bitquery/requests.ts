@@ -1,4 +1,5 @@
 import { isAxiosError } from 'axios';
+import { ExpressError } from '../utils/error.utils';
 import bitqueryAxios from './bitqueryAxios';
 import bitqueryStreamingAxios from './bitqueryStreamingAxios';
 import queries from './queries';
@@ -16,16 +17,14 @@ function getAssetPlatform(network: string) {
 async function searchToken(params: {
   network: 'ethereum' | 'bsc';
   string: string;
-  limit: number;
-  offset: number;
 }) {
   try {
-    const { network, string, limit, offset } = params;
+    const { network, string } = params;
     const query = queries.searchTokenByString({
       network,
       string,
-      limit,
-      offset,
+      limit: 10000,
+      offset: 0,
     });
     const postData = JSON.stringify({ query: query, variables: {} });
     const data = await bitqueryAxios.post('/', postData);
@@ -33,25 +32,49 @@ async function searchToken(params: {
     const search = data.data.data?.search;
 
     if (search && Array.isArray(search) && search.length > 0) {
-      const filteredData = search.map((s: any) => {
-        return {
-          network: s.network.network,
-          address: s.subject.address,
-          name: s.subject.name,
-          symbol: s.subject.symbol,
-          tokenType: s.subject.tokenType,
-          decimals: s.subject.decimals,
-          assetPlatform: getAssetPlatform(s.network.network),
-        };
-      });
+      const filteredData = [];
+
+      for (let c of search) {
+        const network = c.network?.network;
+        const address = c.subject?.address;
+        const name = c.subject?.name;
+        const symbol = c.subject?.symbol;
+        const tokenType = c.subject?.tokenType;
+        const decimals = c.subject?.decimals;
+
+        if (
+          !network ||
+          !address ||
+          !name ||
+          !symbol ||
+          !tokenType ||
+          !decimals
+        ) {
+          continue;
+        }
+
+        filteredData.push({
+          network,
+          address,
+          name,
+          symbol,
+          tokenType,
+          decimals,
+          assetPlatform: getAssetPlatform(network),
+        });
+      }
       return filteredData;
     }
     return [];
   } catch (error: any) {
     if (isAxiosError(error)) {
-      return error.response ? error.response.data : null;
+      throw new ExpressError('ST00001', error.response?.data, 400);
     }
-    return { data: error.message };
+    throw new ExpressError(
+      'ST00002',
+      error.message ?? 'Could not search coin',
+      400
+    );
   }
 }
 

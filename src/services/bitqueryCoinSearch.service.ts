@@ -4,10 +4,26 @@ import geckoRequests from '../geckoTerminal/requests';
 import coinsModel from '../models/coins.model';
 import { ValidWalletAddress } from '../validators/request.validator';
 
+function prepareSearchQuery(network: 'ethereum' | 'bsc', searchString: string) {
+  const regexPattern = new RegExp(searchString, 'i');
+
+  return {
+    network,
+    $or: [{ name: regexPattern }, { symbol: regexPattern }],
+  };
+}
+
 async function upsertCoins(coins: any[]) {
   const operations = coins.map((coin) => ({
     updateOne: {
-      filter: { address: coin.address },
+      filter: {
+        address: coin.address,
+        network: coin.network,
+        name: coin.name,
+        symbol: coin.symbol,
+        decimals: coin.decimals,
+        assetPlatform: coin.assetPlatform,
+      },
       update: { $set: coin },
       upsert: true,
     },
@@ -30,17 +46,43 @@ async function getPool(network: 'ethereum' | 'bsc', searchString: string) {
   return pair;
 }
 
-function prepareSearchQuery(network: 'ethereum' | 'bsc', searchString: string) {
-  const regexPattern = new RegExp(searchString, 'i');
+async function addressSearch(network: 'ethereum' | 'bsc', address: string) {
+  const coinInDb = await coinsModel.find({ address, network }).lean();
+  if (coinInDb.length > 0) {
+    return coinInDb;
+  }
 
-  return {
+  const coinFromBitquery = await bitqueryRequests.searchToken({
     network,
-    $or: [
-      { name: regexPattern },
-      { symbol: regexPattern },
-      { address: regexPattern },
-    ],
-  };
+    string: address,
+  });
+
+  if (coinFromBitquery.length > 0) {
+    await upsertCoins(coinFromBitquery);
+  }
+
+  return coinFromBitquery;
+}
+
+async function syncFromBitquery(
+  network: 'ethereum' | 'bsc',
+  searchString: string
+) {
+  try {
+    const coinsFromBitquery = await bitqueryRequests.searchToken({
+      network,
+      string: searchString,
+    });
+
+    /**
+     * Since, We had to query bitquery because no coins,
+     * We should store all the coins retrieved from bitquery.
+     * So, we can have data on our end next time.
+     */
+    await upsertCoins(coinsFromBitquery);
+  } catch (error) {
+    console.log(`Sync Fail for ${searchString} on ${network} network`);
+  }
 }
 
 function getCoinSearchProjection() {
@@ -58,62 +100,30 @@ function getCoinSearchProjection() {
 async function coinSearchService(params: {
   network: 'ethereum' | 'bsc';
   string: string;
-  limit?: number;
-  offset?: number;
 }) {
   const { network, string } = params;
   let pair = null;
 
-  /**
-   * If the string is valid wallet address
-   * Search for pair, and if there is a pair,
-   * return the pair because it cannot be a specific coin
-   */
   if (is(string, ValidWalletAddress)) {
     // TODO: store pair in DB and first fetch it from db.
     pair = await getPool(network, string);
 
     if (pair) {
-      return { ...pair, pair: true };
+      return [{ ...pair, pair: true }];
     }
+
+    const data = await addressSearch(network, string);
+    return data;
   }
 
-  /**
-   * First, we search for the provided string in db.
-   * If there is a match, we return all of the results.
-   */
   const searchQuery = prepareSearchQuery(network, string);
-  const offset = params.offset ?? 0;
-  const limit = params.limit ?? 10;
+  await syncFromBitquery(network, string);
 
   const coinsInDb = await coinsModel
     .find(searchQuery, getCoinSearchProjection())
-    .skip(offset)
-    .limit(limit)
     .lean();
 
-  if (coinsInDb.length > 0) {
-    return coinsInDb;
-  }
-
-  /**
-   * If there is no match or the length of coinsInDb is 0,
-   * We continue the pagination and search for the coin from bitquery
-   */
-  const coinsFromBitquery = await bitqueryRequests.searchToken({
-    network,
-    string,
-    limit,
-    offset,
-  });
-
-  /**
-   * Since, We had to query bitquery because no coins,
-   * We should store all the coins retrieved from bitquery.
-   * So, we can have data on our end next time.
-   */
-  await upsertCoins(coinsFromBitquery);
-  return coinsFromBitquery;
+  return coinsInDb;
 }
 
 export default coinSearchService;

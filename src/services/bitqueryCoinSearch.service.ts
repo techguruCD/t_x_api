@@ -47,10 +47,9 @@ async function upsertCoins(coins: any[]) {
 
 async function getPool(network: 'ethereum' | 'bsc', searchString: string) {
   let pair = null;
+  const address = searchString.toLowerCase();
   try {
-    const pairInDb = await pairsModel
-      .findOne({ network, address: searchString })
-      .lean();
+    const pairInDb = await pairsModel.findOne({ network, address }).lean();
 
     if (pairInDb) {
       return {
@@ -62,14 +61,14 @@ async function getPool(network: 'ethereum' | 'bsc', searchString: string) {
 
     pair = await geckoRequests.getPool({
       network: network === 'ethereum' ? 'eth' : 'bsc',
-      address: searchString,
+      address,
     });
 
     if (pair) {
       await new pairsModel({
         network,
         name: pair.name,
-        address: String(searchString).toLowerCase(),
+        address,
         baseCurrency: String(pair.base).toLowerCase(),
         quoteCurrency: String(pair.quote).toLowerCase(),
         quotePrice: pair.price,

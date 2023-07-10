@@ -55,7 +55,7 @@ async function priceUpdateController(
         priceUpdates.push({
           updateOne: {
             filter: {
-              address,
+              address: address.toLowerCase(),
               assetPlatform: group.assetPlatform,
             },
             update: { $set: { cgTokenPrice: tokenPrices[address] } },

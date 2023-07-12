@@ -41,12 +41,23 @@ async function updateUserService(params: {
   }
 
   if (params.walletAddress) {
+    const walletAddressExists = await usersModel
+      .exists({ walletAddress: params.walletAddress })
+      .lean();
+
+    if (walletAddressExists) {
+      throw new ExpressError(
+        'UN00001',
+        'Wallet address already connected',
+        400
+      );
+    }
     updateObject['walletAddress'] = params.walletAddress;
   }
 
   if (params.referrer) {
     const [referrerExists, selfRef] = await Promise.all([
-      usersModel.exists({ referrer: params.referrer }).lean(),
+      usersModel.exists({ refCode: params.referrer }).lean(),
       usersModel
         .findOne({ userId: params.userId, refCode: params.referrer })
         .lean(),

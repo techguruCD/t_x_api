@@ -14,18 +14,9 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    twitterUsername: {
-      type: String,
-      unique: true,
-    },
-    discordUsername: {
-      type: String,
-      unique: true,
-    },
-    walletAddress: {
-      type: String,
-      unique: true,
-    },
+    twitterUsername: String,
+    discordUsername: String,
+    walletAddress: String,
     refCode: {
       type: String,
       unique: true,

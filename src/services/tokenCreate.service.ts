@@ -50,13 +50,16 @@ async function tokenCreateService(params: {
 
     if (!user) {
       const refCode = await generateRefCode();
-      await new usersModel({
-        userId: params.userId,
-        emailId: params.emailId,
-        username: params.username,
-        photoUrl: params.photoUrl ?? null,
-        refCode,
-      }).save();
+      await usersModel.findOneAndUpdate(
+        { userId: params.userId },
+        {
+          emailId: params.emailId,
+          username: params.username,
+          photoUrl: params.photoUrl ?? null,
+          refCode,
+        },
+        { upsert: true }
+      );
     }
 
     if (user) {

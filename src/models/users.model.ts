@@ -26,6 +26,14 @@ const userSchema = new Schema(
       type: String,
       unique: true,
     },
+    refCode: {
+      type: String,
+      unique: true,
+    },
+    referrer: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: {

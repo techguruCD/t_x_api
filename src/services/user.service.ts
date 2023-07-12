@@ -1,10 +1,12 @@
 import usersModel from '../models/users.model';
+import { ExpressError } from '../utils/error.utils';
 
 async function updateUserService(params: {
   userId: string;
   twitterUsername?: string;
   discordUsername?: string;
   walletAddress?: string;
+  referrer?: string;
 }) {
   const updateObject: Record<string, string> = {};
 
@@ -18,6 +20,25 @@ async function updateUserService(params: {
 
   if (params.walletAddress) {
     updateObject['walletAddress'] = params.walletAddress;
+  }
+
+  if (params.referrer) {
+    const [referrerExists, selfRef] = await Promise.all([
+      usersModel.exists({ referrer: params.referrer }).lean(),
+      usersModel
+        .findOne({ userId: params.userId, refCode: params.referrer })
+        .lean(),
+    ]);
+
+    if (!referrerExists) {
+      throw new ExpressError('REF00001', 'Invalid Referrer code', 404);
+    }
+
+    if (selfRef) {
+      throw new ExpressError('REF00002', 'Can not refer self', 400);
+    }
+
+    updateObject['referrer'] = params.referrer;
   }
 
   const updatedResult = await usersModel.updateOne(

@@ -33,7 +33,8 @@
     "moduleResolution": "node",
     "baseUrl": "./build",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2021.String"]
   },
   "include": ["./src/**/*", "types"],
   "exclude": ["./build"]

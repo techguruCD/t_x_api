@@ -4,6 +4,27 @@ import cryptoUtils from '../utils/crypto.utils';
 import { ExpressError } from '../utils/error.utils';
 import jwtUtils from '../utils/jwt.utils';
 
+const characters =
+  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const length = 16;
+
+async function generateRefCode(): Promise<string> {
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+
+  const resultExists = await usersModel.exists({ refCode: result }).lean();
+
+  if (resultExists) {
+    return await generateRefCode();
+  }
+
+  return result;
+}
+
 async function tokenCreateService(params: {
   userId: string;
   deviceId: string;
@@ -28,11 +49,13 @@ async function tokenCreateService(params: {
     }
 
     if (!user) {
+      const refCode = await generateRefCode();
       await new usersModel({
         userId: params.userId,
         emailId: params.emailId,
         username: params.username,
         photoUrl: params.photoUrl ?? null,
+        refCode,
       }).save();
     }
 

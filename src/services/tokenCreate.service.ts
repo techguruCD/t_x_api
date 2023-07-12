@@ -41,9 +41,6 @@ async function tokenCreateService(params: {
         .lean(),
     ]);
 
-    if (!params.emailId) {
-      throw new ExpressError('TSC00001', 'emailId is missing', 400);
-    }
     if (!params.username) {
       throw new ExpressError('TSC00002', 'username is missing', 400);
     }
@@ -53,7 +50,7 @@ async function tokenCreateService(params: {
       await usersModel.findOneAndUpdate(
         { userId: params.userId },
         {
-          emailId: params.emailId,
+          emailId: params.emailId ?? null,
           username: params.username,
           photoUrl: params.photoUrl ?? null,
           refCode,

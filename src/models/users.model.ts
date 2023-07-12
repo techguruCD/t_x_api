@@ -12,7 +12,7 @@ const userSchema = new Schema(
     photoUrl: String,
     emailId: {
       type: String,
-      required: true,
+      default: null
     },
     twitterUsername: String,
     discordUsername: String,

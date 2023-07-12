@@ -17,7 +17,7 @@ async function setAlert(params: {
     throw new ExpressError('ASIWA01', 'Invalid Currency Address', 400);
   }
 
-  if (!params.alertPrice || !params.alertPercentage) {
+  if (!params.alertPrice && !params.alertPercentage) {
     throw new ExpressError(
       'ASSA001',
       'Invalid parameters. Alert price or Alert percentage is required',

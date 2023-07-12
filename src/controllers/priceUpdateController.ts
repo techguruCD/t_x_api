@@ -64,7 +64,9 @@ async function priceUpdateController(
       }
     }
 
-    await coinsModel.bulkWrite(priceUpdates);
+    if (priceUpdates.length > 0) {
+      await coinsModel.bulkWrite(priceUpdates);
+    }
     return _res.status(200).json({ success: true });
   } catch (error) {
     _next(error);

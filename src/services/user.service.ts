@@ -11,10 +11,32 @@ async function updateUserService(params: {
   const updateObject: Record<string, string> = {};
 
   if (params.twitterUsername) {
+    const twitterUsernameExists = await usersModel
+      .exists({ twitterUsername: params.twitterUsername })
+      .lean();
+
+    if (twitterUsernameExists) {
+      throw new ExpressError(
+        'UN00001',
+        'Twitter username already connected',
+        400
+      );
+    }
     updateObject['twitterUsername'] = params.twitterUsername;
   }
 
   if (params.discordUsername) {
+    const discordUsernameExists = await usersModel
+      .exists({ discordUsername: params.discordUsername })
+      .lean();
+
+    if (discordUsernameExists) {
+      throw new ExpressError(
+        'UN00001',
+        'Discord username already connected',
+        400
+      );
+    }
     updateObject['discordUsername'] = params.discordUsername;
   }
 

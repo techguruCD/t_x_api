@@ -115,6 +115,22 @@ Example Body:
 
 ---
 
+### Method: `logout`
+
+Description: Logout user by clearing their device token from the db
+
+Args: none
+
+Example Body:
+
+```json
+{
+  "method": "updateUser"
+}
+```
+
+---
+
 ### Method: `searchCoin`
 
 Description: Search tokens by address, name or symbol

@@ -10,7 +10,6 @@ const deviceSchema = new Schema(
     deviceId: {
       type: String,
       required: true,
-      unique: true,
     },
     refreshToken: {
       type: String,

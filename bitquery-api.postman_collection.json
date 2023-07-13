@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"testUserId\",\n        \"username\": \"testUsername\",\n        \"oldDeviceId\": \"testDeviceToken\",\n        \"deviceId\": \"newTestDeviceToken\",\n        \"emailId\": \"test@device.com\"\n    }\n}",
+							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"YGWQhdIdcVN8zV2LT0SsvbJIbaY2asd\",\n        \"username\": \"Rahul Trivediasdsa\",\n        \"deviceId\": \"fom4PXBrTz24OOvM3vtK_1:APA91bG-X3DebN8LEefQWtyiBLbAYD0DSflbTMw1shMVJiw3XXG4reIh3tKTkhm-cFFb4_fi0AJMP4gfPEiLNbPX3WHA_aXL7f9EZM8PPGWNvC8mm6Wt51T8HFT_fSyK0GR-QobqCUuasda\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,6 +91,23 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "update-price",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrlRemote}}/update-price",
+							"host": [
+								"{{baseUrlRemote}}"
+							],
+							"path": [
+								"update-price"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -98,13 +115,13 @@
 			"name": "privateMethods",
 			"item": [
 				{
-					"name": "search-token",
+					"name": "search-coin",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"limit\": 10,\n        \"offset\": 0\n    }\n}",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"0x11950d141EcB863F01007AdD7D1A342041227b58\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -128,7 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"address\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"\n    }\n}",
+							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"address\": \"0x95c91eef65f50570cfc3f269961a00108cf7bf59\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -243,7 +260,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 10, // optional, alertPrice is required, if this is not provided\n        \"alertPrice\": 100 // optional, alertPercentage is required, if this is not provided\n    }\n}",
+							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0x606fb7969fc1b5cad58e64b12cf827fb65ee4875\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 20 // optional, alertPrice is required, if this is not provided\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -320,9 +337,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -335,7 +352,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"address\": \"0x6982508145454ce325ddbe47a25d4ec3d2311933\"\n    }\n}",
+							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"address\": \"0x11950d141EcB863F01007AdD7D1A342041227b58\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -343,9 +360,32 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlLocal}}",
+							"raw": "{{baseUrlRemote}}",
 							"host": [
-								"{{baseUrlLocal}}"
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"logout\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
 							]
 						}
 					},
@@ -419,12 +459,12 @@
 		},
 		{
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IkFDQ0VTUyIsImlhdCI6MTY4ODYyNjkzMywiZXhwIjoxNjg5MjMxNzMzfQ.KsJix3vl252zTqLc3A2_oDEwBi5U79Lhidb_lNIHuwY",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJZR1dRaGRJZGNWTjh6VjJMVDBTc3ZiSkliYVkyIiwiZGV2aWNlSWQiOiJmb200UFhCclR6MjRPT3ZNM3Z0S18xOkFQQTkxYkctWDNEZWJOOExFZWZRV3R5aUJMYkFZRDBEU2ZsYlRNdzFzaE1WSml3M1hYRzRyZUloM3RLVGtobS1jRkZiNF9maTBBSk1QNGdmUEVpTE5iUFgzV0hBX2FYTDdmOUVaTThQUEdXTnZDOG1tNld0NTFUOEhGVF9mU3lLMEdSLVFvYnFDVXVhIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNjg5MTUzNzM1LCJleHAiOjE2ODk3NTg1MzV9.sqS6LLgzD4B877QkMQKxX2U0oVwLpnfoxKuYkiyi7EQ",
 			"type": "string"
 		},
 		{
 			"key": "refreshToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlciIsImRldmljZUlkIjoidGVzdERldmljZSIsInRva2VuVHlwZSI6IlJFRlJFU0giLCJpYXQiOjE2ODg2MjY5MzMsImV4cCI6MTY4OTIzMTczM30.tt0j2A7eq-QctEjkaY4DJLbTyQo5Z9AxX5cYSnQrW_A",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJZR1dRaGRJZGNWTjh6VjJMVDBTc3ZiSkliYVkyIiwiZGV2aWNlSWQiOiJmb200UFhCclR6MjRPT3ZNM3Z0S18xOkFQQTkxYkctWDNEZWJOOExFZWZRV3R5aUJMYkFZRDBEU2ZsYlRNdzFzaE1WSml3M1hYRzRyZUloM3RLVGtobS1jRkZiNF9maTBBSk1QNGdmUEVpTE5iUFgzV0hBX2FYTDdmOUVaTThQUEdXTnZDOG1tNld0NTFUOEhGVF9mU3lLMEdSLVFvYnFDVXVhIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTY4OTE1MzczNSwiZXhwIjoxNjg5NzU4NTM1fQ.6EuP54Y80AqZJ1PRp8cy0nPGAYai8UX_Jr_Ov35WM2o",
 			"type": "string"
 		}
 	]

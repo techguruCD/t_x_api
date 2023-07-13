@@ -1,3 +1,4 @@
+import devicesModel from '../models/devices.model';
 import usersModel from '../models/users.model';
 import { ExpressError } from '../utils/error.utils';
 
@@ -88,9 +89,16 @@ async function getUserService(params: { userId: string }) {
   return user;
 }
 
+async function logout(params: { userId: string, deviceId: string }) {
+  const deviceRemoved = await devicesModel.findOneAndRemove({ userId: params.userId, deviceId: params.deviceId });
+
+  return { loggedOut: Boolean(deviceRemoved) }
+}
+
 const userService = {
   getUserService,
   updateUserService,
+  logout
 };
 
 export default userService;

@@ -22,7 +22,7 @@ Args:
 | ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | `userId`      | string | `userId` should be email id if provided by the specific social login provider                                                                                                                                                                                  | Yes      |
 | `deviceId`    | string | `deviceId` should be provided by the FCM which is specific per device                                                                                                                                                                                          | Yes      |
-| `emailId`     | string | `emailId` should be provided by the respective social login provider.                                                                                                                                                                                          | No      |
+| `emailId`     | string | `emailId` should be provided by the respective social login provider.                                                                                                                                                                                          | No       |
 | `username`    | string | `username` should be provided by the respective social login provider.                                                                                                                                                                                         | Yes      |
 | `photoUrl`    | string | `photoUrl` should be provided by the respective social login provider.                                                                                                                                                                                         | No       |
 | `oldDeviceId` | string | `oldDeviceId` should be the previous device id which must be stored on user's device to refresh the device registration token on the backend side. **Not required for the new users but required when generating a new access and refresh token for the user** | No       |
@@ -93,11 +93,12 @@ Description: Update user data with social and wallet details
 
 Args:
 
-| Name              | Type   | Description                               | Required |
-| ----------------- | ------ | ----------------------------------------- | -------- |
-| `twitterUsername` | string | `twitterUsername` of a user (without `@`) | No       |
-| `discordUsername` | string | `discordusername` of a user               | No       |
-| `walletAddress`   | string | `walletAddress` of a user                 | No       |
+| Name              | Type   | Description                                  | Required |
+| ----------------- | ------ | -------------------------------------------- | -------- |
+| `twitterUsername` | string | `twitterUsername` of a user (without `@`)    | No       |
+| `discordUsername` | string | `discordusername` of a user                  | No       |
+| `walletAddress`   | string | `walletAddress` of a user                    | No       |
+| `referrer`        | string | `refCode` of a user who has invited the user | No       |
 
 Example Body:
 

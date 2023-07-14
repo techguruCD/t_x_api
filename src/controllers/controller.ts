@@ -85,7 +85,7 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     }
 
     if (body.method === 'getAlerts') {
-      data = await alertService.getAlerts({ userId: _req.user.userId });
+      data = await alertService.getAlerts({ userId: _req.user.userId, executed: body.args.executed });
     }
 
     if (body.method === 'getAlert') {

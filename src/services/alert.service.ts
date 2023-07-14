@@ -78,12 +78,18 @@ async function deleteAlert(params: { userId: string; alertId: string }) {
   return removedAlert;
 }
 
-async function getAlerts(params: { userId: string }) {
+async function getAlerts(params: { userId: string, executed?: boolean }) {
+  const $match: Record<string, any> = {
+    userId: params.userId,
+  }
+
+  if (params.executed) {
+    $match['alertExecutionStatus'] = 'executed'
+  }
+
   const alerts = await alertModel.aggregate([
     {
-      $match: {
-        userId: params.userId,
-      },
+      $match,
     },
     {
       $lookup: {
@@ -114,6 +120,11 @@ async function getAlerts(params: { userId: string }) {
         currentPrice: '$info.cgTokenInfo.market_data.current_price.usd',
       },
     },
+    {
+      $sort: {
+        updatedAt: -1
+      }
+    }
   ]);
   return alerts;
 }

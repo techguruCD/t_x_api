@@ -282,7 +282,11 @@ Example Body:
 
 Description: Get all the alerts set by the user
 
-Args: None
+Args:
+
+| Name       | Type    | Description                                                                                                           | Required |
+| ---------- | ------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
+| `executed` | boolean | `executed` should be provided as `true` to fetch the alerts which were already executed. **Useful for alert history** | No       |
 
 Example Body:
 

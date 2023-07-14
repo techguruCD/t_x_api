@@ -74,6 +74,7 @@ async function getCoinInfo(params: { userId: string; address: string }) {
         if (responseData.cgTokenPrice) {
           delete responseData.cgTokenPrice;
         }
+        await coinsModel.findOneAndUpdate({ address: params.address }, { $set: { "cgTokenInfo.market_data.current_price.usd": priceFromBitquery } })
         return {
           ...responseData,
           isFav: Boolean(isFav),

@@ -43,12 +43,7 @@ async function priceUpdateController(
       const group = coinGroups[i];
       const tokenPrices = await cgRequests.tokenPrice({
         id: group.assetPlatform,
-        contract_addresses: group.addresses,
-        vs_currencies: ['usd'],
-        include_24hr_change: true,
-        include_24hr_vol: true,
-        include_last_updated_at: true,
-        include_market_cap: true,
+        contract_addresses: group.addresses
       });
 
       for (const address in tokenPrices) {

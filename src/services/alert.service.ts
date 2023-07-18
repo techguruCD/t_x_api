@@ -56,7 +56,7 @@ async function setAlert(params: {
     }
 
     newAlertData['alertPercentage'] = params.alertPercentage;
-    const priceInDb = coin.cgTokenInfo.market_data.current_price.usd;
+    const priceInDb = coin.cgTokenPrice.usd;
     if (params.alertSide === 'up') {
       newAlertData['alertPrice'] =
         priceInDb + priceInDb * (params.alertPercentage / 100);
@@ -116,8 +116,8 @@ async function getAlerts(params: { userId: string, executed?: boolean }) {
         createdAt: 1,
         updatedAt: 1,
         name: '$info.name',
-        image: '$info.cgTokenInfo.image.small',
-        currentPrice: '$info.cgTokenInfo.market_data.current_price.usd',
+        image: '$info.cgMarketData.image',
+        currentPrice: '$info.cgTokenPrice.usd',
       },
     },
     {
@@ -162,8 +162,8 @@ async function getAlert(params: { userId: string; alertId: string }) {
         createdAt: 1,
         updatedAt: 1,
         name: '$info.name',
-        image: '$info.cgTokenInfo.image.small',
-        currentPrice: '$info.cgTokenInfo.market_data.current_price.usd',
+        image: '$info.cgMarketData.image',
+        currentPrice: '$info.cgTokenPrice.usd',
       },
     },
   ]);

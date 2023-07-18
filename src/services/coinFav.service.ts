@@ -60,10 +60,10 @@ async function getFavCoin(params: { userId: string }) {
       $project: {
         address: 1,
         name: 1,
-        image: '$cgTokenInfo.image.small',
+        image: '$cgMarketData.image',
         price: '$cgTokenPrice.usd',
         priceChangeInPercentage:
-          '$cgTokenInfo.market_data.price_change_percentage_1h_in_currency.usd',
+          '$cgMarketData.price_change_percentage_1h_in_currency',
         updatedAt: 1,
       },
     },

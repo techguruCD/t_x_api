@@ -31,12 +31,6 @@ const coinsSchema = new mongoose.Schema(
     cgTokenPrice: {
       type: mongoose.Schema.Types.Mixed,
     },
-    cgTokenInfo: {
-      type: mongoose.Schema.Types.Mixed,
-    },
-    cgMarketChart: {
-      type: mongoose.Schema.Types.Mixed,
-    },
     cgMarketData: {
       type: mongoose.Schema.Types.Mixed,
     },

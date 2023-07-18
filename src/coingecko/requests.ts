@@ -6,23 +6,13 @@ import cgAxios from './cgAxios';
 async function tokenPrice(params: {
   id: string;
   contract_addresses: string[];
-  vs_currencies: string[];
-  include_market_cap?: boolean;
-  include_24hr_vol?: boolean;
-  include_24hr_change?: boolean;
-  include_last_updated_at?: boolean;
-  precision?: string;
 }) {
   try {
     const url = `/simple/token_price/${params.id}`;
     const queryParams = {
       contract_addresses: params.contract_addresses.toString(),
-      vs_currencies: params.vs_currencies.toString(),
-      include_market_cap: params.include_market_cap ?? 'false',
-      include_24hr_vol: params.include_24hr_vol ?? 'false',
-      include_24hr_change: params.include_24hr_change ?? 'false',
-      include_last_updated_at: params.include_last_updated_at ?? 'false',
-      precision: params.precision ?? 'full',
+      vs_currencies: 'usd',
+      include_last_updated_at: 'true',
     };
 
     const cgResponse = await cgAxios.get(url, {
@@ -109,32 +99,24 @@ async function marketChartFromAddress(params: {
 
 // /coins/markets
 async function coinMarketData(params: {
-  ids?: string[];
-  category?: string;
-  per_page?: string;
-  page?: string;
-  precision?: string;
+  ids: string[];
 }) {
   try {
+
+    if (params.ids.length < 1) {
+      return [];
+    }
+
     const url = `/coins/markets`;
     const queryParams: Record<string, string> = {
+      ids: params.ids.toString(),
       vs_currency: 'usd',
       order: 'market_cap_desc',
-      per_page: params.per_page ?? '100',
-      page: params.page ?? '1',
-      sparkline: 'true',
-      price_change_percentage: '1h,24h,7d,14d,30d',
+      per_page: "250",
+      sparkline: 'false',
+      price_change_percentage: '1h',
       locale: 'en',
-      precision: params.precision ?? 'full',
     };
-
-    if (params.ids && params.ids.length > 0) {
-      queryParams['ids'] = params.ids.toString();
-    }
-
-    if (params.category) {
-      queryParams['category'] = params.category;
-    }
 
     const cgResponse = await cgAxios.get(url, {
       params: queryParams,
@@ -156,11 +138,35 @@ async function coinMarketData(params: {
   }
 }
 
+// /coins/list
+async function coinsList() {
+  try {
+    const url = `/coins/list`;
+
+    const cgResponse = await cgAxios.get(url);
+    return cgResponse.data;
+  } catch (error: any) {
+    if (isAxiosError(error) && error.response) {
+      throw new ExpressError(
+        'CGE00009',
+        error.response.data.error,
+        error.response.status
+      );
+    }
+    throw new ExpressError(
+      'CGE00010',
+      error.message ?? 'Something Went Wrong',
+      400
+    );
+  }
+}
+
 const cgRequests = {
   tokenPrice,
   tokenInfoFromAddress,
   marketChartFromAddress,
   coinMarketData,
+  coinsList
 };
 
 export default cgRequests;

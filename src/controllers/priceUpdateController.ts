@@ -26,42 +26,39 @@ async function priceUpdateController(
       },
       {
         $group: {
-          _id: '$coinInfo.network',
-          assetPlatform: {
-            $first: '$coinInfo.assetPlatform',
+          _id: null,
+          ids: {
+            $addToSet: "$coinInfo.cgMarketData.id",
           },
-          addresses: {
-            $addToSet: '$coinInfo.address',
-          },
-        },
+        }
       },
     ]);
 
-    const priceUpdates = [];
-
-    for (let i = 0; i < coinGroups.length; i++) {
-      const group = coinGroups[i];
-      const tokenPrices = await cgRequests.tokenPrice({
-        id: group.assetPlatform,
-        contract_addresses: group.addresses
-      });
-
-      for (const address in tokenPrices) {
-        priceUpdates.push({
-          updateOne: {
-            filter: {
-              address: address.toLowerCase(),
-              assetPlatform: group.assetPlatform,
-            },
-            update: { $set: { cgTokenPrice: tokenPrices[address] } },
-          },
-        });
-      }
+    if (coinGroups.length < 1) {
+      return _res.status(200).json({ success: true });
     }
 
-    if (priceUpdates.length > 0) {
-      await coinsModel.bulkWrite(priceUpdates);
+    const ids = coinGroups[0].ids ?? [];
+
+    const cgMarketData = await cgRequests.coinMarketData({ ids });
+
+    const cgMarketUpdates = [];
+
+    for (let i = 0; i < cgMarketData.length; i++) {
+      const id = cgMarketData[i].id;
+      cgMarketUpdates.push({
+        updateOne: {
+          filter: { "cgMarketData.id": id },
+          update: { $set: { "cgMarketData": cgMarketData[i] } },
+          upsert: true
+        }
+      })
     }
+
+    if (cgMarketUpdates.length > 0) {
+      await coinsModel.bulkWrite(cgMarketUpdates);
+    }
+
     return _res.status(200).json({ success: true });
   } catch (error) {
     _next(error);

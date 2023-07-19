@@ -46,18 +46,7 @@ async function tokenInfoFromAddress(params: {
     const cgResponse = await cgAxios.get(url);
     return cgResponse.data;
   } catch (error: any) {
-    if (isAxiosError(error) && error.response) {
-      throw new ExpressError(
-        'CGE00003',
-        error.response.data.error,
-        error.response.status
-      );
-    }
-    throw new ExpressError(
-      'CGE00004',
-      error.message ?? 'Something Went Wrong',
-      400
-    );
+    return null;
   }
 }
 

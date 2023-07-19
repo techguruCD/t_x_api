@@ -33,6 +33,10 @@ async function setAlert(params: {
     throw new ExpressError('ASCNF01', 'Coin Not Found', 404);
   }
 
+  if (!coin.cgMarketData || coin.cgMarketData.current_price === undefined || coin.cgMarketData.current_price === null) {
+    throw new ExpressError('ASCPNF01', 'Coin Price Not Found', 404);
+  }
+
   const newAlertData: Record<string, any> = {
     userId: params.userId,
     alertBaseCurrency: params.alertBaseCurrency,
@@ -56,7 +60,7 @@ async function setAlert(params: {
     }
 
     newAlertData['alertPercentage'] = params.alertPercentage;
-    const priceInDb = coin.cgTokenPrice.usd;
+    const priceInDb = coin.cgMarketData.current_price as unknown as number;
     if (params.alertSide === 'up') {
       newAlertData['alertPrice'] =
         priceInDb + priceInDb * (params.alertPercentage / 100);
@@ -117,7 +121,7 @@ async function getAlerts(params: { userId: string, executed?: boolean }) {
         updatedAt: 1,
         name: '$info.name',
         image: '$info.cgMarketData.image',
-        currentPrice: '$info.cgTokenPrice.usd',
+        currentPrice: '$info.cgMarketData.current_price',
       },
     },
     {
@@ -163,7 +167,7 @@ async function getAlert(params: { userId: string; alertId: string }) {
         updatedAt: 1,
         name: '$info.name',
         image: '$info.cgMarketData.image',
-        currentPrice: '$info.cgTokenPrice.usd',
+        currentPrice: '$info.cgMarketData.current_price',
       },
     },
   ]);

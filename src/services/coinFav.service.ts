@@ -62,7 +62,7 @@ async function getFavCoin(params: { userId: string }) {
         name: 1,
         assetPlatform: 1,
         image: '$cgMarketData.image',
-        price: '$cgTokenPrice.usd',
+        price: '$cgMarketData.current_price',
         priceChangeInPercentage:
           '$cgMarketData.price_change_percentage_1h_in_currency',
         updatedAt: 1,

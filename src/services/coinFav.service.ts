@@ -64,7 +64,7 @@ async function getFavCoin(params: { userId: string }) {
         image: '$cgMarketData.image',
         price: '$cgMarketData.current_price',
         priceChangeInPercentage:
-          '$cgMarketData.price_change_percentage_1h_in_currency',
+          '$cgMarketData.price_change_percentage_24h',
         updatedAt: 1,
       },
     },

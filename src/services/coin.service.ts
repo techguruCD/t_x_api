@@ -87,7 +87,15 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   }
 
   const response = {
-    isFav: Boolean(isFav)
+    _id: coin._id,
+    address: coin.address,
+    assetPlatform: coin.assetPlatform,
+    decimals: coin.decimals,
+    name: coin.name,
+    network: coin.network,
+    symbol: coin.symbol,
+    isFav: Boolean(isFav),
+
   }
 
   return response;

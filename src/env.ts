@@ -32,6 +32,11 @@ export function initEnv() {
     process.exit(0);
   }
 
+  if (!process.env['SUBSCRIPTION_SERVICE_URL']) {
+    console.log('[error] SUBSCRIPTION_SERVICE_URL is not set in the env');
+    process.exit(0);
+  }
+
   _env = {
     dbUri: process.env['DB_URI'] ?? 'mongodb://127.0.0.1:27017/bitquery',
     debug: Boolean(process.env['DEBUG']) ?? true,
@@ -48,6 +53,7 @@ export function initEnv() {
     cgBaseUrl: 'https://pro-api.coingecko.com/api/v3',
     cgApiKey: process.env['CG_API_KEY'],
     geckoTerminalBaseUrl: 'https://api.geckoterminal.com/api/v2',
+    subscriptionServiceUrl: process.env['SUBSCRIPTION_SERVICE_URL']
   };
 
   if (_env.debug) {

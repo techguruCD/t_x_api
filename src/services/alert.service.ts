@@ -5,6 +5,8 @@ import coinsModel from '../models/coins.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
 import { ValidWalletAddress } from '../validators/request.validator';
+import axios, { isAxiosError } from 'axios';
+import env from '../env';
 
 async function setAlert(params: {
   userId: string;
@@ -71,6 +73,18 @@ async function setAlert(params: {
   }
 
   const newAlert = await new alertModel(newAlertData).save();
+  try {
+    await axios.post(`${env().subscriptionServiceUrl}/subscriptions/stables`, {
+      network: coin.network,
+      buyCurrencies: [coin.address]
+    });
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log(`Subscription service error`, error.response?.data)
+    } else {
+      console.log(`Subscription service error`);
+    }
+  }
   return newAlert.toObject();
 }
 

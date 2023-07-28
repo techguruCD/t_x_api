@@ -41,17 +41,13 @@ async function tokenCreateService(params: {
         .lean(),
     ]);
 
-    if (!params.username) {
-      throw new ExpressError('TSC00002', 'username is missing', 400);
-    }
-
     if (!user) {
       const refCode = await generateRefCode();
       await usersModel.findOneAndUpdate(
         { userId: params.userId },
         {
           emailId: params.emailId ?? null,
-          username: params.username,
+          username: params.username ?? null,
           photoUrl: params.photoUrl ?? null,
           refCode,
         },

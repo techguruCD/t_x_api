@@ -29,7 +29,8 @@ const methods = enums([
   'getAlert',
   'coinInfo',
   'logout',
-  'listTop100'
+  'listTop100',
+  'coinInfoV2',
 ]);
 
 const ValidTwitterUsername = pattern(string(), /^[A-Za-z0-9_]{1,15}$/);
@@ -105,6 +106,11 @@ const CoinInfoParams = object({
   address: string(),
 });
 
+const CoinInfoV2Params = object({
+  platform: string(),
+  id: number()
+});
+
 const RequestValidator = refine(
   object({
     method: methods,
@@ -161,6 +167,10 @@ const RequestValidator = refine(
     }
 
     if (method === 'coinInfo' && !is(args, CoinInfoParams)) {
+      return msg;
+    }
+
+    if (method === 'coinInfoV2' && !is(args, CoinInfoV2Params)) {
       return msg;
     }
 

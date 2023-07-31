@@ -110,6 +110,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       data = await coinService.getTop100()
     }
 
+    if (body.method === 'coinInfoV2') {
+      data = await coinService.getCoinInfoV2({ ...body.args, userId: _req.user.userId })
+    }
+
     return _res.status(200).json(data);
   } catch (error) {
     _next(error);

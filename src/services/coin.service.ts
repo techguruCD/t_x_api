@@ -5,6 +5,20 @@ import { ExpressError } from '../utils/error.utils';
 import bitqueryRequests from '../bitquery/requests';
 import cmcModel from '../models/cmc.model';
 
+async function getCoinInfoV2(params: { userId: string, platform: string, id: number }) {
+  let info = null
+
+  if (params.platform = "cmc") {
+    info = { platform: "cmc" }
+  }
+
+  if (params.platform === "cg") {
+    info = { platform: "cg" }
+  }
+
+  return info
+}
+
 async function getCoinInfo(params: { userId: string; address: string }) {
   const projection: Record<string, number | string> = {
     address: 1,
@@ -146,6 +160,7 @@ async function getTop100() {
 }
 
 const coinService = {
+  getCoinInfoV2,
   getCoinInfo,
   getTop100,
 };

@@ -1,33 +1,32 @@
-import coinsModel from '../models/coins.model';
+import cmcModel from '../models/cmc.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
 
-async function setFavCoin(params: { userId: string; address: string }) {
-  const coin = await coinsModel
-    .findOne({ address: params.address.toLowerCase() })
-    .lean();
+async function setFavCoin(params: { userId: string; platform: string, value: string | number }) {
 
-  if (!coin) {
-    throw new ExpressError('CNF00001', 'Coin Not Found', 404);
-  }
+  if (params.platform === 'cmc') {
+    const coin = await cmcModel.CMCListModel.findOne({ id: params.value }).lean();
 
-  const favCoin = await favCoinsModel
-    .findOne({
-      address: coin.address.toLowerCase(),
+    if (!coin) {
+      throw new ExpressError('CNF00001', "Coin Not Found", 404);
+    }
+
+    const favCoin = await favCoinsModel.findOne({ userId: params.userId, platform: "cmc", value: params.value }).lean();
+
+    if (favCoin) {
+      return { success: true };
+    }
+
+    await new favCoinsModel({
       userId: params.userId,
-    })
-    .lean();
+      platform: "cmc",
+      value: params.value
+    }).save();
 
-  if (favCoin) {
     return { success: true };
   }
 
-  await new favCoinsModel({
-    address: params.address.toLowerCase(),
-    userId: params.userId,
-  }).save();
-
-  return { success: true };
+  return { success: false };
 }
 
 async function getFavCoin(params: { userId: string }) {

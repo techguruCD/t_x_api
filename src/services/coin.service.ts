@@ -50,6 +50,7 @@ async function getCoinInfoV2(params: { userId: string, platform: string, id: num
             },
           ],
           chart: [],
+          platform: "cmc"
         },
       },
       { $limit: 1 }
@@ -70,6 +71,7 @@ async function getCoinInfoV2(params: { userId: string, platform: string, id: num
   return data;
 }
 
+// TODO: cleanup
 async function getCoinInfo(params: { userId: string; address: string }) {
   const projection: Record<string, number | string> = {
     address: 1,

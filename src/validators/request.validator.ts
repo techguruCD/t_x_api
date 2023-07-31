@@ -54,7 +54,8 @@ const SearchPairParams = object({
 });
 
 const SetFavCoinParams = object({
-  address: string(),
+  platform: string(),
+  value: any(),
 });
 
 const RemoveFavCoinParams = object({

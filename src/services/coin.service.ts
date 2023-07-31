@@ -3,6 +3,7 @@ import coinsModel from '../models/coins.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
 import bitqueryRequests from '../bitquery/requests';
+import cmcModel from '../models/cmc.model';
 
 async function getCoinInfo(params: { userId: string; address: string }) {
   const projection: Record<string, number | string> = {
@@ -101,8 +102,52 @@ async function getCoinInfo(params: { userId: string; address: string }) {
   return response;
 }
 
+async function getTop100() {
+  const top100 = await cmcModel.CMCListModel.aggregate([
+    { $sort: { cmc_rank: 1, } },
+    { $limit: 100 },
+    {
+      $project: {
+        id: 1,
+        cmc_rank: 1,
+        name: 1,
+        platform: 1,
+        "quote.USD": 1,
+      },
+    },
+    {
+      $lookup: {
+        from: "CMCMetadata",
+        localField: "id",
+        foreignField: "id",
+        as: "metadata",
+      },
+    },
+    {
+      $unwind: {
+        path: "$metadata",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        id: 1,
+        cmc_rank: 1,
+        name: 1,
+        logo: "$metadata.logo",
+        price: "$quote.USD.price",
+        change: "$quote.USD.percent_change_1h",
+        platform: "cmc"
+      },
+    },
+  ]);
+
+  return top100;
+}
+
 const coinService = {
   getCoinInfo,
+  getTop100,
 };
 
 export default coinService;

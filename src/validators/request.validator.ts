@@ -28,7 +28,8 @@ const methods = enums([
   'getAlerts',
   'getAlert',
   'coinInfo',
-  'logout'
+  'logout',
+  'listTop100'
 ]);
 
 const ValidTwitterUsername = pattern(string(), /^[A-Za-z0-9_]{1,15}$/);

@@ -106,6 +106,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       data = await userService.logout({ userId: _req.user.userId, deviceId: _req.user.deviceId });
     }
 
+    if (body.method === 'listTop100') {
+      data = await coinService.getTop100()
+    }
+
     return _res.status(200).json(data);
   } catch (error) {
     _next(error);

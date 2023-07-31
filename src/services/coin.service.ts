@@ -6,17 +6,68 @@ import bitqueryRequests from '../bitquery/requests';
 import cmcModel from '../models/cmc.model';
 
 async function getCoinInfoV2(params: { userId: string, platform: string, id: number }) {
-  let info = null
+  let data: Record<string, any> = { info: null }
 
-  if (params.platform = "cmc") {
-    info = { platform: "cmc" }
+  if (params.platform === "cmc") {
+    const cmcCoin = await cmcModel.CMCMetadataModel.aggregate([
+      { $match: { id: params.id } },
+      {
+        $lookup: {
+          from: "CMCList",
+          localField: "id",
+          foreignField: "id",
+          as: "coinList",
+        },
+      },
+      {
+        $unwind:
+        {
+          path: "$coinList",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          id: 1,
+          name: 1,
+          logo: 1,
+          description: 1,
+          price: "$coinList.quote.USD.price",
+          priceChange:
+            "$coinList.quote.USD.percent_change_1h",
+          urls: [
+            {
+              type: "website",
+              values: "$urls.website",
+            },
+            {
+              type: "x",
+              values: "$urls.twitter",
+            },
+            {
+              type: "source_code",
+              values: "$urls.source_code",
+            },
+          ],
+          chart: [],
+        },
+      },
+      { $limit: 1 }
+    ])
+
+    if (!cmcCoin) {
+      throw new ExpressError('CSE00002', 'coin info not found', 404);
+    }
+
+    data['info'] = cmcCoin[0];
+
   }
 
   if (params.platform === "cg") {
-    info = { platform: "cg" }
+    data['info'] = { platform: "cg" }
   }
 
-  return info
+  return data;
 }
 
 async function getCoinInfo(params: { userId: string; address: string }) {

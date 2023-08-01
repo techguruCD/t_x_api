@@ -197,6 +197,33 @@ Example Body:
 
 ---
 
+### Method: `search`
+
+Description: Search tokens, pairs (soon)
+
+Args:
+
+| Name         | Type   | Description                                              | Required |
+| ------------ | ------ | -------------------------------------------------------- | -------- |
+| `searchTerm` | string | `searchTerm` should be a string                          | Yes      |
+| `limit`      | number | pagination parameter to fetch specific length of records | No       |
+| `offset`     | number | pagination parameter to skip specific number of records  | No       |
+
+Example Body:
+
+```json
+{
+  "method": "search",
+  "args": {
+    "searchTerm": "meme",
+    "skip": 0,
+    "limit": 100
+  }
+}
+```
+
+---
+
 ### Method: `searchCoin`
 
 Description: Search tokens by address, name or symbol

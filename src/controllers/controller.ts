@@ -24,6 +24,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     let data = null;
 
+    if (body.method === 'search') {
+      data = await coinService.coinSearch(body.args);
+    }
+
     if (body.method === 'searchCoin') {
       data = await bitqueryCoinSearchService(body.args);
     }

@@ -430,6 +430,29 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\": \"meme\",\n        \"skip\": 0,\n        \"limit\": 100\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

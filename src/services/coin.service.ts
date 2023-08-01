@@ -1,6 +1,55 @@
 import { ExpressError } from '../utils/error.utils';
 import cmcModel from '../models/cmc.model';
 
+async function coinSearch(params: { searchTerm: string, skip?: number, limit?: number }) {
+  if (params.skip === undefined) {
+    params.skip = 0
+  }
+
+  if (params.limit === undefined) {
+    params.limit = 10;
+  }
+
+  const searchObjectWithRegex = { $regex: params.searchTerm, $options: "i" }
+  const results = await cmcModel.CMCMetadataModel.aggregate([
+    {
+      $match: {
+        $or: [
+          { name: searchObjectWithRegex },
+          { slug: searchObjectWithRegex },
+          { symbol: searchObjectWithRegex },
+          { tags: { $elemMatch: searchObjectWithRegex } },
+          { "tag-groups": { $elemMatch: searchObjectWithRegex } },
+          { "tag-names": { $elemMatch: searchObjectWithRegex } },
+          { "platform.token_address": params.searchTerm },
+          { "contract_address.contract_address": params.searchTerm },
+        ],
+      },
+    },
+    { $lookup: { from: "CMCList", localField: "id", foreignField: "id", as: "cmcCoin" } },
+    { $unwind: { path: "$cmcCoin", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$contract_address", preserveNullAndEmptyArrays: false } },
+    {
+      $group: {
+        _id: { id: "$id", contract_address: "$contract_address.contract_address" },
+        id: { $first: "$id" },
+        name: { $first: "$name" },
+        logo: { $first: "$logo" },
+        price: { $first: "$cmcCoin.quote.USD.price" },
+        change: { $first: "$cmcCoin.quote.USD.percent_change_1h" },
+        contract_address: { $first: "$contract_address.contract_address" },
+        platform: { $first: "cmc" },
+        cmc_rank: { $first: "$cmcCoin.cmc_rank" },
+        updatedAt: { $first: "$updatedAt" }
+      },
+    },
+    { $sort: { cmc_rank: 1 } },
+    { $project: { _id: 0, cmc_rank: 0 } }
+  ]).skip(params.skip).limit(params.limit);
+
+  return results;
+}
+
 async function getCoinInfo(params: { userId: string, platform: string, value: number | string }) {
   let data: Record<string, any> = { info: null }
 
@@ -111,6 +160,7 @@ async function getTop100() {
 }
 
 const coinService = {
+  coinSearch,
   getCoinInfo,
   getTop100,
 };

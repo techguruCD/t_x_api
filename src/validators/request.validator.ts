@@ -10,6 +10,7 @@ import {
   boolean,
   array,
   pattern,
+  union,
 } from 'superstruct';
 
 const methods = enums([
@@ -109,12 +110,8 @@ const GetAlertParams = object({
 });
 
 const CoinInfoParams = object({
-  address: string(),
-});
-
-const CoinInfoV2Params = object({
   platform: string(),
-  id: number()
+  value: union([number(), string()])
 });
 
 const RequestValidator = refine(
@@ -177,10 +174,6 @@ const RequestValidator = refine(
     }
 
     if (method === 'coinInfo' && !is(args, CoinInfoParams)) {
-      return msg;
-    }
-
-    if (method === 'coinInfoV2' && !is(args, CoinInfoV2Params)) {
       return msg;
     }
 

@@ -97,10 +97,7 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     }
 
     if (body.method === 'coinInfo') {
-      data = await coinService.getCoinInfo({
-        ...body.args,
-        userId: _req.user.userId,
-      });
+      data = await coinService.getCoinInfo({ ...body.args, userId: _req.user.userId })
     }
 
     if (body.method === 'logout') {
@@ -109,10 +106,6 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'listTop100') {
       data = await coinService.getTop100()
-    }
-
-    if (body.method === 'coinInfoV2') {
-      data = await coinService.getCoinInfoV2({ ...body.args, userId: _req.user.userId })
     }
 
     return _res.status(200).json(data);

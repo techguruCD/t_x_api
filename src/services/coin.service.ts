@@ -1,5 +1,6 @@
 import { ExpressError } from '../utils/error.utils';
 import cmcModel from '../models/cmc.model';
+import favCoinsModel from '../models/favCoins.model';
 
 async function coinSearch(params: { searchTerm: string, skip?: number, limit?: number }) {
   if (params.skip === undefined) {
@@ -101,9 +102,12 @@ async function getCoinInfo(params: { userId: string, platform: string, value: nu
       { $limit: 1 }
     ])
 
-    if (!cmcCoin) {
+    if (cmcCoin.length < 1) {
       throw new ExpressError('CSE00002', 'coin info not found', 404);
     }
+
+    const isFav = await favCoinsModel.exists({ platform: "cmc", value: params.value, userId: params.userId }).lean();
+    cmcCoin[0].isFav = Boolean(isFav);
 
     data['info'] = cmcCoin[0];
 

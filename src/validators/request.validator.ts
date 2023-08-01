@@ -65,7 +65,7 @@ const GetFavCoinParams = object({
 })
 
 const RemoveFavCoinParams = object({
-  addresses: array(string()),
+  _ids: array(string()),
 });
 
 const SetPriceAlertParams = object({

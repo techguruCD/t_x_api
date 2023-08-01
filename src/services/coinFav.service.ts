@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import cmcModel from '../models/cmc.model';
 import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
@@ -180,10 +181,10 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
   return data[0].favCoins;
 }
 
-async function removeFavCoin(params: { userId: string; addresses: string[] }) {
-  const deleteOperations = params.addresses.map((address) => ({
+async function removeFavCoin(params: { userId: string; _ids: string[] }) {
+  const deleteOperations = params._ids.map((_id) => ({
     deleteOne: {
-      filter: { address: address.toLowerCase(), userId: params.userId },
+      filter: { _id: new mongoose.Types.ObjectId(_id), userId: params.userId },
     },
   }));
 

@@ -131,6 +131,72 @@ Example Body:
 
 ---
 
+### Method: `listTop100`
+
+Description: List top 100 coins by market cap. Usage for homescreen
+
+Args: none
+
+Example Body:
+
+```json
+{
+    "method": "listTop100"
+}
+```
+
+---
+
+### Method: `coinInfo`
+
+Description: Fetch information for a specific coin. Use projection to get required data.
+
+Args:
+
+| Name       | Type   | Description                                                                                                                       | Required |
+| ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `platform` | string | `platform` of a specific token                                                                                                    | Yes      |
+| `value`    | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` from the list of top 100 coins or search list** | Yes      |
+
+Example Body:
+
+```json
+{
+  "method": "coinInfo",
+  "args": {
+    "platform": "cmc",
+    "value": 5
+  }
+}
+```
+
+---
+
+### Method: `setFavCoin`
+
+Description: Set a favorite coin for a specific user by providing the address of the coin
+
+Args:
+
+| Name       | Type   | Description                                                                                                                       | Required |
+| ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `platform` | string | `platform` of a specific token                                                                                                    | Yes      |
+| `value`    | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` from the list of top 100 coins or search list** | Yes      |
+
+Example Body:
+
+```json
+{
+  "method": "setFavCoin",
+  "args": {
+    "platform": "cmc",
+    "value": 1027
+  }
+}
+```
+
+---
+
 ### Method: `searchCoin`
 
 Description: Search tokens by address, name or symbol
@@ -160,34 +226,15 @@ Example Body:
 
 ---
 
-### Method: `setFavCoin`
-
-Description: Set a favorite coin for a specific user by providing the address of the coin
-
-Args:
-
-| Name      | Type   | Description                   | Required |
-| --------- | ------ | ----------------------------- | -------- |
-| `address` | string | `address` of a specific token | Yes      |
-
-Example Body:
-
-```json
-{
-  "method": "setFavCoin",
-  "args": {
-    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-  }
-}
-```
-
----
-
 ### Method: `getFavCoin`
 
-Description: Get list of favorite coins of a specific user. Projection can be described in `projection` property as described below. However, projection is not recommended to be used for this method because it can send a huge amount of data. Still, it can be used if the data is necessary
+Description: Get list of favorite coins of a specific user.
+Args: 
 
-Args: None
+| Name    | Type   | Description                                              | Required |
+| ------- | ------ | -------------------------------------------------------- | -------- |
+| `limit` | number | pagination parameter to fetch specific length of records | No       |
+| `skip`  | number | pagination parameter to skip specific number of records  | No       |
 
 Example Body:
 
@@ -206,9 +253,9 @@ Description: Remove coins from the favorite list.
 
 Args:
 
-| Name        | Type     | Description                                                                                                | Required |
-| ----------- | -------- | ---------------------------------------------------------------------------------------------------------- | -------- |
-| `addresses` | string[] | `addresses` is a array of string and it should include addresses of coins to be removed from favorite list | Yes      |
+| Name   | Type     | Description                                                                                      | Required |
+| ------ | -------- | ------------------------------------------------------------------------------------------------ | -------- |
+| `_ids` | string[] | `_ids` is a array of string and it should include _ids of coins to be removed from favorite list | Yes      |
 
 Example Body:
 
@@ -216,33 +263,7 @@ Example Body:
 {
   "method": "removeFavCoin",
   "args": {
-    "addresses": [
-      "0x95c91eef65f50570cfc3f269961a00108cf7bf59",
-      "0x07814b55b9d71f058d434de0beb40cf8b931d9a2"
-    ]
-  }
-}
-```
-
----
-
-### Method: `coinInfo`
-
-Description: Fetch information for a specific coin. Use projection to get required data.
-
-Args:
-
-| Name      | Type   | Description                   | Required |
-| --------- | ------ | ----------------------------- | -------- |
-| `address` | string | `address` of a specific token | Yes      |
-
-Example Body:
-
-```json
-{
-  "method": "coinInfo",
-  "args": {
-    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    "_ids": ["64c7bb95d81a47997551f851"]
   }
 }
 ```

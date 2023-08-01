@@ -58,6 +58,11 @@ const SetFavCoinParams = object({
   value: any(),
 });
 
+const GetFavCoinParams = object({
+  skip: optional(number()),
+  limit: optional(number())
+})
+
 const RemoveFavCoinParams = object({
   addresses: array(string()),
 });
@@ -132,6 +137,10 @@ const RequestValidator = refine(
     }
 
     if (method === 'setFavCoin' && !is(args, SetFavCoinParams)) {
+      return msg;
+    }
+
+    if (method === 'getFavCoin' && !is(args, GetFavCoinParams)) {
       return msg;
     }
 

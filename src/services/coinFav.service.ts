@@ -29,7 +29,15 @@ async function setFavCoin(params: { userId: string; platform: string, value: str
   return { success: false };
 }
 
-async function getFavCoin(params: { userId: string }) {
+async function getFavCoin(params: { userId: string, skip?: number, limit?: number }) {
+  if (params.skip === undefined) {
+    params.skip = 0
+  }
+
+  if (params.limit === undefined) {
+    params.limit = 10
+  }
+
   const data = await favCoinsModel.aggregate([
     {
       $match: {
@@ -37,38 +45,139 @@ async function getFavCoin(params: { userId: string }) {
       },
     },
     {
-      $lookup: {
-        from: 'Coins',
-        localField: 'address',
-        foreignField: 'address',
-        as: 'info',
-      },
-    },
-    {
-      $unwind: {
-        path: '$info',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $replaceRoot: {
-        newRoot: '$info',
+      $facet: {
+        cmcResults: [
+          {
+            $match: {
+              platform: "cmc",
+            },
+          },
+          {
+            $lookup: {
+              from: "CMCList",
+              localField: "value",
+              foreignField: "id",
+              as: "cmcCoin",
+            },
+          },
+          {
+            $lookup: {
+              from: "CMCMetadata",
+              localField: "value",
+              foreignField: "id",
+              as: "cmcMetadata",
+            },
+          },
+          {
+            $unwind: {
+              path: "$cmcCoin",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $unwind: {
+              path: "$cmcMetadata",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              id: {
+                $ifNull: ["$cmcMetadata.id", null]
+              },
+              name: {
+                $ifNull: ["$cmcMetadata.name", null]
+              },
+              logo: {
+                $ifNull: ["$cmcMetadata.logo", null]
+              },
+              price: {
+                $ifNull: ["$cmcCoin.quote.USD.price", null]
+              },
+              change: {
+                $ifNull: ["$cmcCoin.quote.USD.percent_change_1h", null]
+              },
+              platform: "cmc",
+              createdAt: 1,
+            },
+          },
+        ],
+        cgResults: [
+          {
+            $match: {
+              platform: "cg",
+            },
+          },
+          {
+            $project: {
+              id: {
+                $ifNull: ["$cmcMetadata.id", null]
+              },
+              name: {
+                $ifNull: ["$cmcMetadata.name", null]
+              },
+              logo: {
+                $ifNull: ["$cmcMetadata.logo", null]
+              },
+              price: {
+                $ifNull: ["$cmcCoin.quote.USD.price", null]
+              },
+              change: {
+                $ifNull: ["$cmcCoin.quote.USD.percent_change_1h", null]
+              },
+              platform: "cmc",
+              createdAt: 1,
+            },
+          },
+        ],
       },
     },
     {
       $project: {
-        address: 1,
-        name: 1,
-        assetPlatform: 1,
-        image: '$cgMarketData.image',
-        price: '$cgMarketData.current_price',
-        priceChangeInPercentage:
-          '$cgMarketData.price_change_percentage_24h',
-        updatedAt: 1,
+        mergedResults: {
+          $concatArrays: [
+            "$cmcResults",
+            "$cgResults",
+          ],
+        },
       },
     },
+    {
+      $unwind: {
+        path: "$mergedResults",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        "mergedResults.id": { $ne: null }
+      }
+    },
+    {
+      $sort: {
+        "mergedResults.createdAt": -1,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        favCoins: {
+          $push: "$mergedResults",
+        },
+      },
+    },
+    {
+      $skip: params.skip
+    },
+    {
+      $limit: params.limit
+    }
   ]);
-  return data;
+
+  if (data.length < 1) {
+    return []
+  }
+  return data[0].favCoins;
 }
 
 async function removeFavCoin(params: { userId: string; addresses: string[] }) {

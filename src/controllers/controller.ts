@@ -41,6 +41,7 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'getFavCoin') {
       data = await coinFavService.getFavCoin({
+        ...body.args,
         userId: _req.user.userId,
       });
     }

@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"YGWQhdIdcVN8zV2LT0SsvbJIbaY2asd\",\n        \"username\": \"Rahul Trivediasdsa\",\n        \"deviceId\": \"fom4PXBrTz24OOvM3vtK_1:APA91bG-X3DebN8LEefQWtyiBLbAYD0DSflbTMw1shMVJiw3XXG4reIh3tKTkhm-cFFb4_fi0AJMP4gfPEiLNbPX3WHA_aXL7f9EZM8PPGWNvC8mm6Wt51T8HFT_fSyK0GR-QobqCUuasda\"\n    }\n}",
+							"raw": "{\n    \"method\": \"tokenCreate\",\n    \"args\": {\n        \"userId\": \"n0SCDwv3SaPPmJy2VUSLHIgNsEz1\",\n        \"username\": \"Rahul Trivedi\",\n        \"deviceId\": \"cb7sWlr1RoC0bQQDXXcSND:APA91bFomxKhYh-RT0jrhIzGInc5rds-jx6bTCf7pgvgm66Ck039e5sowZ-jMntCEeoP0CixdFiwsDrhmpgg27Vg0ToFNiS9TbZ7X1lBOCqEQgxo5cv4Ztkrmfuyta_6Ec8kc3kOIpi2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -98,12 +98,29 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrlRemote}}/update-price",
+							"raw": "{{baseUrlLocal}}/update-price",
+							"host": [
+								"{{baseUrlLocal}}"
+							],
+							"path": [
+								"update-price"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-coin-list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrlRemote}}/update-coin-list",
 							"host": [
 								"{{baseUrlRemote}}"
 							],
 							"path": [
-								"update-price"
+								"update-coin-list"
 							]
 						}
 					},
@@ -121,7 +138,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"string\": \"0x11950d141EcB863F01007AdD7D1A342041227b58\"\n    }\n}",
+							"raw": "{\n    \"method\": \"searchCoin\",\n    \"args\": {\n        \"network\": \"bsc\",\n        \"string\": \"0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -145,7 +162,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"address\": \"0x95c91eef65f50570cfc3f269961a00108cf7bf59\"\n    }\n}",
+							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"platform\": \"cmc\",\n        \"value\": 1027\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -168,7 +185,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"getFavCoin\",\n    \"args\": {}\n}",
+							"raw": "{\n    \"method\": \"getFavCoin\",\n    \"args\": { }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -191,7 +208,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"addresses\": [\"0x95c91eef65f50570cfc3f269961a00108cf7bf59\", \"0x07814b55b9d71f058d434de0beb40cf8b931d9a2\"]\n    }\n}",
+							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"_ids\": [\"64c8baeed8fe90f17cca2f9f\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -260,7 +277,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0x606fb7969fc1b5cad58e64b12cf827fb65ee4875\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 20 // optional, alertPrice is required, if this is not provided\n    }\n}",
+							"raw": "{\n    \"method\": \"setAlert\",\n    \"args\": {\n        \"alertBaseCurrency\": \"0x631e4a13af90437e7dabcd8bed4067c8db48065e\",\n        \"alertSide\": \"down\",\n        \"alertPercentage\": 20 // optional, alertPrice is required, if this is not provided\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -352,7 +369,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"address\": \"0x11950d141EcB863F01007AdD7D1A342041227b58\"\n    }\n}",
+							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"platform\": \"cmc\",\n        \"value\": 5\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -376,6 +393,29 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"method\": \"logout\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list-top-100",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"listTop100\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -459,12 +499,12 @@
 		},
 		{
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJZR1dRaGRJZGNWTjh6VjJMVDBTc3ZiSkliYVkyIiwiZGV2aWNlSWQiOiJmb200UFhCclR6MjRPT3ZNM3Z0S18xOkFQQTkxYkctWDNEZWJOOExFZWZRV3R5aUJMYkFZRDBEU2ZsYlRNdzFzaE1WSml3M1hYRzRyZUloM3RLVGtobS1jRkZiNF9maTBBSk1QNGdmUEVpTE5iUFgzV0hBX2FYTDdmOUVaTThQUEdXTnZDOG1tNld0NTFUOEhGVF9mU3lLMEdSLVFvYnFDVXVhIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNjg5MTUzNzM1LCJleHAiOjE2ODk3NTg1MzV9.sqS6LLgzD4B877QkMQKxX2U0oVwLpnfoxKuYkiyi7EQ",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJuMFNDRHd2M1NhUFBtSnkyVlVTTEhJZ05zRXoxIiwiZGV2aWNlSWQiOiJjYjdzV2xyMVJvQzBiUVFEWFhjU05EOkFQQTkxYkZvbXhLaFloLVJUMGpyaEl6R0luYzVyZHMtang2YlRDZjdwZ3ZnbTY2Q2swMzllNXNvd1otak1udENFZW9QMENpeGRGaXdzRHJobXBnZzI3VmcwVG9GTmlTOVRiWjdYMWxCT0NxRVFneG81Y3Y0WnRrcm1mdXl0YV82RWM4a2Mza09JcGkyIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNjkwNzMzNzA5LCJleHAiOjE2OTEzMzg1MDl9.4B6mHdmdju1L0ZBFQ19EW1F3YNSxoFzlhI5lIt4z1VM",
 			"type": "string"
 		},
 		{
 			"key": "refreshToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJZR1dRaGRJZGNWTjh6VjJMVDBTc3ZiSkliYVkyIiwiZGV2aWNlSWQiOiJmb200UFhCclR6MjRPT3ZNM3Z0S18xOkFQQTkxYkctWDNEZWJOOExFZWZRV3R5aUJMYkFZRDBEU2ZsYlRNdzFzaE1WSml3M1hYRzRyZUloM3RLVGtobS1jRkZiNF9maTBBSk1QNGdmUEVpTE5iUFgzV0hBX2FYTDdmOUVaTThQUEdXTnZDOG1tNld0NTFUOEhGVF9mU3lLMEdSLVFvYnFDVXVhIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTY4OTE1MzczNSwiZXhwIjoxNjg5NzU4NTM1fQ.6EuP54Y80AqZJ1PRp8cy0nPGAYai8UX_Jr_Ov35WM2o",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJuMFNDRHd2M1NhUFBtSnkyVlVTTEhJZ05zRXoxIiwiZGV2aWNlSWQiOiJjYjdzV2xyMVJvQzBiUVFEWFhjU05EOkFQQTkxYkZvbXhLaFloLVJUMGpyaEl6R0luYzVyZHMtang2YlRDZjdwZ3ZnbTY2Q2swMzllNXNvd1otak1udENFZW9QMENpeGRGaXdzRHJobXBnZzI3VmcwVG9GTmlTOVRiWjdYMWxCT0NxRVFneG81Y3Y0WnRrcm1mdXl0YV82RWM4a2Mza09JcGkyIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTY4OTY1NjY3MCwiZXhwIjoxNjkwMjYxNDcwfQ.-UmJebHuHQhT-fs2958pSimiwnviJxV9jpExmiqZCZY",
 			"type": "string"
 		}
 	]

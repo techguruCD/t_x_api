@@ -1,8 +1,4 @@
-import cgRequests from '../coingecko/requests';
-import coinsModel from '../models/coins.model';
-import favCoinsModel from '../models/favCoins.model';
 import { ExpressError } from '../utils/error.utils';
-import bitqueryRequests from '../bitquery/requests';
 import cmcModel from '../models/cmc.model';
 
 async function getCoinInfo(params: { userId: string, platform: string, value: number | string }) {

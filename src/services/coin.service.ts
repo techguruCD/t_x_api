@@ -91,6 +91,30 @@ async function getCoinInfo(params: { userId: string, platform: string, value: nu
               type: "source_code",
               values: "$urls.source_code",
             },
+            {
+              type: "chat",
+              values: "$urls.chat"
+            },
+            {
+              type: "facebook",
+              values: "$urls.facebook"
+            },
+            {
+              type: "explorer",
+              values: "$urls.explorer"
+            },
+            {
+              type: "reddit",
+              values: "$urls.reddit"
+            },
+            {
+              type: "technical_doc",
+              values: "$urls.technical_doc"
+            },
+            {
+              type: "announcement",
+              values: "$urls.announcement"
+            },
           ],
           chart: [],
           platform: "cmc"

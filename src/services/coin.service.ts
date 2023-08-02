@@ -104,7 +104,7 @@ async function getCoinInfo(params: { userId: string, platform: string, value: nu
     }
 
     const isFav = await favCoinsModel.exists({ platform: "cmc", value: params.value, userId: params.userId }).lean();
-    cmcCoin[0].isFav = Boolean(isFav);
+    cmcCoin[0].isFav = isFav?._id.toString() ?? null
 
     data['info'] = cmcCoin[0];
 

@@ -29,7 +29,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     },
     { $lookup: { from: "CMCList", localField: "id", foreignField: "id", as: "cmcCoin" } },
     { $unwind: { path: "$cmcCoin", preserveNullAndEmptyArrays: true } },
-    { $unwind: { path: "$contract_address", preserveNullAndEmptyArrays: false } },
+    { $unwind: { path: "$contract_address", preserveNullAndEmptyArrays: true } },
     {
       $group: {
         _id: { id: "$id", contract_address: "$contract_address.contract_address" },

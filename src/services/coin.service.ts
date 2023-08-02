@@ -29,20 +29,17 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     },
     { $lookup: { from: "CMCList", localField: "id", foreignField: "id", as: "cmcCoin" } },
     { $unwind: { path: "$cmcCoin", preserveNullAndEmptyArrays: true } },
-    { $unwind: { path: "$contract_address", preserveNullAndEmptyArrays: true } },
     {
-      $group: {
-        _id: { id: "$id", contract_address: "$contract_address.contract_address" },
-        id: { $first: "$id" },
-        name: { $first: "$name" },
-        logo: { $first: "$logo" },
-        price: { $first: "$cmcCoin.quote.USD.price" },
-        change: { $first: "$cmcCoin.quote.USD.percent_change_1h" },
-        contract_address: { $first: "$contract_address.contract_address" },
-        platform: { $first: "cmc" },
-        cmc_rank: { $first: "$cmcCoin.cmc_rank" },
-        updatedAt: { $first: "$updatedAt" }
-      },
+      $project: {
+        id: "$id",
+        name: "$name",
+        logo: "$logo",
+        price: "$cmcCoin.quote.USD.price",
+        change: "$cmcCoin.quote.USD.percent_change_1h",
+        platform:  "cmc",
+        cmc_rank: "$cmcCoin.cmc_rank",
+        updatedAt: "$updatedAt",
+      }
     },
     { $sort: { cmc_rank: 1 } },
     { $project: { _id: 0, cmc_rank: 0 } }

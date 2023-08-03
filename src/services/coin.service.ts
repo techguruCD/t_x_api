@@ -36,14 +36,118 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         logo: "$logo",
         price: "$cmcCoin.quote.USD.price",
         change: "$cmcCoin.quote.USD.percent_change_1h",
-        platform:  "cmc",
-        cmc_rank: "$cmcCoin.cmc_rank",
+        platform: "cmc",
         updatedAt: "$updatedAt",
+        network: null,
+        type: "token",
+        cmc_rank: "$cmcCoin.cmc_rank",
       }
     },
     { $sort: { cmc_rank: 1 } },
     { $project: { _id: 0, cmc_rank: 0 } }
-  ]).skip(params.skip).limit(params.limit);
+  ]).unionWith({
+    coll: 'BQList',
+    pipeline: [
+      {
+        $match: {
+          $or: [
+            { "currency.address": params.searchTerm },
+            { "currency.name": searchObjectWithRegex },
+            { "currency.symbol": searchObjectWithRegex },
+            { "currency.tokenId": params.searchTerm },
+            { "currency.tokenType": params.searchTerm },
+          ],
+        },
+      },
+      {
+        $project: {
+          id: "$_id",
+          name: "$currency.name",
+          logo: null,
+          price: null,
+          change: null,
+          platform: null,
+          updatedAt: "$updatedAt",
+          network: "$network",
+          type: "token",
+        },
+      },
+      { $sort: { count: -1 } },
+    ]
+  }).unionWith({
+    coll: 'BQPair',
+    pipeline: [
+      {
+        $lookup: {
+          from: "BQList",
+          localField: "baseCurrency",
+          foreignField: "currency.address",
+          as: "baseCurrency",
+        },
+      },
+      { $unwind: { path: "$baseCurrency", preserveNullAndEmptyArrays: false } },
+      {
+        $lookup: {
+          from: "BQList",
+          localField: "quoteCurrency",
+          foreignField: "currency.address",
+          as: "quoteCurrency",
+        },
+      },
+      { $unwind: { path: "$quoteCurrency", preserveNullAndEmptyArrays: false },
+      },
+      {
+        $project: {
+          _id: 1,
+          network: 1,
+          pairContract: 1,
+          baseCurrency: "$baseCurrency.currency",
+          dexToolSlug: 1,
+          dexTrades: 1,
+          exchange: 1,
+          quoteCurrency: "$quoteCurrency.currency",
+        },
+      },
+      {
+        $match: {
+          $or: [
+            // { "baseCurrency.address": params.searchTerm },
+            // { "baseCurrency.name": searchObjectWithRegex },
+            // { "baseCurrency.symbol": searchObjectWithRegex },
+            // { "baseCurrency.tokenId": params.searchTerm },
+            // { "baseCurrency.tokenType": params.searchTerm },
+            // { "quoteCurrency.address": params.searchTerm },
+            // { "quoteCurrency.name": searchObjectWithRegex },
+            // { "quoteCurrency.symbol": searchObjectWithRegex },
+            // { "quoteCurrency.tokenId": params.searchTerm },
+            // { "quoteCurrency.tokenType": params.searchTerm },
+            { "exchange.address": params.searchTerm },
+            { "pairContract.address": params.searchTerm },
+            { "pairContract.currency.name": searchObjectWithRegex },
+            { "pairContract.currency.symbol": searchObjectWithRegex },
+            { "pairContract.currency.tokenType":  params.searchTerm },
+            { "exchange.fullName": searchObjectWithRegex },
+            { "exchange.fullNameWithId": searchObjectWithRegex },
+            { "exchange.name": searchObjectWithRegex },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          name: { $concat: [ "$baseCurrency.symbol", "/", "$quoteCurrency.symbol" ] },
+          logo: null,
+          price: null,
+          change: null,
+          platform: "bitquery",
+          updatedAt: "$updatedAt",
+          network: "$network",
+          type: "pair",
+        },
+      },
+    ]
+  }).skip(params.skip).limit(params.limit);
 
   return results;
 }

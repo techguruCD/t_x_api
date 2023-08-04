@@ -101,7 +101,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           logo: null,
           price: null,
           change: null,
-          platform: "bitquery",
+          platform: "DEX",
           updatedAt: "$updatedAt",
           network: "$network",
           type: "pair",
@@ -206,7 +206,7 @@ async function getCoinInfo(params: {
 
   }
 
-  if (params.platform === 'bitquery' && params.type === 'token') {
+  if (params.platform === 'DEX' && params.type === 'token') {
     if (!params.tokenPairSkip) {
       params.tokenPairSkip = 0
     }
@@ -224,7 +224,7 @@ async function getCoinInfo(params: {
           priceChange: null,
           urls: [],
           chart: [],
-          platform: "bitquery",
+          platform: "DEX",
         },
       },
       {
@@ -242,7 +242,7 @@ async function getCoinInfo(params: {
                 logo: null,
                 price: null,
                 change: null,
-                platform: "bitquery",
+                platform: "DEX",
                 updated: "$updatedAt",
                 network: "$network",
                 type: "pair",
@@ -260,13 +260,13 @@ async function getCoinInfo(params: {
       return data;
     }
 
-    const isFav = await favCoinsModel.exists({ platform: "bitquery", value: params.value, userId: params.userId }).lean();
+    const isFav = await favCoinsModel.exists({ platform: "DEX", value: params.value, userId: params.userId }).lean();
     bqCoin[0].isFav = isFav?._id.toString() ?? null;
 
     data['info'] = bqCoin[0];
   }
 
-  if (params.platform === 'bitquery' && params.type === 'pair') {
+  if (params.platform === 'DEX' && params.type === 'pair') {
     const bqPair = await bqModel.BQPairModel.aggregate([
       { $match: { "smartContract.address.address": params.value } },
       {
@@ -275,7 +275,7 @@ async function getCoinInfo(params: {
           name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
           logo: null,
           change: null,
-          platform: "bitquery",
+          platform: "DEX",
           updatedAt: "$updatedAt",
           network: "$network",
           type: "pair",
@@ -325,7 +325,7 @@ async function getCoinInfo(params: {
       };
     }
 
-    const isFav = await favCoinsModel.exists({ platform: 'bitquery', value: params.value, userId: params.userId }).lean();
+    const isFav = await favCoinsModel.exists({ platform: 'DEX', value: params.value, userId: params.userId }).lean();
     info['isFav'] = isFav?._id.toString() ?? null;
     
     data['info'] = info;

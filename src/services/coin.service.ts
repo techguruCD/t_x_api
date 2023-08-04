@@ -369,7 +369,8 @@ async function getTop100() {
         logo: "$metadata.logo",
         price: "$quote.USD.price",
         change: "$quote.USD.percent_change_1h",
-        platform: "cmc"
+        platform: "cmc",
+        type: "token"
       },
     },
   ]);

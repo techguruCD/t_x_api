@@ -67,7 +67,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           logo: null,
           price: null,
           change: null,
-          platform: null,
+          platform: "DEX",
           updatedAt: "$updatedAt",
           network: "$network",
           type: "token",

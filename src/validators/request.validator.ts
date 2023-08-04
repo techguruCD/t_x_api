@@ -118,7 +118,9 @@ const GetAlertParams = object({
 
 const CoinInfoParams = object({
   platform: string(),
-  value: union([number(), string()])
+  value: union([number(), string()]),
+  type: string(),
+  tokenPairSkip: optional(number())
 });
 
 const RequestValidator = refine(

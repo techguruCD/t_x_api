@@ -1,4 +1,4 @@
-import { ExpressError } from '../utils/error.utils';
+import bqModel from '../models/bq.model';
 import cmcModel from '../models/cmc.model';
 import favCoinsModel from '../models/favCoins.model';
 
@@ -22,8 +22,8 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           { tags: { $elemMatch: searchObjectWithRegex } },
           { "tag-groups": { $elemMatch: searchObjectWithRegex } },
           { "tag-names": { $elemMatch: searchObjectWithRegex } },
-          { "platform.token_address": params.searchTerm },
-          { "contract_address.contract_address": params.searchTerm },
+          { "platform.token_address": searchObjectWithRegex },
+          { "contract_address.contract_address": searchObjectWithRegex },
         ],
       },
     },
@@ -31,6 +31,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     { $unwind: { path: "$cmcCoin", preserveNullAndEmptyArrays: true } },
     {
       $project: {
+        _id: 0,
         id: "$id",
         name: "$name",
         logo: "$logo",
@@ -51,17 +52,18 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       {
         $match: {
           $or: [
-            { "currency.address": params.searchTerm },
+            { "currency.address": searchObjectWithRegex },
             { "currency.name": searchObjectWithRegex },
             { "currency.symbol": searchObjectWithRegex },
-            { "currency.tokenId": params.searchTerm },
-            { "currency.tokenType": params.searchTerm },
+            { "currency.tokenId": searchObjectWithRegex },
+            { "currency.tokenType": searchObjectWithRegex },
           ],
         },
       },
       {
         $project: {
-          id: "$_id",
+          _id: 0,
+          id: "$currency.address",
           name: "$currency.name",
           logo: null,
           price: null,
@@ -78,65 +80,24 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     coll: 'BQPair',
     pipeline: [
       {
-        $lookup: {
-          from: "BQList",
-          localField: "baseCurrency",
-          foreignField: "currency.address",
-          as: "baseCurrency",
-        },
-      },
-      { $unwind: { path: "$baseCurrency", preserveNullAndEmptyArrays: false } },
-      {
-        $lookup: {
-          from: "BQList",
-          localField: "quoteCurrency",
-          foreignField: "currency.address",
-          as: "quoteCurrency",
-        },
-      },
-      { $unwind: { path: "$quoteCurrency", preserveNullAndEmptyArrays: false },
-      },
-      {
-        $project: {
-          _id: 1,
-          network: 1,
-          pairContract: 1,
-          baseCurrency: "$baseCurrency.currency",
-          dexToolSlug: 1,
-          dexTrades: 1,
-          exchange: 1,
-          quoteCurrency: "$quoteCurrency.currency",
-        },
-      },
-      {
         $match: {
           $or: [
-            // { "baseCurrency.address": params.searchTerm },
-            // { "baseCurrency.name": searchObjectWithRegex },
-            // { "baseCurrency.symbol": searchObjectWithRegex },
-            // { "baseCurrency.tokenId": params.searchTerm },
-            // { "baseCurrency.tokenType": params.searchTerm },
-            // { "quoteCurrency.address": params.searchTerm },
-            // { "quoteCurrency.name": searchObjectWithRegex },
-            // { "quoteCurrency.symbol": searchObjectWithRegex },
-            // { "quoteCurrency.tokenId": params.searchTerm },
-            // { "quoteCurrency.tokenType": params.searchTerm },
-            { "exchange.address": params.searchTerm },
-            { "pairContract.address": params.searchTerm },
-            { "pairContract.currency.name": searchObjectWithRegex },
-            { "pairContract.currency.symbol": searchObjectWithRegex },
-            { "pairContract.currency.tokenType":  params.searchTerm },
+            { "smartContract.address.address": searchObjectWithRegex },
+            { "smartContract.currency.name": searchObjectWithRegex },
+            { "smartContract.currency.symbol": searchObjectWithRegex },
+            { "smartContract.currency.tokenType": searchObjectWithRegex },
+            { "exchange.address.address": searchObjectWithRegex },
             { "exchange.fullName": searchObjectWithRegex },
             { "exchange.fullNameWithId": searchObjectWithRegex },
-            { "exchange.name": searchObjectWithRegex },
           ],
         },
       },
+      { $sort: { tradeAmount: -1 } },
       {
         $project: {
           _id: 0,
-          id: "$_id",
-          name: { $concat: [ "$baseCurrency.symbol", "/", "$quoteCurrency.symbol" ] },
+          id: "$smartContract.address.address",
+          name: { $concat: [ "$buyCurrency.symbol", "/", "$sellCurrency.symbol" ] },
           logo: null,
           price: null,
           change: null,
@@ -144,6 +105,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           updatedAt: "$updatedAt",
           network: "$network",
           type: "pair",
+          exchange: "$exchange.fullName",
         },
       },
     ]
@@ -152,7 +114,13 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
   return results;
 }
 
-async function getCoinInfo(params: { userId: string, platform: string, value: number | string }) {
+async function getCoinInfo(params: {
+  userId: string,
+  platform: string,
+  value: number | string,
+  type: 'token' | 'pair',
+  tokenPairSkip: number
+}) {
   let data: Record<string, any> = { info: null }
 
   if (params.platform === "cmc") {
@@ -228,18 +196,139 @@ async function getCoinInfo(params: { userId: string, platform: string, value: nu
     ])
 
     if (cmcCoin.length < 1) {
-      throw new ExpressError('CSE00002', 'coin info not found', 404);
+      return data;
     }
 
     const isFav = await favCoinsModel.exists({ platform: "cmc", value: params.value, userId: params.userId }).lean();
-    cmcCoin[0].isFav = isFav?._id.toString() ?? null
+    cmcCoin[0].isFav = isFav?._id.toString() ?? null;
 
     data['info'] = cmcCoin[0];
 
   }
 
-  if (params.platform === "cg") {
-    data['info'] = { platform: "cg" }
+  if (params.platform === 'bitquery' && params.type === 'token') {
+    if (!params.tokenPairSkip) {
+      params.tokenPairSkip = 0
+    }
+
+    const bqCoin = await bqModel.BQListModel.aggregate([
+      { $match: { "currency.address": params.value } },
+      {
+        $project: {
+          _id: 0,
+          id: "$currency.address",
+          name: "$currency.name",
+          logo: null,
+          description: null,
+          price: null,
+          priceChange: null,
+          urls: [],
+          chart: [],
+          platform: "bitquery",
+        },
+      },
+      {
+        $lookup: {
+          from: "BQPair",
+          let: { address: "$id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$buyCurrency.address", "$$address"] } } },
+            { $skip: params.tokenPairSkip },
+            { $limit: 10 },
+            {
+              $project: {
+                id: "$smartContract.address.address",
+                name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
+                logo: null,
+                price: null,
+                change: null,
+                platform: "bitquery",
+                updated: "$updatedAt",
+                network: "$network",
+                type: "pair",
+                exchange: "$exchange.fullName",
+              },
+            },
+          ],
+          as: "pairs",
+        },
+      },
+      { $limit: 1 }
+    ]);
+
+    if (bqCoin.length < 1) {
+      return data;
+    }
+
+    const isFav = await favCoinsModel.exists({ platform: "bitquery", value: params.value, userId: params.userId }).lean();
+    bqCoin[0].isFav = isFav?._id.toString() ?? null;
+
+    data['info'] = bqCoin[0];
+  }
+
+  if (params.platform === 'bitquery' && params.type === 'pair') {
+    const bqPair = await bqModel.BQPairModel.aggregate([
+      { $match: { "smartContract.address.address": params.value } },
+      {
+        $project: {
+          id: "$smartContract.address.address",
+          name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
+          logo: null,
+          change: null,
+          platform: "bitquery",
+          updatedAt: "$updatedAt",
+          network: "$network",
+          type: "pair",
+          count: "$count",
+          tradeAmount: "$tradeAmount",
+          pairContractAddress:
+            "$smartContract.address.address",
+          protocolType: "$smartContract.protocolType",
+          exchange: "$exchange.fullName",
+          exchnageContractAddress:
+            "$exchange.address.address",
+        },
+      }
+    ]);
+
+    if (bqPair.length < 1) {
+      return data;
+    }
+
+    const info: Record<string, any> = {
+      id: bqPair[0].id,
+      name: bqPair[0].name,
+      logo: bqPair[0].logo,
+      price: null,
+      change: bqPair[0].change,
+      platform: bqPair[0].platform,
+      network: bqPair[0].network,
+      type: bqPair[0].type,
+      pairContractAddress: bqPair[0].pairContractAddress,
+      protocolType: bqPair[0].protocolType,
+      exchange: bqPair[0].exchange,
+      exchangeContractAddress: bqPair[0].exchangeContractAddress,
+      buy: {
+        name: bqPair[0].name,
+        trades: bqPair[0].count,
+        tradeAmount: bqPair[0].tradeAmount,
+      },
+      sell: null,
+      isFav: null
+    }
+    
+    if (bqPair[1]) {
+      info['sell'] = {
+        name: bqPair[1].name,
+        count: bqPair[1].count,
+        tradeAmount: bqPair[1].tradeAmount
+      };
+    }
+
+    const isFav = await favCoinsModel.exists({ platform: 'bitquery', value: params.value, userId: params.userId }).lean();
+    info['isFav'] = isFav?._id.toString() ?? null;
+    
+    data['info'] = info;
   }
 
   return data;

@@ -369,7 +369,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"platform\": \"cmc\",\n        \"value\": 5\n    }\n}",
+							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"platform\": \"bitquery\",\n        \"type\": \"pair\",\n        \"value\": \"0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -438,7 +438,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\": \"meme\",\n        \"skip\": 0,\n        \"limit\": 100\n    }\n}",
+							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\": \"0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640\",\n        \"skip\": 0,\n        \"limit\": 100\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

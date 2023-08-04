@@ -157,6 +157,9 @@ Args:
 | ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | `platform` | string | `platform` of a specific token                                                                                                    | Yes      |
 | `value`    | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` from the list of top 100 coins or search list** | Yes      |
+| `type` | string | type of an asset. It can be either `pair` or `token` | Yes |
+| `tokenPairSkip` | number | pagination parameter for pairs received for a specific `token`. It will provide 10 pairs by default | Yes |
+
 
 Example Body:
 

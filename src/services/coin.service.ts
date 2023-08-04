@@ -11,19 +11,18 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
-  const searchObjectWithRegex = { $regex: params.searchTerm, $options: "i" }
   const results = await cmcModel.CMCMetadataModel.aggregate([
     {
       $match: {
         $or: [
-          { name: searchObjectWithRegex },
-          { slug: searchObjectWithRegex },
-          { symbol: searchObjectWithRegex },
-          { tags: { $elemMatch: searchObjectWithRegex } },
-          { "tag-groups": { $elemMatch: searchObjectWithRegex } },
-          { "tag-names": { $elemMatch: searchObjectWithRegex } },
-          { "platform.token_address": searchObjectWithRegex },
-          { "contract_address.contract_address": searchObjectWithRegex },
+          { name: params.searchTerm },
+          { symbol: params.searchTerm },
+          { slug: params.searchTerm },
+          { tags: { $elemMatch: { $eq: params.searchTerm } } },
+          { "tag-groups": { $elemMatch: { $eq: params.searchTerm } } },
+          { "tag-names": { $elemMatch: { $eq: params.searchTerm } } },
+          { "platform.token_address": params.searchTerm },
+          { "contract_address.contract_address": params.searchTerm },
         ],
       },
     },
@@ -44,7 +43,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         cmc_rank: "$cmcCoin.cmc_rank",
       }
     },
-    { $sort: { cmc_rank: 1 } },
+    // { $sort: { cmc_rank: 1 } },
     { $project: { _id: 0, cmc_rank: 0 } }
   ]).unionWith({
     coll: 'BQList',
@@ -52,11 +51,11 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       {
         $match: {
           $or: [
-            { "currency.address": searchObjectWithRegex },
-            { "currency.name": searchObjectWithRegex },
-            { "currency.symbol": searchObjectWithRegex },
-            { "currency.tokenId": searchObjectWithRegex },
-            { "currency.tokenType": searchObjectWithRegex },
+            { "currency.address": params.searchTerm },
+            { "currency.name": params.searchTerm },
+            { "currency.symbol": params.searchTerm },
+            { "currency.tokenId": params.searchTerm },
+            { "currency.tokenType": params.searchTerm },
           ],
         },
       },
@@ -82,13 +81,13 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       {
         $match: {
           $or: [
-            { "smartContract.address.address": searchObjectWithRegex },
-            { "smartContract.currency.name": searchObjectWithRegex },
-            { "smartContract.currency.symbol": searchObjectWithRegex },
-            { "smartContract.currency.tokenType": searchObjectWithRegex },
-            { "exchange.address.address": searchObjectWithRegex },
-            { "exchange.fullName": searchObjectWithRegex },
-            { "exchange.fullNameWithId": searchObjectWithRegex },
+            { "smartContract.address.address": params.searchTerm },
+            { "smartContract.currency.name": params.searchTerm },
+            { "smartContract.currency.symbol": params.searchTerm },
+            { "smartContract.currency.tokenType": params.searchTerm },
+            { "exchange.address.address": params.searchTerm },
+            { "exchange.fullName": params.searchTerm },
+            { "exchange.fullNameWithId": params.searchTerm },
           ],
         },
       },

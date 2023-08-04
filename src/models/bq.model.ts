@@ -40,37 +40,59 @@ const bqPairsSchema = new Schema({
         type: String,
         default: null
     },
-    baseCurrency: {
-        type: String,
-        ref: 'BQList'
-    },
-    quoteCurrency: {
-        type: String,
-        ref: 'BQList'
-    },
     exchange: new Schema({
-        address: String,
+        address: new Schema({
+            address: {
+                type: String,
+                index: true
+            }
+        }),
         fullName: String,
-        fullNameWithId: String,
-        name: String
+        fullNameWithId: String
     }),
-    pairContract: new Schema({
-        address: {
-            type: String,
-            index: true
-        },
+    smartContract: new Schema({
+        address: new Schema({
+            address: {
+                type: String,
+                index: true
+            }
+        }),
+        contractType: String,
         currency: new Schema({
             decimals: Number,
             name: String,
             symbol: String,
             tokenType: String
         }),
-        contractType: String,
         protocolType: String
     }),
-    lastFetchDate: String,
-    dexTrades: Number
-});
+    buyCurrency: new Schema({
+        address: {
+            type: String,
+            index: true
+        },
+        decimals: Number,
+        name: String,
+        symbol: String,
+        tokenId: String,
+        tokenType: String
+    }),
+    sellCurrency: new Schema({
+        address: {
+            type: String,
+            index: true
+        },
+        decimals: Number,
+        name: String,
+        symbol: String,
+        tokenId: String,
+        tokenType: String
+    }),
+    count: Number,
+    tradeAmount: Number,
+    daysTraded: Number,
+    started: String
+})
 
 const BQListModel = model('BQList', bqListSchema, 'BQList');
 const BQPairModel = model('BQPair', bqPairsSchema, 'BQPair');

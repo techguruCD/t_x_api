@@ -5,18 +5,9 @@ const cmcPlatformSchema = new Schema({
         type: Number,
         unique: true
     },
-    name: {
-        type: String,
-        index: true
-    },
-    symbol: {
-        type: String,
-        index: true
-    },
-    slug: {
-        type: String,
-        index: true
-    }
+    name: String,
+    symbol: String,
+    slug: String,
 }, { timestamps: { createdAt: true, updatedAt: true } });
 
 const cmcQuoteSchema = new Schema({
@@ -41,18 +32,9 @@ const cmcListSchema = new Schema({
         type: Number,
         unique: true
     },
-    name: {
-        type: String,
-        index: true
-    },
-    symbol: {
-        type: String,
-        index: true
-    },
-    slug: {
-        type: String,
-        index: true
-    },
+    name: String,
+    symbol: String,
+    slug: String,
     cmc_rank: Number,
     num_market_pairs: Number,
     circulating_supply: Number,
@@ -83,18 +65,9 @@ const cmcMetadataSchema = new Schema({
         type: Number,
         unique: true
     },
-    name: {
-        type: String,
-        index: true
-    },
-    symbol: {
-        type: String,
-        index: true
-    },
-    slug: {
-        type: String,
-        index: true
-    },
+    name: String,
+    symbol: String,
+    slug: String,
     category: String,
     description: String,
     logo: String,

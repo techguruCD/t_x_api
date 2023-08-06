@@ -12,14 +12,8 @@ const bqListSchema = new Schema({
             index: true
         },
         decimals: Number,
-        name: {
-            type: String,
-            index: true
-        },
-        symbol: {
-            type: String,
-            index: true
-        },
+        name: String,
+        symbol: String,
         tokenId: String,
         tokenType: String
     }),
@@ -33,7 +27,6 @@ const bqListSchema = new Schema({
     amount_usd: Number,
 }, { timestamps: { createdAt: true, updatedAt: true } });
 
-
 const bqPairsSchema = new Schema({
     network: String,
     dexToolSlug: {
@@ -42,10 +35,7 @@ const bqPairsSchema = new Schema({
     },
     exchange: new Schema({
         address: new Schema({
-            address: {
-                type: String,
-                index: true
-            }
+            address: String
         }),
         fullName: String,
         fullNameWithId: String
@@ -67,10 +57,7 @@ const bqPairsSchema = new Schema({
         protocolType: String
     }),
     buyCurrency: new Schema({
-        address: {
-            type: String,
-            index: true
-        },
+        address: String,
         decimals: Number,
         name: String,
         symbol: String,
@@ -78,18 +65,16 @@ const bqPairsSchema = new Schema({
         tokenType: String
     }),
     sellCurrency: new Schema({
-        address: {
-            type: String,
-            index: true
-        },
+        address: String,
         decimals: Number,
         name: String,
         symbol: String,
         tokenId: String,
         tokenType: String
     }),
+    buyCurrencyPrice: String,
+    sellCurrencyPrice: String,
     count: Number,
-    tradeAmount: Number,
     daysTraded: Number,
     started: String
 })
@@ -99,7 +84,7 @@ const BQPairModel = model('BQPair', bqPairsSchema, 'BQPair');
 
 const bqModel = {
     BQListModel,
-    BQPairModel
+    BQPairModel,
 };
 
 export default bqModel;

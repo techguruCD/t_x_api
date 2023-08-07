@@ -1,6 +1,5 @@
 import bqModel from '../models/bq.model';
 import cgModel from '../models/cg.model';
-import cmcModel from '../models/cmc.model';
 import favCoinsModel from '../models/favCoins.model';
 
 async function coinSearch(params: { searchTerm: string, skip?: number, limit?: number }) {
@@ -108,77 +107,32 @@ async function getCoinInfo(params: {
 }) {
   let data: Record<string, any> = { info: null }
 
-  if (params.platform === "cmc") {
-    const cmcCoin = await cmcModel.CMCMetadataModel.aggregate([
+  if (params.platform === "cg") {
+    const cmcCoin = await cgModel.CGListModel.aggregate([
       { $match: { id: params.value } },
-      {
-        $lookup: {
-          from: "CMCList",
-          localField: "id",
-          foreignField: "id",
-          as: "coinList",
-        },
-      },
-      {
-        $unwind:
-        {
-          path: "$coinList",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
       {
         $project: {
           id: 1,
           name: 1,
-          logo: 1,
-          description: 1,
-          price: "$coinList.quote.USD.price",
-          priceChange:
-            "$coinList.quote.USD.percent_change_1h",
-          urls: [
-            {
-              type: "website",
-              values: "$urls.website",
-            },
-            {
-              type: "x",
-              values: "$urls.twitter",
-            },
-            {
-              type: "source_code",
-              values: "$urls.source_code",
-            },
-            {
-              type: "chat",
-              values: "$urls.chat"
-            },
-            {
-              type: "facebook",
-              values: "$urls.facebook"
-            },
-            {
-              type: "explorer",
-              values: "$urls.explorer"
-            },
-            {
-              type: "reddit",
-              values: "$urls.reddit"
-            },
-            {
-              type: "technical_doc",
-              values: "$urls.technical_doc"
-            },
-            {
-              type: "announcement",
-              values: "$urls.announcement"
-            },
-          ],
+          logo: "$image",
+          description: {
+            $ifNull: ["$description", null],
+          },
+          price: "$current_price",
+          priceChange: {
+            $round: [
+              "$price_change_percentage_1h_in_currency",
+              4,
+            ],
+          },
+          urls: [],
           chart: [],
-          platform: "cmc"
+          platform: "cg",
+          type: "token",
         },
       },
       { $limit: 1 }
-    ])
+    ]);
 
     if (cmcCoin.length < 1) {
       return data;

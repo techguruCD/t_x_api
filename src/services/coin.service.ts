@@ -337,44 +337,22 @@ async function getCoinInfo(params: {
 
 async function getTop100() {
   const top100 = await cmcModel.CMCListModel.aggregate([
-    { $sort: { cmc_rank: 1, } },
-    { $limit: 100 },
-    {
-      $project: {
-        id: 1,
-        cmc_rank: 1,
-        name: 1,
-        platform: 1,
-        "quote.USD": 1,
-      },
+  { $match: { market_cap_rank: { $ne: null } } },
+  { $sort: { market_cap_rank: 1 } },
+  { $limit: 100 },
+  {
+    $project: {
+      id: 1,
+      market_cap_rank: 1,
+      name: 1,
+      logo: "$image",
+      price: "$current_price",
+      change: { $round: ["$price_change_percentage_1h_in_currency", 4] },
+      platform: "cg",
+      type: "token",
     },
-    {
-      $lookup: {
-        from: "CMCMetadata",
-        localField: "id",
-        foreignField: "id",
-        as: "metadata",
-      },
-    },
-    {
-      $unwind: {
-        path: "$metadata",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $project: {
-        id: 1,
-        cmc_rank: 1,
-        name: 1,
-        logo: "$metadata.logo",
-        price: "$quote.USD.price",
-        change: "$quote.USD.percent_change_1h",
-        platform: "cmc",
-        type: "token"
-      },
-    },
-  ]);
+  },
+]);
 
   return top100;
 }

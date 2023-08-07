@@ -12,40 +12,23 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
-  const results = await cmcModel.CMCMetadataModel.aggregate([
-    {
-      $match: {
-        $or: [
-          { name: params.searchTerm },
-          { symbol: params.searchTerm },
-          { slug: params.searchTerm },
-          { tags: { $elemMatch: { $eq: params.searchTerm } } },
-          { "tag-groups": { $elemMatch: { $eq: params.searchTerm } } },
-          { "tag-names": { $elemMatch: { $eq: params.searchTerm } } },
-          { "platform.token_address": params.searchTerm },
-          { "contract_address.contract_address": params.searchTerm },
-        ],
-      },
-    },
-    { $lookup: { from: "CMCList", localField: "id", foreignField: "id", as: "cmcCoin" } },
-    { $unwind: { path: "$cmcCoin", preserveNullAndEmptyArrays: true } },
+  // const regexSearch = { $regex: params.searchTerm, $options: "i" };
+
+  const results = await cgModel.CGListModel.aggregate([
+    { $match: { $or: [{ name: params.searchTerm }, { symbol: params.searchTerm }, { id: params.searchTerm }] } },
     {
       $project: {
-        _id: 0,
-        id: "$id",
-        name: "$name",
-        logo: "$logo",
-        price: "$cmcCoin.quote.USD.price",
-        change: "$cmcCoin.quote.USD.percent_change_1h",
-        platform: "cmc",
-        updatedAt: "$updatedAt",
-        network: null,
+        id: 1,
+        market_cap_rank: 1,
+        name: 1,
+        logo: "$image",
+        price: "$current_price",
+        change: { $round: ["$price_change_percentage_1h_in_currency", 4] },
+        platform: "cg",
         type: "token",
-        cmc_rank: "$cmcCoin.cmc_rank",
-      }
+        network: null,
+      },
     },
-    // { $sort: { cmc_rank: 1 } },
-    { $project: { _id: 0, cmc_rank: 0 } }
   ]).unionWith({
     coll: 'BQList',
     pipeline: [

@@ -98,7 +98,9 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           id: "$smartContract.address.address",
           name: { $concat: [ "$buyCurrency.symbol", "/", "$sellCurrency.symbol" ] },
           logo: null,
-          price: null,
+          price: {
+            $toDouble: "$buyCurrencyPrice"
+          },
           change: null,
           platform: "DEX",
           updatedAt: "$updatedAt",

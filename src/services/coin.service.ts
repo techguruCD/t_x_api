@@ -1,4 +1,5 @@
 import bqModel from '../models/bq.model';
+import cgModel from '../models/cg.model';
 import cmcModel from '../models/cmc.model';
 import favCoinsModel from '../models/favCoins.model';
 
@@ -336,7 +337,7 @@ async function getCoinInfo(params: {
 }
 
 async function getTop100() {
-  const top100 = await cmcModel.CMCListModel.aggregate([
+  const top100 = await cgModel.CGListModel.aggregate([
   { $match: { market_cap_rank: { $ne: null } } },
   { $sort: { market_cap_rank: 1 } },
   { $limit: 100 },

@@ -11,10 +11,10 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
-  // const regexSearch = { $regex: params.searchTerm, $options: "i" };
+  const regexSearch = { $regex: `^${params.searchTerm}$`, $options: "i" };
 
   const results = await cgModel.CGListModel.aggregate([
-    { $match: { $or: [{ symbol: params.searchTerm }, { name: params.searchTerm }, { id: params.searchTerm }] } },
+    { $match: { $or: [{ symbol: regexSearch }, { name: regexSearch }, { id: regexSearch }] } },
     {
       $project: {
         id: 1,
@@ -52,11 +52,11 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       {
         $match: {
           $or: [
-            { address: params.searchTerm },
-            { symbol: params.searchTerm },
-            { name: params.searchTerm },
-            { tokenId: params.searchTerm },
-            { tokenType: params.searchTerm },
+            { address: regexSearch },
+            { symbol: regexSearch },
+            { name: regexSearch },
+            { tokenId: regexSearch },
+            { tokenType: regexSearch },
           ],
         },
       },
@@ -67,13 +67,13 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       {
         $match: {
           $or: [
-            { "smartContract.address.address": params.searchTerm },
-            { "smartContract.currency.name": params.searchTerm },
-            { "smartContract.currency.symbol": params.searchTerm },
-            { "smartContract.currency.tokenType": params.searchTerm },
-            { "exchange.address.address": params.searchTerm },
-            { "exchange.fullName": params.searchTerm },
-            { "exchange.fullNameWithId": params.searchTerm },
+            { "smartContract.address.address": regexSearch },
+            { "smartContract.currency.name": regexSearch },
+            { "smartContract.currency.symbol": regexSearch },
+            { "smartContract.currency.tokenType": regexSearch },
+            { "exchange.address.address": regexSearch },
+            { "exchange.fullName": regexSearch },
+            { "exchange.fullNameWithId": regexSearch },
           ],
         },
       },

@@ -11,10 +11,10 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
-  // const regexSearch = { $regex: params.searchTerm, $options: "i" };
+  const regexSearch = { $regex: params.searchTerm, $options: "i" };
 
   const results = await cgModel.CGListModel.aggregate([
-    { $match: { $or: [{ name: params.searchTerm }, { symbol: params.searchTerm }, { id: params.searchTerm }] } },
+    { $match: { $or: [{ symbol: params.searchTerm }, { name: regexSearch }, { id: params.searchTerm }] } },
     {
       $project: {
         id: 1,
@@ -29,34 +29,37 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       },
     },
   ]).unionWith({
-    coll: 'BQList',
+    coll: 'BQPair',
     pipeline: [
+      {
+        $group: {
+          _id: "$buyCurrency.address",
+          id: { $first: "$buyCurrency.address" },
+          name: { $first: "$buyCurrency.name" },
+          logo: { $first: null },
+          price: { $first: { $toDouble: "$buyCurrencyPrice" } },
+          change: { $first: null },
+          platform: { $first: "DEX" },
+          address: { $first: "$buyCurrency.address" },
+          decimals: { $first: "$buyCurrency.decimals" },
+          symbol: { $first: "$buyCurrency.symbol" },
+          tokenId: { $first: "$buyCurrency.tokenId" },
+          tokenType: { $first: "$buyCurrency.tokenType" },
+          network: { $first: "$network" },
+          type: { $first: "token" },
+        },
+      },
       {
         $match: {
           $or: [
-            { "currency.address": params.searchTerm },
-            { "currency.name": params.searchTerm },
-            { "currency.symbol": params.searchTerm },
-            { "currency.tokenId": params.searchTerm },
-            { "currency.tokenType": params.searchTerm },
+            { address: params.searchTerm },
+            { symbol: params.searchTerm },
+            { name: regexSearch },
+            { tokenId: params.searchTerm },
+            { tokenType: params.searchTerm },
           ],
         },
       },
-      {
-        $project: {
-          _id: 0,
-          id: "$currency.address",
-          name: "$currency.name",
-          logo: null,
-          price: null,
-          change: null,
-          platform: "DEX",
-          updatedAt: "$updatedAt",
-          network: "$network",
-          type: "token",
-        },
-      },
-      { $sort: { count: -1 } },
     ]
   }).unionWith({
     coll: 'BQPair',

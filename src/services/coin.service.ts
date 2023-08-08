@@ -124,45 +124,45 @@ async function getCoinInfo(params: {
           urls: [
             {
               type: "website",
-              value: "$links.homepage",
+              values: "$links.homepage",
             },
             {
               type: "twitter",
-              value: ["$links.twitter_screen_name"],
+              values: ["$links.twitter_screen_name"],
             },
             {
               type: "message_board",
-              value: "$links.official_forum_url",
+              values: "$links.official_forum_url",
             },
             {
               type: "chat",
-              value: "$links.chat_url",
+              values: "$links.chat_url",
             },
             {
               type: "facebook",
-              value: ["$links.facebook_username"],
+              values: ["$links.facebook_username"],
             },
             {
               type: "explorer",
-              value: "$links.blockchain_site",
+              values: "$links.blockchain_site",
             },
             {
               type: "reddit",
-              value: ["$links.subreddit_url"],
+              values: ["$links.subreddit_url"],
             },
             {
               type: "technical_doc",
-              value: [],
+              values: [],
             },
             {
               type: "telegram",
-              value: [
+              values: [
                 "$links.telegram_channel_identifier",
               ],
             },
             {
               type: "source_code",
-              value: {
+              values: {
                 $concatArrays: [
                   "$links.repos_url.github",
                   "$links.repos_url.bitbucket",
@@ -171,7 +171,7 @@ async function getCoinInfo(params: {
             },
             {
               type: "announcement",
-              value: "$links.announcement_url",
+              values: "$links.announcement_url",
             },
           ],
           chart: [],

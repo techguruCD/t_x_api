@@ -14,7 +14,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
   const regexSearch = { $regex: params.searchTerm, $options: "i" };
 
   const results = await cgModel.CGListModel.aggregate([
-    { $match: { $or: [{ symbol: params.searchTerm }, { name: regexSearch }, { id: params.searchTerm }] } },
+    { $match: { $or: [{ symbol: params.searchTerm }, { name: params.searchTerm }, { id: params.searchTerm }] } },
     {
       $project: {
         id: 1,

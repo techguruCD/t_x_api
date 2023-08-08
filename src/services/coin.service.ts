@@ -11,7 +11,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
-  const regexSearch = { $regex: params.searchTerm, $options: "i" };
+  // const regexSearch = { $regex: params.searchTerm, $options: "i" };
 
   const results = await cgModel.CGListModel.aggregate([
     { $match: { $or: [{ symbol: params.searchTerm }, { name: params.searchTerm }, { id: params.searchTerm }] } },
@@ -54,7 +54,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           $or: [
             { address: params.searchTerm },
             { symbol: params.searchTerm },
-            { name: regexSearch },
+            { name: params.searchTerm },
             { tokenId: params.searchTerm },
             { tokenType: params.searchTerm },
           ],

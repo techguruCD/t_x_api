@@ -108,30 +108,107 @@ async function getCoinInfo(params: {
   let data: Record<string, any> = { info: null }
 
   if (params.platform === "cg") {
-    const cmcCoin = await cgModel.CGListModel.aggregate([
-      { $match: { id: params.value } },
+    const cmcCoin = await cgModel.CGCoinInfoModel.aggregate([
+      {
+        $match: {
+          id: params.value,
+        },
+      },
       {
         $project: {
           id: 1,
           name: 1,
-          logo: "$image",
-          description: {
-            $ifNull: ["$description", null],
-          },
+          logo: "$image.large",
+          description: "$description.en",
           price: "$current_price",
-          priceChange: {
-            $round: [
-              "$price_change_percentage_1h_in_currency",
-              4,
-            ],
-          },
-          urls: [],
+          urls: [
+            {
+              type: "website",
+              value: "$links.homepage",
+            },
+            {
+              type: "twitter",
+              value: ["$links.twitter_screen_name"],
+            },
+            {
+              type: "message_board",
+              value: "$links.official_forum_url",
+            },
+            {
+              type: "chat",
+              value: "$links.chat_url",
+            },
+            {
+              type: "facebook",
+              value: ["$links.facebook_username"],
+            },
+            {
+              type: "explorer",
+              value: "$links.blockchain_site",
+            },
+            {
+              type: "reddit",
+              value: ["$links.subreddit_url"],
+            },
+            {
+              type: "technical_doc",
+              value: [],
+            },
+            {
+              type: "telegram",
+              value: [
+                "$links.telegram_channel_identifier",
+              ],
+            },
+            {
+              type: "source_code",
+              value: {
+                $concatArrays: [
+                  "$links.repos_url.github",
+                  "$links.repos_url.bitbucket",
+                ],
+              },
+            },
+            {
+              type: "announcement",
+              value: "$links.announcement_url",
+            },
+          ],
           chart: [],
           platform: "cg",
           type: "token",
         },
       },
-      { $limit: 1 }
+      {
+        $lookup: {
+          from: "CGList",
+          localField: "id",
+          foreignField: "id",
+          as: "change",
+        },
+      },
+      {
+        $unwind: {
+          path: "$change",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          price: "$change.current_price",
+          priceChange: {
+            $round: [
+              "$change.price_change_percentage_1h_in_currency",
+              4,
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          change: 0,
+        },
+      },
     ]);
 
     if (cmcCoin.length < 1) {

@@ -36,10 +36,52 @@ const cgListSchema = new Schema({
     price_change_percentage_1h_in_currency: Number
 });
 
+const coinInfoSchema = new Schema({
+    id: {
+        type: String,
+        ref: 'CGList'
+    },
+    symbol: String,
+    name: String,
+    asset_platform_id: String,
+    platforms: Schema.Types.Mixed,
+    detail_platforms: Schema.Types.Mixed,
+    categories: [String],
+    public_notice: String,
+    description: Schema.Types.Mixed,
+    links: Schema.Types.Mixed,
+    image: new Schema({
+        thumb: String,
+        small: String,
+        large: String
+    }),
+    market_cap_rank: Number,
+    coingecko_rank: Number,
+    coingecko_score: Number,
+    developer_score: Number,
+    community_score: Number,
+    liquidity_score: Number,
+    public_interest_score: Number,
+    last_updated: String
+});
+
+const tickersSchema = new Schema({
+    id: {
+        type: String,
+        ref: 'CGList'
+    },
+    name: String,
+    tickers: [Schema.Types.Mixed]
+});
+
 const CGListModel = model('CGList', cgListSchema, 'CGList');
+const CGCoinInfoModel = model('CGInfo', coinInfoSchema, 'CGInfo');
+const CGTickersModel = model('CGTickers', tickersSchema, 'CGTickers');
 
 const cgModel = {
-    CGListModel
+    CGListModel,
+    CGCoinInfoModel,
+    CGTickersModel
 };
 
 export default cgModel;

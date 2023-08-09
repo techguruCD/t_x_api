@@ -111,7 +111,7 @@ async function getCoinInfo(params: {
   let data: Record<string, any> = { info: null }
 
   if (params.platform === "cg") {
-    const cmcCoin = await cgModel.CGCoinInfoModel.aggregate([
+    const cgCoin = await cgModel.CGCoinInfoModel.aggregate([
       {
         $match: {
           id: params.value,
@@ -214,14 +214,14 @@ async function getCoinInfo(params: {
       },
     ]);
 
-    if (cmcCoin.length < 1) {
+    if (cgCoin.length < 1) {
       return data;
     }
 
-    const isFav = await favCoinsModel.exists({ platform: "cmc", value: params.value, userId: params.userId }).lean();
-    cmcCoin[0].isFav = isFav?._id.toString() ?? null;
+    const isFav = await favCoinsModel.exists({ platform: "cg", value: params.value, userId: params.userId, type: 'token' }).lean();
+    cgCoin[0].isFav = isFav?._id.toString() ?? null;
 
-    data['info'] = cmcCoin[0];
+    data['info'] = cgCoin[0];
 
   }
 

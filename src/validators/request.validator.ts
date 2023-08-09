@@ -62,8 +62,9 @@ const SearchPairParams = object({
 });
 
 const SetFavCoinParams = object({
-  platform: string(),
+  platform: enums(['cg', 'DEX']),
   value: any(),
+  type: enums(['token', 'pair'])
 });
 
 const GetFavCoinParams = object({

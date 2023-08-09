@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 const favCoinSchema = new mongoose.Schema(
   {
@@ -7,13 +7,9 @@ const favCoinSchema = new mongoose.Schema(
       required: true,
       ref: 'Users',
     },
-    // TODO: cleanup
-    address: {
-      type: String,
-      ref: 'Coins',
-    },
     platform: String,
-    value: Schema.Types.Mixed,
+    value: String,
+    type: String,
   },
   { timestamps: { createdAt: true, updatedAt: true } }
 );

@@ -1,33 +1,23 @@
 import mongoose from 'mongoose';
-import cmcModel from '../models/cmc.model';
 import favCoinsModel from '../models/favCoins.model';
-import { ExpressError } from '../utils/error.utils';
 
-async function setFavCoin(params: { userId: string; platform: string, value: string | number }) {
+async function setFavCoin(params: { userId: string; platform: string, value: string, type: string }) {
 
-  if (params.platform === 'cmc') {
-    const coin = await cmcModel.CMCListModel.findOne({ id: params.value }).lean();
-
-    if (!coin) {
-      throw new ExpressError('CNF00001', "Coin Not Found", 404);
-    }
-
-    const favCoin = await favCoinsModel.findOne({ userId: params.userId, platform: "cmc", value: params.value }).lean();
-
+  const favObject = {
+    userId: String(params.userId),
+    platform: params.platform === 'cg' ? 'cg' : 'DEX',
+    type: params.type === 'token' ? 'token' : 'pair',
+    value: String(params.value)
+  }
+    const favCoin = await favCoinsModel.findOne(favObject);
+    
     if (favCoin) {
       return { success: true };
     }
 
-    await new favCoinsModel({
-      userId: params.userId,
-      platform: "cmc",
-      value: params.value
-    }).save();
+    await new favCoinsModel(favObject).save();
 
     return { success: true };
-  }
-
-  return { success: false };
 }
 
 async function getFavCoin(params: { userId: string, skip?: number, limit?: number }) {
@@ -40,144 +30,108 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
   }
 
   const data = await favCoinsModel.aggregate([
-    {
-      $match: {
-        userId: params.userId,
-      },
-    },
+    { $match: { userId: params.userId } },
     {
       $facet: {
-        cmcResults: [
-          {
-            $match: {
-              platform: "cmc",
-            },
-          },
-          {
-            $lookup: {
-              from: "CMCList",
-              localField: "value",
-              foreignField: "id",
-              as: "cmcCoin",
-            },
-          },
-          {
-            $lookup: {
-              from: "CMCMetadata",
-              localField: "value",
-              foreignField: "id",
-              as: "cmcMetadata",
-            },
-          },
-          {
-            $unwind: {
-              path: "$cmcCoin",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
-          {
-            $unwind: {
-              path: "$cmcMetadata",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
+        cgTokens: [
+          { $match: { platform: "cg", type: "token" } },
+          { $lookup: { from: "CGList", localField: "value", foreignField: "id", as: "cgCoin" } },
+          { $unwind: { path: "$cgCoin", preserveNullAndEmptyArrays: true } },
           {
             $project: {
-              id: {
-                $ifNull: ["$cmcMetadata.id", null]
-              },
-              name: {
-                $ifNull: ["$cmcMetadata.name", null]
-              },
-              logo: {
-                $ifNull: ["$cmcMetadata.logo", null]
-              },
-              price: {
-                $ifNull: ["$cmcCoin.quote.USD.price", null]
-              },
-              change: {
-                $ifNull: ["$cmcCoin.quote.USD.percent_change_1h", null]
-              },
-              platform: "cmc",
-              createdAt: 1,
-            },
-          },
-        ],
-        cgResults: [
-          {
-            $match: {
+              id: "$cgCoin.id",
+              market_cap_rank: "$cgCoin.market_cap_rank",
+              name: "$cgCoin.name",
+              logo: "$cgCoin.image",
+              price: "$cgCoin.current_price",
+              change: { $round: [ "$cgCoin.price_change_percentage_1h_in_currency", 4 ] },
               platform: "cg",
+              type: "token",
+              network: null,
+              updatedAt: 1,
             },
           },
+        ],
+        dexTokens: [
+          { $match: { platform: "DEX", type: "token" } },
+          {
+            $lookup: {
+              from: "BQPair",
+              let: { address: "$value" },
+              pipeline: [
+                { $match: { $expr: { $eq: ["$buyCurrency.address", "$$address"] } } },
+                { $limit: 1 },
+              ],
+              as: "bqCoin",
+            },
+          },
+          { $unwind: { path: "$bqCoin", preserveNullAndEmptyArrays: false } },
           {
             $project: {
-              id: {
-                $ifNull: ["$cmcMetadata.id", null]
-              },
-              name: {
-                $ifNull: ["$cmcMetadata.name", null]
-              },
-              logo: {
-                $ifNull: ["$cmcMetadata.logo", null]
-              },
-              price: {
-                $ifNull: ["$cmcCoin.quote.USD.price", null]
-              },
-              change: {
-                $ifNull: ["$cmcCoin.quote.USD.percent_change_1h", null]
-              },
-              platform: "cmc",
-              createdAt: 1,
+              id: "$bqCoin.buyCurrency.address",
+              name: "$bqCoin.buyCurrency.name",
+              logo: null,
+              price: { $toDouble: "$bqCoin.buyCurrencyPrice" },
+              change: null,
+              platform: "DEX",
+              address:
+                "$bqCoin.buyCurrency.address",
+              decimals:
+                "$bqCoin.buyCurrency.decimals",
+              symbol: "$bqCoin.buyCurrency.symbol",
+              tokenId:
+                "$bqCoin.buyCurrency.tokenId",
+              tokenType:
+                "$bqCoin.buyCurrency.tokenType",
+              network: "network",
+              type: "token",
+              updatedAt: 1,
+            },
+          },
+        ],
+        dexPairs: [
+          { $match: { platform: "DEX", type: "pair" } },
+          {
+            $lookup: {
+              from: "BQPair",
+              let: { address: "$value" },
+              pipeline: [
+                { $match: { $expr: { $eq: [ "$smartContract.address.address", "$$address" ] } } },
+                { $limit: 1 },
+              ],
+              as: "bqPair",
+            },
+          },
+          { $unwind: { path: "$bqPair", preserveNullAndEmptyArrays: false } },
+          {
+            $project: {
+              id: "$bqPair.smartContract.address.address",
+              name: { $concat: [ "$bqPair.buyCurrency.symbol", "/", "$bqPair.sellCurrency.symbol" ] },
+              logo: null,
+              price: { $toDouble: "$bqPair.buyCurrencyPrice" },
+              change: null,
+              platform: "DEX",
+              network: "$network",
+              type: "pair",
+              exchange: "$bqPair.exchange.fullName",
+              updatedAt: 1,
             },
           },
         ],
       },
     },
-    {
-      $project: {
-        mergedResults: {
-          $concatArrays: [
-            "$cmcResults",
-            "$cgResults",
-          ],
-        },
-      },
-    },
-    {
-      $unwind: {
-        path: "$mergedResults",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $match: {
-        "mergedResults.id": { $ne: null }
-      }
-    },
-    {
-      $sort: {
-        "mergedResults.createdAt": -1,
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        favCoins: {
-          $push: "$mergedResults",
-        },
-      },
-    },
-    {
-      $skip: params.skip
-    },
-    {
-      $limit: params.limit
-    }
+    { $project: { mergedResult: { $concatArrays: ["$cgTokens", "$dexTokens", "$dexPairs" ] } } },
+    { $unwind: { path: "$mergedResult", preserveNullAndEmptyArrays: false } },
+    { $sort: { "mergedResult.updatedAt": -1 } },
+    { $group: { _id: null, favCoins: { $push: "$mergedResult" } } },
+    { $skip: 0 },
+    { $limit: 10 },
   ]);
 
   if (data.length < 1) {
     return []
   }
+  
   return data[0].favCoins;
 }
 

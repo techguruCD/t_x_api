@@ -230,56 +230,29 @@ async function getCoinInfo(params: {
       params.tokenPairSkip = 0
     }
 
-    const bqCoin = await bqModel.BQListModel.aggregate([
-      { $match: { "currency.address": params.value } },
+    const bqCoin = await bqModel.BQPairModel.aggregate([
+      { $match: { "buyCurrency.address": params.value } },
       {
         $project: {
           _id: 0,
-          id: "$currency.address",
-          name: "$currency.name",
+          id: "$buyCurrency.address",
+          name: "$buyCurrency.name",
           logo: null,
           description: null,
-          price: null,
+          price: { $toDouble: "$buyCurrencyPrice" },
           priceChange: null,
           urls: [],
           chart: [],
           platform: "DEX",
         },
       },
-      {
-        $lookup: {
-          from: "BQPair",
-          let: { address: "$id" },
-          pipeline: [
-            { $match: { $expr: { $eq: ["$buyCurrency.address", "$$address"] } } },
-            { $skip: params.tokenPairSkip },
-            { $limit: 10 },
-            {
-              $project: {
-                id: "$smartContract.address.address",
-                name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
-                logo: null,
-                price: null,
-                change: null,
-                platform: "DEX",
-                updated: "$updatedAt",
-                network: "$network",
-                type: "pair",
-                exchange: "$exchange.fullName",
-              },
-            },
-          ],
-          as: "pairs",
-        },
-      },
-      { $limit: 1 }
     ]);
 
     if (bqCoin.length < 1) {
       return data;
     }
 
-    const isFav = await favCoinsModel.exists({ platform: "DEX", value: params.value, userId: params.userId }).lean();
+    const isFav = await favCoinsModel.exists({ platform: "DEX", value: params.value, userId: params.userId, type: "token" }).lean();
     bqCoin[0].isFav = isFav?._id.toString() ?? null;
 
     data['info'] = bqCoin[0];

@@ -153,12 +153,12 @@ Description: Fetch information for a specific coin. Use projection to get requir
 
 Args:
 
-| Name       | Type   | Description                                                                                                                       | Required |
-| ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `platform` | string | `platform` of a specific token                                                                                                    | Yes      |
-| `value`    | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` from the list of top 100 coins or search list** | Yes      |
-| `type` | string | type of an asset. It can be either `pair` or `token` | Yes |
-| `tokenPairSkip` | number | pagination parameter for pairs received for a specific `token`. It will provide 10 pairs by default | Yes |
+| Name            | Type   | Description                                                                                                                       | Required |
+| --------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `platform`      | string | `platform` of a specific token                                                                                                    | Yes      |
+| `value`         | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` from the list of top 100 coins or search list** | Yes      |
+| `type`          | string | type of an asset. It can be either `pair` or `token`                                                                              | Yes      |
+| `tokenPairSkip` | number | pagination parameter for pairs received for a specific `token`. It will provide 10 pairs by default                               | Yes      |
 
 
 Example Body:
@@ -181,10 +181,12 @@ Description: Set a favorite coin for a specific user by providing the address of
 
 Args:
 
-| Name       | Type   | Description                                                                                                                       | Required |
-| ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `platform` | string | `platform` of a specific token                                                                                                    | Yes      |
-| `value`    | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` from the list of top 100 coins or search list** | Yes      |
+| Name       | Type   | Description                                                                                      | Required |
+| ---------- | ------ | ------------------------------------------------------------------------------------------------ | -------- |
+| `platform` | string | `platform` of a specific token. Valid values: `cg`, `DEX`                                        | Yes      |
+| `value`    | string | `value` to fetch info for specific coin for specific token. **`value` is the `id` of the asset** | Yes      |
+| `type`     | string | `type` of the asset, Valid values: `token`, `pair`                                               | Yes      |
+
 
 Example Body:
 

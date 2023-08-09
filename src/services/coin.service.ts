@@ -287,7 +287,9 @@ async function getCoinInfo(params: {
           id: "$smartContract.address.address",
           name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
           logo: null,
-          price: "$buyCurrencyPrice",
+          price: {
+            $toDouble: "$buyCurrencyPrice"
+          },
           change: null,
           platform: "DEX",
           updatedAt: "$updatedAt",

@@ -215,13 +215,34 @@ async function getCoinInfo(params: {
     ]);
 
     if (cgCoin.length < 1) {
-      return data;
+      const cgCoinFromList = await cgModel.CGListModel.aggregate([
+        { $match: { id: params.value } },
+        {
+          $project: {
+            id: 1,
+            name: 1,
+            logo: "$image",
+            description: null,
+            price: "$current_price",
+            urls: [],
+            chart: [],
+            platform: "cg",
+            type: "token",
+          },
+        },
+      ]);
+      
+      if (cgCoinFromList.length < 1) {
+        return data;
+      }
+
+      data['info'] = cgCoinFromList[0];
+    } else {
+      data['info'] = cgCoin[0];
     }
 
     const isFav = await favCoinsModel.exists({ platform: "cg", value: params.value, userId: params.userId, type: 'token' }).lean();
-    cgCoin[0].isFav = isFav?._id.toString() ?? null;
-
-    data['info'] = cgCoin[0];
+    data['info'].isFav = isFav?._id.toString() ?? null;
 
   }
 

@@ -67,6 +67,9 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       {
         $match: {
           $or: [
+            { "buyCurrency.address": regexSearch },
+            { "buyCurrency.name": regexSearch },
+            { "buyCurrency.symbol": regexSearch },
             { "smartContract.address.address": regexSearch },
             { "smartContract.currency.name": regexSearch },
             { "smartContract.currency.symbol": regexSearch },

@@ -2,6 +2,65 @@ import bqModel from '../models/bq.model';
 import cgModel from '../models/cg.model';
 import favCoinsModel from '../models/favCoins.model';
 
+interface IUrlEntry {
+  type: string;
+  values: string[]
+}
+
+function parseUrl(urls: IUrlEntry[]) {
+  return urls.map(url => {
+    if (url.type === 'website') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "website", values: completeUrl };
+    }
+    if (url.type === 'twitter') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '').map(id => `https://twitter.com/${id}`);
+      return { type: "twitter", values: completeUrl };
+    }
+    if (url.type === 'message_board') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "message_board", values: completeUrl };
+    }
+    if (url.type === 'chat') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "chat", values: completeUrl };
+    }
+    if (url.type === 'facebook') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '').map(id => `https://www.facebook.com/${id}`);
+      return { type: "facebook", values: completeUrl };
+    }
+    if (url.type === 'explorer') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "explorer", values: completeUrl };
+    }
+    if (url.type === 'reddit') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "reddit", values: completeUrl };
+    }
+    if (url.type === 'technical_doc') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "technical_doc", values: completeUrl };
+    }
+    if (url.type === 'source_code') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "source_code", values: completeUrl };
+    }
+    if (url.type === 'announcement') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '');
+      return { type: "announcement", values: completeUrl };
+    }
+    if (url.type === 'bitcointalk') {
+      const completeUrl = url.values.filter(id => id !== null && id !== '').map(id => `https://bitcointalk.org/index.php?topic=${id}`);
+      return { type: "bitcointalk", values: completeUrl };
+    }
+    if (url.type === "telegram") {
+      const completeUrl = url.values.filter(id => id !== null && id !== '').map(id => `https://t.me/${id}`);
+      return { type: "telegram", values: completeUrl };
+    }
+    return url;
+  })
+}
+
 async function coinSearch(params: { searchTerm: string, skip?: number, limit?: number }) {
   if (params.skip === undefined) {
     params.skip = 0
@@ -179,6 +238,10 @@ async function getCoinInfo(params: {
               type: "announcement",
               values: "$links.announcement_url",
             },
+            {
+              type: "bitcointalk",
+              values: ["$links.bitcointalk_thread_identifier"]
+            }
           ],
           chart: [],
           platform: "cg",
@@ -242,6 +305,8 @@ async function getCoinInfo(params: {
       data['info'] = cgCoinFromList[0];
     } else {
       data['info'] = cgCoin[0];
+
+      data['info'].urls = parseUrl(data['info'].urls);
     }
 
     const isFav = await favCoinsModel.exists({ platform: "cg", value: params.value, userId: params.userId, type: 'token' }).lean();

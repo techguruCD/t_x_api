@@ -7,7 +7,6 @@ import {
   any,
   optional,
   number,
-  boolean,
   array,
   pattern,
   union,
@@ -15,8 +14,6 @@ import {
 
 const methods = enums([
   'search',
-  'searchCoin',
-  'searchPairs',
   'setFavCoin',
   'getFavCoin',
   'removeFavCoin',
@@ -46,21 +43,6 @@ const SearchParams = object({
   limit: optional(number())
 })
 
-const SearchCoinParams = object({
-  network: enums(['ethereum', 'bsc']),
-  string: string(),
-  limit: optional(number()),
-  offset: optional(number()),
-});
-
-const SearchPairParams = object({
-  network: enums(['ethereum', 'bsc']),
-  currency: string(),
-  limit: optional(number()),
-  offset: optional(number()),
-  fromBitquery: boolean(),
-});
-
 const SetFavCoinParams = object({
   platform: enums(['cg', 'DEX']),
   value: any(),
@@ -74,12 +56,6 @@ const GetFavCoinParams = object({
 
 const RemoveFavCoinParams = object({
   _ids: array(string()),
-});
-
-const SetPriceAlertParams = object({
-  network: enums(['eth', 'bsc']),
-  buyCurrency: string(),
-  sellCurrency: string(),
 });
 
 const TokenCreateParams = object({
@@ -139,14 +115,6 @@ const RequestValidator = refine(
       return msg;
     }
 
-    if (method === 'searchCoin' && !is(args, SearchCoinParams)) {
-      return msg;
-    }
-
-    if (method === 'searchPairs' && !is(args, SearchPairParams)) {
-      return msg;
-    }
-
     if (method === 'setFavCoin' && !is(args, SetFavCoinParams)) {
       return msg;
     }
@@ -156,10 +124,6 @@ const RequestValidator = refine(
     }
 
     if (method === 'removeFavCoin' && !is(args, RemoveFavCoinParams)) {
-      return msg;
-    }
-
-    if (method === 'setPairPriceAlert' && !is(args, SetPriceAlertParams)) {
       return msg;
     }
 

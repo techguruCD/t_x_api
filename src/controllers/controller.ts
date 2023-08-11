@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { is, validate } from 'superstruct';
-import bitqueryCoinSearchService from '../services/bitqueryCoinSearch.service';
-import bitqueryPairSearchService from '../services/bitqueryPairSearch.service';
 import coinFavService from '../services/coinFav.service';
 import { ExpressError } from '../utils/error.utils';
 import RequestValidator from '../validators/request.validator';
 import userService from '../services/user.service';
-import alertService from '../services/alert.service';
+// import alertService from '../services/alert.service'; // TODO: Work In Progress
 import coinService from '../services/coin.service';
-// import bitqueryPriceSubscriptionService from './services/priceSubscription.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
   try {
@@ -26,14 +23,6 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'search') {
       data = await coinService.coinSearch(body.args);
-    }
-
-    if (body.method === 'searchCoin') {
-      data = await bitqueryCoinSearchService(body.args);
-    }
-
-    if (body.method === 'searchPairs') {
-      data = await bitqueryPairSearchService(body.args);
     }
 
     if (body.method === 'setFavCoin') {
@@ -57,11 +46,6 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       });
     }
 
-    if (body.method === 'setPairPriceAlert') {
-      return _res.status(200).json({ message: 'SUCCESS' });
-      // data = await bitqueryPriceSubscriptionService(body.args);
-    }
-
     if (body.method === 'updateUser') {
       data = await userService.updateUserService({
         ...body.args,
@@ -76,28 +60,32 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
     }
 
     if (body.method === 'setAlert') {
-      data = await alertService.setAlert({
-        ...body.args,
-        userId: _req.user.userId,
-      });
+      data = { todo: "Work In Progress" };
+      // data = await alertService.setAlert({
+      //   ...body.args,
+      //   userId: _req.user.userId,
+      // });
     }
 
     if (body.method === 'deleteAlert') {
-      data = await alertService.deleteAlert({
-        ...body.args,
-        userId: _req.user.userId,
-      });
+      data = { todo: "Work In Progress" };
+      // data = await alertService.deleteAlert({
+      //   ...body.args,
+      //   userId: _req.user.userId,
+      // });
     }
 
     if (body.method === 'getAlerts') {
-      data = await alertService.getAlerts({ userId: _req.user.userId, executed: body.args.executed });
+      data = { todo: "Work In Progress" };
+      // data = await alertService.getAlerts({ userId: _req.user.userId, executed: body.args.executed });
     }
 
     if (body.method === 'getAlert') {
-      data = await alertService.getAlert({
-        ...body.args,
-        userId: _req.user.userId,
-      });
+      data = { todo: "Work In Progress" };
+      // data = await alertService.getAlert({
+      //   ...body.args,
+      //   userId: _req.user.userId,
+      // });
     }
 
     if (body.method === 'coinInfo') {

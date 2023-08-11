@@ -39,7 +39,8 @@ const cgListSchema = new Schema({
 const coinInfoSchema = new Schema({
     id: {
         type: String,
-        ref: 'CGList'
+        ref: 'CGList',
+        index: true,
     },
     symbol: String,
     name: String,

@@ -57,7 +57,10 @@ const bqPairsSchema = new Schema({
         protocolType: String
     }),
     buyCurrency: new Schema({
-        address: String,
+        address: {
+            type: String,
+            index: true
+        },
         decimals: Number,
         name: String,
         symbol: String,

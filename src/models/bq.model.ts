@@ -1,32 +1,5 @@
 import { Schema, model } from "mongoose";
 
-const bqListSchema = new Schema({
-    network: String,
-    dexToolSlug: {
-        type: String,
-        default: null
-    },
-    currency: new Schema({
-        address: {
-            type: String,
-            index: true
-        },
-        decimals: Number,
-        name: String,
-        symbol: String,
-        tokenId: String,
-        tokenType: String
-    }),
-    count: Number,
-    senders: Number,
-    receivers: Number,
-    days: Number,
-    from_date: String,
-    till_date: String,
-    amount: Number,
-    amount_usd: Number,
-}, { timestamps: { createdAt: true, updatedAt: true } });
-
 const bqPairsSchema = new Schema({
     network: String,
     dexToolSlug: {
@@ -82,11 +55,9 @@ const bqPairsSchema = new Schema({
     started: String
 })
 
-const BQListModel = model('BQList', bqListSchema, 'BQList');
 const BQPairModel = model('BQPair', bqPairsSchema, 'BQPair');
 
 const bqModel = {
-    BQListModel,
     BQPairModel,
 };
 

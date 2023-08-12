@@ -35,16 +35,22 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
       $facet: {
         cgTokens: [
           { $match: { platform: "cg", type: "token" } },
-          { $lookup: { from: "CGList", localField: "value", foreignField: "id", as: "cgCoin" } },
+          { $lookup: { from: "CGInfo", localField: "value", foreignField: "id", as: "cgCoin" } },
           { $unwind: { path: "$cgCoin", preserveNullAndEmptyArrays: true } },
           {
             $project: {
               id: "$cgCoin.id",
-              market_cap_rank: "$cgCoin.market_cap_rank",
+              market_cap_rank:
+                "$cgCoin.market_cap_rank",
               name: "$cgCoin.name",
               logo: "$cgCoin.image",
               price: "$cgCoin.current_price",
-              change: { $round: [ "$cgCoin.price_change_percentage_1h_in_currency", 4 ] },
+              change: {
+                $round: [
+                  "$cgCoin.price_change_percentage_24h",
+                  4,
+                ],
+              },
               platform: "cg",
               type: "token",
               network: null,
@@ -58,10 +64,7 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
             $lookup: {
               from: "BQPair",
               let: { address: "$value" },
-              pipeline: [
-                { $match: { $expr: { $eq: ["$buyCurrency.address", "$$address"] } } },
-                { $limit: 1 },
-              ],
+              pipeline: [{ $match: { $expr: { $eq: ["$buyCurrency.address", "$$address"] } } }, { $limit: 1 }],
               as: "bqCoin",
             },
           },
@@ -74,15 +77,11 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
               price: { $toDouble: "$bqCoin.buyCurrencyPrice" },
               change: null,
               platform: "DEX",
-              address:
-                "$bqCoin.buyCurrency.address",
-              decimals:
-                "$bqCoin.buyCurrency.decimals",
+              address: "$bqCoin.buyCurrency.address",
+              decimals: "$bqCoin.buyCurrency.decimals",
               symbol: "$bqCoin.buyCurrency.symbol",
-              tokenId:
-                "$bqCoin.buyCurrency.tokenId",
-              tokenType:
-                "$bqCoin.buyCurrency.tokenType",
+              tokenId: "$bqCoin.buyCurrency.tokenId",
+              tokenType: "$bqCoin.buyCurrency.tokenType",
               network: "network",
               type: "token",
               updatedAt: 1,
@@ -90,13 +89,13 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
           },
         ],
         dexPairs: [
-          { $match: { platform: "DEX", type: "pair" } },
+          { $match: { platform: "DEX", type: "pair"} },
           {
             $lookup: {
               from: "BQPair",
               let: { address: "$value" },
               pipeline: [
-                { $match: { $expr: { $eq: [ "$smartContract.address.address", "$$address" ] } } },
+                { $match: { $expr: { $eq: ["$smartContract.address.address", "$$address"] } } },
                 { $limit: 1 },
               ],
               as: "bqPair",
@@ -106,7 +105,7 @@ async function getFavCoin(params: { userId: string, skip?: number, limit?: numbe
           {
             $project: {
               id: "$bqPair.smartContract.address.address",
-              name: { $concat: [ "$bqPair.buyCurrency.symbol", "/", "$bqPair.sellCurrency.symbol" ] },
+              name: { $concat: ["$bqPair.buyCurrency.symbol","/","$bqPair.sellCurrency.symbol"] },
               logo: null,
               price: { $toDouble: "$bqPair.buyCurrencyPrice" },
               change: null,

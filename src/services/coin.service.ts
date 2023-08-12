@@ -72,7 +72,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
 
   const regexSearch = { $regex: `^${params.searchTerm}$`, $options: "i" };
 
-  const results = await cgModel.CGListModel.aggregate([
+  const results = await cgModel.CGCoinInfoModel.aggregate([
     { $match: { $or: [{ symbol: regexSearch }, { name: regexSearch }, { id: regexSearch }] } },
     {
       $project: {
@@ -81,7 +81,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         name: 1,
         logo: "$image",
         price: "$current_price",
-        change: { $round: ["$price_change_percentage_1h_in_currency", 4] },
+        change: { $round: ["$price_change_percentage_24h", 4] },
         platform: "cg",
         type: "token",
         network: null,
@@ -174,18 +174,15 @@ async function getCoinInfo(params: {
 
   if (params.platform === "cg") {
     const cgCoin = await cgModel.CGCoinInfoModel.aggregate([
-      {
-        $match: {
-          id: params.value,
-        },
-      },
+      { $match: { id: params.value } },
       {
         $project: {
           id: 1,
           name: 1,
           logo: "$image.large",
-          description: "$description.en",
+          description: "$description",
           price: "$current_price",
+          priceChange: "$price_change_percentage_24h",
           urls: [
             {
               type: "website",
@@ -248,66 +245,14 @@ async function getCoinInfo(params: {
           type: "token",
         },
       },
-      {
-        $lookup: {
-          from: "CGList",
-          localField: "id",
-          foreignField: "id",
-          as: "change",
-        },
-      },
-      {
-        $unwind: {
-          path: "$change",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $addFields: {
-          price: "$change.current_price",
-          priceChange: {
-            $round: [
-              "$change.price_change_percentage_1h_in_currency",
-              4,
-            ],
-          },
-        },
-      },
-      {
-        $project: {
-          change: 0,
-        },
-      },
     ]);
 
     if (cgCoin.length < 1) {
-      const cgCoinFromList = await cgModel.CGListModel.aggregate([
-        { $match: { id: params.value } },
-        {
-          $project: {
-            id: 1,
-            name: 1,
-            logo: "$image",
-            description: null,
-            price: "$current_price",
-            urls: [],
-            chart: [],
-            platform: "cg",
-            type: "token",
-          },
-        },
-      ]);
-      
-      if (cgCoinFromList.length < 1) {
-        return data;
-      }
-
-      data['info'] = cgCoinFromList[0];
-    } else {
-      data['info'] = cgCoin[0];
-
-      data['info'].urls = parseUrl(data['info'].urls);
+      return data;
     }
+    
+    data['info'] = cgCoin[0];
+    data['info'].urls = parseUrl(data['info'].urls);
 
     const isFav = await favCoinsModel.exists({ platform: "cg", value: params.value, userId: params.userId, type: 'token' }).lean();
     data['info'].isFav = isFav?._id.toString() ?? null;
@@ -333,6 +278,7 @@ async function getCoinInfo(params: {
           urls: [],
           chart: [],
           platform: "DEX",
+          type: "token"
         },
       },
     ]);
@@ -355,22 +301,18 @@ async function getCoinInfo(params: {
           id: "$smartContract.address.address",
           name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
           logo: null,
-          price: {
-            $toDouble: "$buyCurrencyPrice"
-          },
-          change: null,
+          price: { $toDouble: "$buyCurrencyPrice" },
+          priceChange: null,
           platform: "DEX",
           updatedAt: "$updatedAt",
           network: "$network",
           type: "pair",
           count: "$count",
           tradeAmount: "$tradeAmount",
-          pairContractAddress:
-            "$smartContract.address.address",
+          pairContractAddress: "$smartContract.address.address",
           protocolType: "$smartContract.protocolType",
           exchange: "$exchange.fullName",
-          exchnageContractAddress:
-            "$exchange.address.address",
+          exchangeContractAddress: "$exchange.address.address",
         },
       }
     ]);
@@ -384,7 +326,7 @@ async function getCoinInfo(params: {
       name: bqPair[0].name,
       logo: bqPair[0].logo,
       price: bqPair[0].price,
-      change: bqPair[0].change,
+      priceChange: bqPair[0].change,
       platform: bqPair[0].platform,
       network: bqPair[0].network,
       type: bqPair[0].type,
@@ -419,7 +361,7 @@ async function getCoinInfo(params: {
 }
 
 async function getTop100() {
-  const top100 = await cgModel.CGListModel.aggregate([
+  const top100 = await cgModel.CGCoinInfoModel.aggregate([
   { $match: { market_cap_rank: { $ne: null } } },
   { $sort: { market_cap_rank: 1 } },
   { $limit: 100 },
@@ -430,7 +372,7 @@ async function getTop100() {
       name: 1,
       logo: "$image",
       price: "$current_price",
-      change: { $round: ["$price_change_percentage_1h_in_currency", 4] },
+      change: { $round: ["$price_change_percentage_24h", 4] },
       platform: "cg",
       type: "token",
     },

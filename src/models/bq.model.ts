@@ -1,7 +1,10 @@
 import { Schema, model } from "mongoose";
 
 const bqPairsSchema = new Schema({
-    network: String,
+    network: {
+        type: String,
+        index: true
+    },
     dexToolSlug: {
         type: String,
         default: null
@@ -41,7 +44,10 @@ const bqPairsSchema = new Schema({
         tokenType: String
     }),
     sellCurrency: new Schema({
-        address: String,
+        address: {
+            type: String,
+            index: true
+        },
         decimals: Number,
         name: String,
         symbol: String,

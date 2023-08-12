@@ -179,7 +179,7 @@ async function getCoinInfo(params: {
         $project: {
           id: 1,
           name: 1,
-          logo: "$image.large",
+          logo: "$image",
           description: "$description",
           price: "$current_price",
           priceChange: "$price_change_percentage_24h",

@@ -162,7 +162,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"platform\": \"cmc\",\n        \"value\": 1027\n    }\n}",
+							"raw": "{\n    \"method\": \"setFavCoin\",\n    \"args\": {\n        \"platform\": \"DEX\",\n        \"value\": \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\",\n        \"type\": \"token\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -170,9 +170,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlRemote}}",
+							"raw": "{{baseUrlLocal}}",
 							"host": [
-								"{{baseUrlRemote}}"
+								"{{baseUrlLocal}}"
 							]
 						}
 					},
@@ -185,7 +185,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"getFavCoin\",\n    \"args\": { }\n}",
+							"raw": "{\n    \"method\": \"getFavCoin\",\n    \"args\": {}\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -193,9 +193,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlRemote}}",
+							"raw": "{{baseUrlLocal}}",
 							"host": [
-								"{{baseUrlRemote}}"
+								"{{baseUrlLocal}}"
 							]
 						}
 					},
@@ -208,7 +208,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"_ids\": [\"64c8baeed8fe90f17cca2f9f\"]\n    }\n}",
+							"raw": "{\n    \"method\": \"removeFavCoin\",\n    \"args\": {\n        \"_ids\": [\"64d35f4f0710a42cf716ccec\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -369,7 +369,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"platform\": \"bitquery\",\n        \"type\": \"pair\",\n        \"value\": \"0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640\"\n    }\n}",
+							"raw": "{\n    \"method\": \"coinInfo\",\n    \"args\": {\n        \"platform\": \"cg\",\n        \"type\": \"token\",\n        \"value\": \"okse\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -438,7 +438,30 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\": \"0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640\",\n        \"skip\": 0,\n        \"limit\": 100\n    }\n}",
+							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\":\"okse\",\n        \"skip\": 0,\n        \"limit\": 10,\n        \"network\": \"bsc\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getNetworks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"getNetworks\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -522,7 +545,7 @@
 		},
 		{
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJuMFNDRHd2M1NhUFBtSnkyVlVTTEhJZ05zRXoxIiwiZGV2aWNlSWQiOiJjYjdzV2xyMVJvQzBiUVFEWFhjU05EOkFQQTkxYkZvbXhLaFloLVJUMGpyaEl6R0luYzVyZHMtang2YlRDZjdwZ3ZnbTY2Q2swMzllNXNvd1otak1udENFZW9QMENpeGRGaXdzRHJobXBnZzI3VmcwVG9GTmlTOVRiWjdYMWxCT0NxRVFneG81Y3Y0WnRrcm1mdXl0YV82RWM4a2Mza09JcGkyIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNjkwNzMzNzA5LCJleHAiOjE2OTEzMzg1MDl9.4B6mHdmdju1L0ZBFQ19EW1F3YNSxoFzlhI5lIt4z1VM",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJuMFNDRHd2M1NhUFBtSnkyVlVTTEhJZ05zRXoxIiwiZGV2aWNlSWQiOiJjYjdzV2xyMVJvQzBiUVFEWFhjU05EOkFQQTkxYkZvbXhLaFloLVJUMGpyaEl6R0luYzVyZHMtang2YlRDZjdwZ3ZnbTY2Q2swMzllNXNvd1otak1udENFZW9QMENpeGRGaXdzRHJobXBnZzI3VmcwVG9GTmlTOVRiWjdYMWxCT0NxRVFneG81Y3Y0WnRrcm1mdXl0YV82RWM4a2Mza09JcGkyIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNjkyMDAxNzg4LCJleHAiOjE2OTI2MDY1ODh9.4JM6rxar6UI0aEGA0g2hfdasvcX_qHOT0FFuAUZWGkY",
 			"type": "string"
 		},
 		{

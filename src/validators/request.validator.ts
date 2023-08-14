@@ -41,7 +41,8 @@ export const ValidRefCode = pattern(string(), /^[a-zA-Z0-9]{16}$/);
 const SearchParams = object({
   searchTerm: string(),
   skip: optional(number()),
-  limit: optional(number())
+  limit: optional(number()),
+  network: optional(string())
 })
 
 const SetFavCoinParams = object({

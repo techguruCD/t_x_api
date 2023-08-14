@@ -61,7 +61,7 @@ function parseUrl(urls: IUrlEntry[]) {
   })
 }
 
-async function coinSearch(params: { searchTerm: string, skip?: number, limit?: number }) {
+async function coinSearch(params: { searchTerm: string, skip?: number, limit?: number, network?: string }) {
   if (params.skip === undefined) {
     params.skip = 0
   }
@@ -70,10 +70,63 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
+  let networkForBq = params.network
+  let networkForCg = params.network;
+
+  if (networkForCg === 'bsc') {
+    networkForCg = 'binance-smart-chain'
+  }
+
+  if (networkForCg === 'celo_mainnet') {
+    networkForCg = 'celo'
+  }
+
+  if (networkForCg === 'klaytn') {
+    networkForCg = 'klay-token'
+  }
+
+  if (networkForCg === 'matic') {
+    networkForCg = 'polygon-pos'
+  }
+
   const regexSearch = { $regex: `^${params.searchTerm}$`, $options: "i" };
 
+  const cgMatch: Record<string, any> = { $or: [{ symbol: regexSearch }, { name: regexSearch }, { id: regexSearch }] };
+  const bqMatch: Record<string, any> = {
+    $or: [
+      { address: regexSearch },
+      { symbol: regexSearch },
+      { name: regexSearch },
+      { tokenId: regexSearch },
+      { tokenType: regexSearch },
+    ]
+  }
+  const bqPairMatch: Record<string, any> = {
+    $or: [
+      { "buyCurrency.address": regexSearch },
+      { "buyCurrency.name": regexSearch },
+      { "buyCurrency.symbol": regexSearch },
+      { "smartContract.address.address": regexSearch },
+      { "smartContract.currency.name": regexSearch },
+      { "smartContract.currency.symbol": regexSearch },
+      { "smartContract.currency.tokenType": regexSearch },
+      { "exchange.address.address": regexSearch },
+      { "exchange.fullName": regexSearch },
+      { "exchange.fullNameWithId": regexSearch },
+    ],
+  }
+
+  if (networkForCg) {
+    cgMatch[`platforms.${networkForCg}`] = { $exists: true };
+  }
+
+  if (networkForBq) {
+    bqMatch['network'] = networkForBq;
+    bqPairMatch['network'] = networkForBq;
+  }
+
   const results = await cgModel.CGCoinInfoModel.aggregate([
-    { $match: { $or: [{ symbol: regexSearch }, { name: regexSearch }, { id: regexSearch }] } },
+    { $match: cgMatch },
     {
       $project: {
         id: 1,
@@ -108,37 +161,12 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           type: { $first: "token" },
         },
       },
-      {
-        $match: {
-          $or: [
-            { address: regexSearch },
-            { symbol: regexSearch },
-            { name: regexSearch },
-            { tokenId: regexSearch },
-            { tokenType: regexSearch },
-          ],
-        },
-      },
+      { $match: bqMatch },
     ]
   }).unionWith({
     coll: 'BQPair',
     pipeline: [
-      {
-        $match: {
-          $or: [
-            { "buyCurrency.address": regexSearch },
-            { "buyCurrency.name": regexSearch },
-            { "buyCurrency.symbol": regexSearch },
-            { "smartContract.address.address": regexSearch },
-            { "smartContract.currency.name": regexSearch },
-            { "smartContract.currency.symbol": regexSearch },
-            { "smartContract.currency.tokenType": regexSearch },
-            { "exchange.address.address": regexSearch },
-            { "exchange.fullName": regexSearch },
-            { "exchange.fullNameWithId": regexSearch },
-          ],
-        },
-      },
+      { $match: bqPairMatch },
       { $sort: { tradeAmount: -1 } },
       {
         $project: {

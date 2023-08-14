@@ -391,10 +391,44 @@ async function getTop100() {
   return top100;
 }
 
+async function getNetworks() {
+  const cgInfoNetworks = await cgModel.CGCoinInfoModel.aggregate([
+    { $project: { platformProperties: { $objectToArray: "$platforms" } } },
+    { $unwind: "$platformProperties" },
+    { $group: { _id: null, networks: { $addToSet: "$platformProperties.k" } } },
+    { $project: { _id: 0 } },
+  ]);
+
+  const networks = cgInfoNetworks[0].networks
+    .filter((network: string) => network !== '')
+    .map((network: string) => {
+      if (network === 'binance-smart-chain') {
+        return 'bsc'
+      }
+
+      if (network === 'celo') {
+        return 'celo_mainnet'
+      }
+
+      if (network === 'klay-token') {
+        return 'klaytn'
+      }
+
+      if (network === 'polygon-pos') {
+        return 'matic'
+      }
+
+      return network
+    })
+
+  return networks;
+}
+
 const coinService = {
   coinSearch,
   getCoinInfo,
   getTop100,
+  getNetworks
 };
 
 export default coinService;

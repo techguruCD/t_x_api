@@ -138,6 +138,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         platform: "cg",
         type: "token",
         network: null,
+        contracts: "$platforms"
       },
     },
   ]).unionWith({
@@ -188,7 +189,23 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     ]
   }).skip(params.skip).limit(params.limit);
 
-  return results;
+  const contractsSet = new Set();
+
+  results.forEach(result => {
+    const contracts = result.contracts
+    
+    if (contracts) {
+      Object.values(contracts).forEach(contract => {
+        contractsSet.add(contract)
+      })
+    }
+
+    delete result.contracts
+  });
+
+  const filteredResults = results.filter(result => !contractsSet.has(result.id));
+
+  return filteredResults;
 }
 
 async function getCoinInfo(params: {

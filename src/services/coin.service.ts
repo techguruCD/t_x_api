@@ -342,8 +342,6 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         contractsSet.add(contract)
       })
     }
-
-    delete result.contracts
   });
 
   const filteredResults = results.filter(result => !contractsSet.has(result.id));

@@ -429,7 +429,9 @@ async function getCoinInfo(params: {
           chart: [],
           platform: "cg",
           type: "token",
+          circulating_supply: "$circulating_supply",
           market_cap: "$market_cap",
+          total_supply: "$total_supply",
           total_volume: "$total_volume",
           platforms: "$platforms"
         },
@@ -470,7 +472,9 @@ async function getCoinInfo(params: {
           type: "token",
           market_cap: null,
           total_volume: null,
-          platforms: null
+          platforms: null,
+          circulating_supply: null,
+          total_supply: null,
         },
       },
     ]);
@@ -505,6 +509,8 @@ async function getCoinInfo(params: {
           protocolType: "$smartContract.protocolType",
           exchange: "$exchange.fullName",
           exchangeContractAddress: "$exchange.address.address",
+          circulating_supply: null,
+          total_supply: null,
         },
       }
     ]);
@@ -529,6 +535,8 @@ async function getCoinInfo(params: {
       market_cap: null,
       total_volume: null,
       platforms: null,
+      circulating_supply: null,
+      total_supply: null,
       buy: {
         name: bqPair[0].name,
         trades: bqPair[0].count,

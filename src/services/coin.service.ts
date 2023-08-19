@@ -365,6 +365,7 @@ async function getCoinInfo(params: {
         $project: {
           id: 1,
           name: 1,
+          coingecko_asset_platform_id: "$asset_platform_id",
           logo: "$image",
           description: "$description",
           price: "$current_price",
@@ -462,6 +463,7 @@ async function getCoinInfo(params: {
           _id: 0,
           id: "$buyCurrency.address",
           name: "$buyCurrency.name",
+          network: "$network",
           logo: null,
           description: null,
           price: { $toDouble: "$buyCurrencyPrice" },
@@ -481,6 +483,25 @@ async function getCoinInfo(params: {
 
     if (bqCoin.length < 1) {
       return data;
+    }
+
+    bqCoin[0].coingecko_asset_platform_id = bqCoin[0].network;
+
+    if (bqCoin[0].network === 'bsc') {
+      bqCoin[0].coingecko_asset_platform_id = 'celo'
+    }
+
+
+    if (bqCoin[0].network === 'celo_mainnet') {
+      bqCoin[0].coingecko_asset_platform_id = 'celo'
+    }
+
+    if (bqCoin[0].network === 'klaytn') {
+      bqCoin[0].coingecko_asset_platform_id = 'klay-token'
+    }
+
+    if (bqCoin[0].network === 'matic') {
+      bqCoin[0].coingecko_asset_platform_id = 'polygon-pos'
     }
 
     const isFav = await favCoinsModel.exists({ platform: "DEX", value: params.value, userId: params.userId, type: "token" }).lean();
@@ -544,6 +565,26 @@ async function getCoinInfo(params: {
       },
       sell: null,
       isFav: null
+    }
+
+    info['coingecko_asset_platform_id'] = info['network'];
+
+
+    if (info['network'] === 'bsc') {
+      info['coingecko_asset_platform_id'] = 'celo'
+    }
+
+
+    if (info['network'].network === 'celo_mainnet') {
+      info['coingecko_asset_platform_id'] = 'celo'
+    }
+
+    if (info['network'].network === 'klaytn') {
+      info['coingecko_asset_platform_id'] = 'klay-token'
+    }
+
+    if (info['network'].network === 'matic') {
+      info['coingecko_asset_platform_id'] = 'polygon-pos'
     }
     
     if (bqPair[1]) {

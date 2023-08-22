@@ -4,6 +4,7 @@ import idempotencyKeyModel from "../models/idempotency-key.model";
 async function idempotencyController(_req: Request, _res: Response, _next: NextFunction) {
     try {
         const idempotencyKey = _req.headers['idempotency-key'];
+        const authorization = _req.header('Authorization');
 
         if (!idempotencyKey) {
             return _res.status(400).json({ error: 'idempotencyKey not found in the header' });
@@ -19,6 +20,7 @@ async function idempotencyController(_req: Request, _res: Response, _next: NextF
 
         const body = _req.body;
         console.log(`body`, body);
+        console.log('authorization', authorization)
 
         await new idempotencyKeyModel({
             idempotencyKey

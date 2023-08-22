@@ -17,6 +17,9 @@ async function idempotencyController(_req: Request, _res: Response, _next: NextF
             return _res.status(200).json({ success: true })
         }
 
+        const body = _req.body;
+        console.log(`body`, body);
+
         await new idempotencyKeyModel({
             idempotencyKey
         }).save()

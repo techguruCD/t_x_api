@@ -70,23 +70,27 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     params.limit = 10;
   }
 
-  let networkForBq = params.network
+  let networkForBq = params.network;
   let networkForCg = params.network;
 
-  if (networkForCg === 'bsc') {
+  if (params.network === 'bsc') {
+    networkForBq = 'bsc';
     networkForCg = 'binance-smart-chain'
   }
 
-  if (networkForCg === 'celo_mainnet') {
+  if (params.network === 'celo_mainnet') {
+    networkForBq = 'celo_mainnet'
     networkForCg = 'celo'
   }
 
-  if (networkForCg === 'klaytn') {
+  if (params.network === 'klaytn') {
     networkForCg = 'klay-token'
+    networkForBq = 'klaytn'
   }
 
-  if (networkForCg === 'matic') {
+  if (params.network === 'matic') {
     networkForCg = 'polygon-pos'
+    networkForBq = 'matic'
   }
 
   const regexSearch = { $regex: `^${params.searchTerm}$`, $options: "i" };
@@ -488,7 +492,7 @@ async function getCoinInfo(params: {
     bqCoin[0].coingecko_asset_platform_id = bqCoin[0].network;
 
     if (bqCoin[0].network === 'bsc') {
-      bqCoin[0].coingecko_asset_platform_id = 'celo'
+      bqCoin[0].coingecko_asset_platform_id = 'binance-smart-chain'
     }
 
 
@@ -571,7 +575,7 @@ async function getCoinInfo(params: {
 
 
     if (info['network'] === 'bsc') {
-      info['coingecko_asset_platform_id'] = 'celo'
+      info['coingecko_asset_platform_id'] = 'binance-smart-chain'
     }
 
 

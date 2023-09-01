@@ -15,4 +15,5 @@ export interface IEnv {
   cgApiKey: string;
   geckoTerminalBaseUrl: string;
   subscriptionServiceUrl: string;
+  aegisUrl: string;
 }

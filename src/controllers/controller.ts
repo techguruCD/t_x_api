@@ -6,6 +6,7 @@ import RequestValidator from '../validators/request.validator';
 import userService from '../services/user.service';
 // import alertService from '../services/alert.service'; // TODO: Work In Progress
 import coinService from '../services/coin.service';
+import aegisService from '../services/aegis.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
   try {
@@ -102,6 +103,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
 
     if (body.method === 'listTop100') {
       data = await coinService.getTop100()
+    }
+
+    if (body.method === 'getScanData') {
+      data = await aegisService.getTokenQuickCheckData(body.args);
     }
 
     return _res.status(200).json(data);

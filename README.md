@@ -393,3 +393,28 @@ Example Body:
   }
 }
 ```
+
+### Method: `getScanData`
+
+Description: Get scanner related data for token
+
+Args:
+
+| Name               | Type   | Description                                                                                                                              | Required |
+| ------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `network`          | string | network of the token. supported networks: `ethereum`, `fantom`, `bsc` (bq), `binance-smart-chain` (cg), `matic` (bq), `polygon-pos` (cg) | Yes      |
+| `platform`         | string | `cg` or `bq`                                                                                                                             | Yes      |
+| `contract_address` | string | contract address of the token                                                                                                            | Yes      |
+
+Example Body:
+
+```json
+{
+  "method": "getScanData",
+  "args": {
+    "network": "ethereum",
+    "platform": "cg",
+    "contract_address":"0x423f4e6138e475d85cf7ea071ac92097ed631eea"
+  }
+}
+```

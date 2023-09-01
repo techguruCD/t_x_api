@@ -438,7 +438,30 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\":\"okse\",\n        \"skip\": 0,\n        \"limit\": 10,\n        \"network\": \"bsc\"\n    }\n}",
+							"raw": "{\n    \"method\": \"search\",\n    \"args\": {\n        \"searchTerm\":\"pndc\",\n        \"skip\": 0,\n        \"limit\": 10\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlRemote}}",
+							"host": [
+								"{{baseUrlRemote}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getScanData",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"getScanData\",\n    \"args\": {\n        \"network\": \"ethereum\",\n        \"platform\": \"cg\",\n        \"contract_address\":\"0x423f4e6138e475d85cf7ea071ac92097ed631eea\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

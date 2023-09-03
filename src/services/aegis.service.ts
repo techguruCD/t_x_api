@@ -219,22 +219,22 @@ function calculateScore(results: any[]) {
     const result = results[i];
 
     if (result.AegisTokenQuickCheckFantom) {
-      result.score = processScoreCalculation(result.AegisTokenQuickCheckFantom)
+      result.score = result.AegisTokenQuickCheckFantom.score
       result.AegisTokenQuickCheckFantom = undefined;
     }
 
     if (result.AegisTokenQuickCheckPolygon) {
-      result.score = processScoreCalculation(result.AegisTokenQuickCheckPolygon)
+      result.score = result.AegisTokenQuickCheckPolygon.score
       result.AegisTokenQuickCheckPolygon = undefined;
     }
 
     if (result.AegisTokenQuickCheckBSC) {
-      result.score = processScoreCalculation(result.AegisTokenQuickCheckBSC)
+      result.score = result.AegisTokenQuickCheckBSC.score
       result.AegisTokenQuickCheckBSC = undefined;
     }
 
     if (result.AegisTokenQuickCheckEthereum) {
-      result.score = processScoreCalculation(result.AegisTokenQuickCheckEthereum)
+      result.score = result.AegisTokenQuickCheckEthereum.score
       result.AegisTokenQuickCheckEthereum = undefined;
     }
   }

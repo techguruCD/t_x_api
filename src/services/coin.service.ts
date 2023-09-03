@@ -1,6 +1,7 @@
 import bqModel from '../models/bq.model';
 import cgModel from '../models/cg.model';
 import favCoinsModel from '../models/favCoins.model';
+import aegisService from './aegis.service';
 
 interface IUrlEntry {
   type: string;
@@ -288,6 +289,62 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         contracts: "$platforms"
       },
     },
+    {
+      $lookup: {
+        from: "AegisTokenQuickCheck",
+        localField: "contracts.ethereum",
+        foreignField: "contract_address",
+        as: "AegisTokenQuickCheckEthereum"
+      }
+    },
+    {
+      $unwind: {
+        path: "$AegisTokenQuickCheckEthereum",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: "AegisTokenQuickCheck",
+        localField: "contracts.binance-smart-chain",
+        foreignField: "contract_address",
+        as: "AegisTokenQuickCheckBSC"
+      }
+    },
+    {
+      $unwind: {
+        path: "$AegisTokenQuickCheckBSC",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: "AegisTokenQuickCheck",
+        localField: "contracts.polygon-pos",
+        foreignField: "contract_address",
+        as: "AegisTokenQuickCheckPolygon"
+      }
+    },
+    {
+      $unwind: {
+        path: "$AegisTokenQuickCheckPolygon",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: "AegisTokenQuickCheck",
+        localField: "contracts.fantom",
+        foreignField: "contract_address",
+        as: "AegisTokenQuickCheckFantom"
+      }
+    },
+    {
+      $unwind: {
+        path: "$AegisTokenQuickCheckFantom",
+        preserveNullAndEmptyArrays: true
+      }
+    }
   ]).unionWith({
     coll: 'BQPair',
     pipeline: [
@@ -310,6 +367,62 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         },
       },
       { $match: bqMatch },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "address",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckEthereum"
+        }
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckEthereum",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "address",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckBSC"
+        }
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckBSC",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "address",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckPolygon"
+        }
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckPolygon",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "address",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckFantom"
+        }
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckFantom",
+          preserveNullAndEmptyArrays: true
+        }
+      }
     ]
   }).unionWith({
     coll: 'BQPair',
@@ -331,10 +444,69 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
           network: "$network",
           type: "pair",
           exchange: "$exchange.fullName",
+          buyCurrencyAddress: "$buyCurrency.address",
+        },
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "buyCurrencyAddress",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckEthereum",
+        },
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckEthereum",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "buyCurrencyAddress",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckBSC",
+        },
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckBSC",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "buyCurrencyAddress",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckPolygon",
+        },
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckPolygon",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "AegisTokenQuickCheck",
+          localField: "buyCurrencyAddress",
+          foreignField: "contract_address",
+          as: "AegisTokenQuickCheckFantom",
+        },
+      },
+      {
+        $unwind: {
+          path: "$AegisTokenQuickCheckFantom",
+          preserveNullAndEmptyArrays: true,
         },
       },
     ]
   }).skip(params.skip).limit(params.limit);
+
+  aegisService.calculateScore(results);
 
   const contractsSet = new Set();
 

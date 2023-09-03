@@ -56,6 +56,7 @@ async function getTokenQuickCheckData(params: { network: string, contract_addres
 
     if (scanData) {
       data['scanData'] = scanData;
+      data['scanData']['score'] = processScoreCalculation(scanData as any);
       return data;
     }
 
@@ -78,6 +79,7 @@ async function getTokenQuickCheckData(params: { network: string, contract_addres
     }
 
     data['scanData'] = quickCheckData;
+    data['scanData']['score'] = processScoreCalculation(quickCheckData);
     
     await aegisModel.AegisTokenQuickCheckModel.updateOne({ contract_address }, { $set: quickCheckData });
     return data;

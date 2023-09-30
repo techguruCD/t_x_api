@@ -526,7 +526,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
 }
 
 async function getCoinInfo(params: {
-  userId: string,
+  userId?: string,
   platform: string,
   value: number | string,
   type: 'token' | 'pair',
@@ -622,8 +622,10 @@ async function getCoinInfo(params: {
     data['info'] = cgCoin[0];
     data['info'].urls = parseUrl(data['info'].urls);
 
-    const isFav = await favCoinsModel.exists({ platform: "cg", value: params.value, userId: params.userId, type: 'token' }).lean();
-    data['info'].isFav = isFav?._id.toString() ?? null;
+    if (params.userId) {
+      const isFav = await favCoinsModel.exists({ platform: "cg", value: params.value, userId: params.userId, type: 'token' }).lean();
+      data['info'].isFav = isFav?._id.toString() ?? null;
+    }
 
   }
 
@@ -680,8 +682,10 @@ async function getCoinInfo(params: {
       bqCoin[0].coingecko_asset_platform_id = 'polygon-pos'
     }
 
-    const isFav = await favCoinsModel.exists({ platform: "DEX", value: params.value, userId: params.userId, type: "token" }).lean();
-    bqCoin[0].isFav = isFav?._id.toString() ?? null;
+    if (params.userId) {
+      const isFav = await favCoinsModel.exists({ platform: "DEX", value: params.value, userId: params.userId, type: "token" }).lean();
+      bqCoin[0].isFav = isFav?._id.toString() ?? null;
+    }
 
     data['info'] = bqCoin[0];
   }
@@ -771,8 +775,10 @@ async function getCoinInfo(params: {
       };
     }
 
-    const isFav = await favCoinsModel.exists({ platform: 'DEX', value: params.value, userId: params.userId }).lean();
-    info['isFav'] = isFav?._id.toString() ?? null;
+    if (params.userId) {
+      const isFav = await favCoinsModel.exists({ platform: 'DEX', value: params.value, userId: params.userId }).lean();
+      info['isFav'] = isFav?._id.toString() ?? null;
+    }
     
     data['info'] = info;
   }

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { is, validate } from 'superstruct';
+import aegisService from '../services/aegis.service';
+// import alertService from '../services/alert.service';
+import coinService from '../services/coin.service';
 import coinFavService from '../services/coinFav.service';
+import userService from '../services/user.service';
 import { ExpressError } from '../utils/error.utils';
 import RequestValidator from '../validators/request.validator';
-import userService from '../services/user.service';
-// import alertService from '../services/alert.service'; // TODO: Work In Progress
-import coinService from '../services/coin.service';
-import aegisService from '../services/aegis.service';
 
 async function controller(_req: Request, _res: Response, _next: NextFunction) {
   try {
@@ -64,34 +64,30 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       });
     }
 
-    if (body.method === 'setAlert') {
-      data = { todo: "Work In Progress" };
-      // data = await alertService.setAlert({
-      //   ...body.args,
-      //   userId: _req.user.userId,
-      // });
-    }
+    // if (body.method === 'setAlert') {
+    //   data = await alertService.setAlert({
+    //     ...body.args,
+    //     userId: _req.user.userId,
+    //   });
+    // }
 
-    if (body.method === 'deleteAlert') {
-      data = { todo: "Work In Progress" };
-      // data = await alertService.deleteAlert({
-      //   ...body.args,
-      //   userId: _req.user.userId,
-      // });
-    }
+    // if (body.method === 'deleteAlert') {
+    //   data = await alertService.deleteAlert({
+    //     ...body.args,
+    //     userId: _req.user.userId,
+    //   });
+    // }
 
-    if (body.method === 'getAlerts') {
-      data = { todo: "Work In Progress" };
-      // data = await alertService.getAlerts({ userId: _req.user.userId, executed: body.args.executed });
-    }
+    // if (body.method === 'getAlerts') {
+    //   data = await alertService.getAlerts({ userId: _req.user.userId, executed: body.args.executed });
+    // }
 
-    if (body.method === 'getAlert') {
-      data = { todo: "Work In Progress" };
-      // data = await alertService.getAlert({
-      //   ...body.args,
-      //   userId: _req.user.userId,
-      // });
-    }
+    // if (body.method === 'getAlert') {
+    //   data = await alertService.getAlert({
+    //     ...body.args,
+    //     userId: _req.user.userId,
+    //   });
+    // }
 
     if (body.method === 'coinInfo') {
       data = await coinService.getCoinInfo({ ...body.args, userId: _req.user.userId })

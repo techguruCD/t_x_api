@@ -1,39 +1,80 @@
-import { Schema, model } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
-const alertSchema = new Schema(
+interface BaseAlertDocument extends Document {
+  alertPlatform: 'cg' | 'dex';
+  userId: string;
+  alertPrice: number;
+  alertPercentage: number;
+  alertSide: 'up' | 'down';
+  alertExecutionStatus: 'pending' | 'executed';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const baseAlertSchema = new Schema<BaseAlertDocument>(
   {
+    alertPlatform: {
+      type: String,
+      enum: ['cg', 'dex'],
+      required: true
+    },
     userId: {
       type: String,
-      required: true,
-      ref: 'Users',
-    },
-    alertBaseCurrency: {
-      type: String,
-      required: true,
-      ref: 'Coins',
+      required: true
     },
     alertPrice: {
       type: Number,
-      default: null,
+      required: true
     },
     alertPercentage: {
       type: Number,
-      default: null,
+      required: true
     },
     alertSide: {
       type: String,
       enum: ['up', 'down'],
-      required: true,
+      required: true
     },
     alertExecutionStatus: {
       type: String,
-      enums: ['pending', 'executed'],
-      default: 'pending',
+      enum: ['pending', 'executed'],
+      default: 'pending'
     },
   },
-  { timestamps: { createdAt: true, updatedAt: true } }
+  {
+    timestamps: { createdAt: true, updatedAt: true },
+    discriminatorKey: 'alertPlatform',
+  }
 );
 
-const alertModel = model('Alerts', alertSchema, 'Alerts');
+const baseAlertModel = model<BaseAlertDocument>('Alerts', baseAlertSchema, 'Alerts');
+
+interface CgAlertDocument extends BaseAlertDocument {
+  coinId: string;
+  cwCoinId: string;
+}
+
+const cgAlertSchema = baseAlertModel.discriminator<CgAlertDocument>('cg', new Schema<CgAlertDocument>({
+  coinId: { type: String, required: true },
+  cwCoinId: { type: String, required: true },
+}));
+
+interface DexAlertDocument extends BaseAlertDocument {
+  baseCurrency: string;
+  quoteCurrency?: string;
+}
+
+const dexAlertSchema = baseAlertModel.discriminator<DexAlertDocument>('dex', new Schema<DexAlertDocument>({
+  baseCurrency: {
+    type: String,
+    required: true
+  },
+  quoteCurrency: String
+}))
+
+const alertModel = {
+  cgAlertSchema,
+  dexAlertSchema
+}
 
 export default alertModel;

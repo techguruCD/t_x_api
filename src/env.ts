@@ -54,7 +54,8 @@ export function initEnv() {
     cgApiKey: process.env['CG_API_KEY'],
     geckoTerminalBaseUrl: 'https://api.geckoterminal.com/api/v2',
     subscriptionServiceUrl: process.env['SUBSCRIPTION_SERVICE_URL'],
-    aegisUrl: "https://api.aegisweb3.com"
+    aegisUrl: "https://api.aegisweb3.com",
+    alertApiUrl: "https://alert-api.tokenxplorer.com"
   };
 
   if (_env.debug) {

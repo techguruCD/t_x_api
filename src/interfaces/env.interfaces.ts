@@ -16,4 +16,5 @@ export interface IEnv {
   geckoTerminalBaseUrl: string;
   subscriptionServiceUrl: string;
   aegisUrl: string;
+  alertApiUrl: string;
 }

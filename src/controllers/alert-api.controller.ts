@@ -5,21 +5,22 @@ import { ExpressError } from "../utils/error.utils";
 import cgModel from "../models/cg.model";
 import bqModel from "../models/bq.model";
 
-interface SetCgAlertDTO {
+interface SetAlertDTO {
+  coinName: string;
+  coinLogo: string;
   alertPrice: number;
   alertPercentage: number;
   alertSide?: 'up' | 'down';
   alertExecutionStatus: 'pending' | 'executed';
+}
+
+interface SetCgAlertDTO extends SetAlertDTO {
   coinId: string;
   cwSid: string;
   cwCurrencyPairID: string;
 }
 
-interface SetDexAlertDTO {
-  alertPrice: number;
-  alertPercentage: number;
-  alertSide?: 'up' | 'down';
-  alertExecutionStatus: 'pending' | 'executed';
+interface SetDexAlertDTO extends SetAlertDTO {
   network: string;
   baseCurrency: string;
   quoteCurrency: string;
@@ -115,7 +116,7 @@ async function getAllAlertsForUserId(request: Request, response: Response, next:
 async function createAlertForUserIdOnCoingeckoPlatform(request: Request, response: Response, next: NextFunction) {
     try {
       const { userId } = request.user;
-      let { alertPercentage, coinId, alertSide } = request.body as SetCgAlertDTO;
+      let { coinName, coinLogo, alertPercentage, coinId, alertSide } = request.body as SetCgAlertDTO;
 
       const coin = await cgModel.CGCoinInfoModel.findOne({ id: coinId }).lean();
 
@@ -145,6 +146,7 @@ async function createAlertForUserIdOnCoingeckoPlatform(request: Request, respons
         alertPercentage,
         alertPrice,
         coinId,
+        coinName, coinLogo,
         cwCurrencyPairID: "12332", // TODO: set it from cw database
         cwSid: "bitcoin", // TODO: set it from cw database
         alertSide: alertSide ?? "up"
@@ -159,7 +161,7 @@ async function createAlertForUserIdOnCoingeckoPlatform(request: Request, respons
 async function createAlertForUserIdOnDexPlatform(request: Request, response: Response, next: NextFunction) {
     try {
       const { userId } = request.user;
-      const { alertPercentage, baseCurrency, quoteCurrency, alertSide } = request.body as SetDexAlertDTO;
+      const { coinName, coinLogo, alertPercentage, baseCurrency, quoteCurrency, alertSide } = request.body as SetDexAlertDTO;
 
       const coin = await bqModel.BQPairModel.findOne({ "buyCurrency.address": baseCurrency, "sellCurrency.address": quoteCurrency }).lean();
 
@@ -188,6 +190,7 @@ async function createAlertForUserIdOnDexPlatform(request: Request, response: Res
         alertExecutionStatus: 'pending',
         alertPercentage,
         alertPrice: parseInt(`${alertPrice}`),
+        coinName, coinLogo,
         baseCurrency,
         network: `${coin.network}`,
         quoteCurrency,

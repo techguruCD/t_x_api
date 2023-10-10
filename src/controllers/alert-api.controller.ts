@@ -163,7 +163,12 @@ async function createAlertForUserIdOnDexPlatform(request: Request, response: Res
       const { userId } = request.user;
       const { coinName, coinLogo, alertPercentage, baseCurrency, quoteCurrency, alertSide } = request.body as SetDexAlertDTO;
 
-      const coin = await bqModel.BQPairModel.findOne({ "buyCurrency.address": baseCurrency, "sellCurrency.address": quoteCurrency }).lean();
+      const filterObject: Record<string, any> = { "buyCurrency.address": baseCurrency };
+
+      if (quoteCurrency) {
+        filterObject['sellCurrency.address'] = quoteCurrency;
+      }
+      const coin = await bqModel.BQPairModel.findOne(filterObject).lean();
 
       if (!coin) {
         throw new ExpressError('ASCNF01', 'Coin Not Found', 404);

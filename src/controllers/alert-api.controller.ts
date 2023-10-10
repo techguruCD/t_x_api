@@ -21,6 +21,7 @@ interface SetCgAlertDTO extends SetAlertDTO {
 }
 
 interface SetDexAlertDTO extends SetAlertDTO {
+  assetType: string;
   network: string;
   baseCurrency: string;
   quoteCurrency: string;
@@ -161,7 +162,7 @@ async function createAlertForUserIdOnCoingeckoPlatform(request: Request, respons
 async function createAlertForUserIdOnDexPlatform(request: Request, response: Response, next: NextFunction) {
     try {
       const { userId } = request.user;
-      const { coinName, coinLogo, alertPercentage, baseCurrency, quoteCurrency, alertSide } = request.body as SetDexAlertDTO;
+      const { coinName, coinLogo, alertPercentage, baseCurrency, quoteCurrency, alertSide, assetType } = request.body as SetDexAlertDTO;
 
       const filterObject: Record<string, any> = { "buyCurrency.address": baseCurrency };
 
@@ -192,6 +193,7 @@ async function createAlertForUserIdOnDexPlatform(request: Request, response: Res
       }
 
       const data = await createAlertForUserIdOnDexPlatformFromAPI(userId, {
+        assetType,
         alertExecutionStatus: 'pending',
         alertPercentage,
         alertPrice: parseInt(`${alertPrice}`),

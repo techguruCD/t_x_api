@@ -164,11 +164,16 @@ async function createAlertForUserIdOnDexPlatform(request: Request, response: Res
       const { userId } = request.user;
       const { coinName, coinLogo, alertPercentage, baseCurrency, quoteCurrency, alertSide, assetType } = request.body as SetDexAlertDTO;
 
-      const filterObject: Record<string, any> = { "buyCurrency.address": baseCurrency };
+      let filterObject: Record<string, any> = { "buyCurrency.address": baseCurrency };
 
       if (quoteCurrency) {
         filterObject['sellCurrency.address'] = quoteCurrency;
       }
+
+      if (assetType === 'pair') {
+        filterObject = { "smartContract.address.address": baseCurrency };
+      }
+
       const coin = await bqModel.BQPairModel.findOne(filterObject).lean();
 
       if (!coin) {

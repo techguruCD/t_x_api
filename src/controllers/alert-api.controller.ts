@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { ExpressError } from "../utils/error.utils";
 import cgModel from "../models/cg.model";
 import bqModel from "../models/bq.model";
+import mongoose from "mongoose";
 
 interface SetAlertDTO {
   coinName: string;
@@ -21,10 +22,9 @@ interface SetCgAlertDTO extends SetAlertDTO {
 }
 
 interface SetDexAlertDTO extends SetAlertDTO {
+  coinId: string;
   assetType: string;
   network: string;
-  baseCurrency: string;
-  quoteCurrency: string;
 }
 
 function alertApiAxiosClient() {
@@ -106,8 +106,8 @@ async function getAllAlertsForUserId(request: Request, response: Response, next:
   try {
     const { userId, skip, limit } = request.params;
 
-    const data = await getAllAlertsForUserIdFromAPI(userId, parseInt(skip), parseInt(limit));
-    return response.status(200).json(data);
+    const alertsData = await getAllAlertsForUserIdFromAPI(userId, parseInt(skip), parseInt(limit));
+    return response.status(200).json({ data: alertsData });
   } catch (error) {
     next(error);
     return;
@@ -162,19 +162,9 @@ async function createAlertForUserIdOnCoingeckoPlatform(request: Request, respons
 async function createAlertForUserIdOnDexPlatform(request: Request, response: Response, next: NextFunction) {
     try {
       const { userId } = request.user;
-      const { coinName, coinLogo, alertPercentage, baseCurrency, quoteCurrency, alertSide, assetType } = request.body as SetDexAlertDTO;
+      const { coinName, coinLogo, alertPercentage, alertSide, assetType, coinId } = request.body as SetDexAlertDTO;
 
-      let filterObject: Record<string, any> = { "buyCurrency.address": baseCurrency };
-
-      if (quoteCurrency) {
-        filterObject['sellCurrency.address'] = quoteCurrency;
-      }
-
-      if (assetType === 'pair') {
-        filterObject = { "smartContract.address.address": baseCurrency };
-      }
-
-      const coin = await bqModel.BQPairModel.findOne(filterObject).lean();
+      const coin = await bqModel.BQPairModel.findById(new mongoose.Types.ObjectId(coinId));
 
       if (!coin) {
         throw new ExpressError('ASCNF01', 'Coin Not Found', 404);
@@ -197,16 +187,23 @@ async function createAlertForUserIdOnDexPlatform(request: Request, response: Res
         alertPrice = priceInDB - priceInDB * (alertPercentage / 100);
       }
 
+      if (coin.network !== 'ethereum' && coin.network !== 'bsc') {
+        throw new ExpressError(
+          'AS00003',
+          'Coin network should be either ethereum or bsc',
+          400
+        );
+      }
+
       const data = await createAlertForUserIdOnDexPlatformFromAPI(userId, {
         assetType,
         alertExecutionStatus: 'pending',
         alertPercentage,
         alertPrice: parseInt(`${alertPrice}`),
         coinName, coinLogo,
-        baseCurrency,
         network: `${coin.network}`,
-        quoteCurrency,
-        alertSide: alertSide ?? 'up'
+        alertSide: alertSide ?? 'up',
+        coinId
     })
     return response.status(200).json(data);
   } catch (error) {

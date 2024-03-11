@@ -12,7 +12,7 @@ const httpServer = http.createServer(app);
 
 httpServer.listen({
   port: env().port,
-  host: env().host,
+  host: '0.0.0.0',
 });
 
 httpServer.on('listening', async () => {

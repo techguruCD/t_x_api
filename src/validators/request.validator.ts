@@ -29,6 +29,7 @@ const methods = enums([
   'coinInfo',
   'logout',
   'listTop100',
+  'listTopTrending10',
   'coinInfoV2',
   'getNetworks',
   'getScanData'

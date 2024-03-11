@@ -1,6 +1,7 @@
 import bqModel from '../models/bq.model';
 import cgModel from '../models/cg.model';
 import favCoinsModel from '../models/favCoins.model';
+import logModel from '../models/log.model';
 import aegisService from './aegis.service';
 
 interface IUrlEntry {
@@ -94,7 +95,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
     networkForBq = 'matic'
   }
 
-  const regexSearch = { $regex: `^${params.searchTerm}$`, $options: "i" };
+  const regexSearch = { $regex: `.*${params.searchTerm}.*`, $options: "i" };
 
   const cgMatch: Record<string, any> = {
     $or: [
@@ -530,7 +531,8 @@ async function getCoinInfo(params: {
   platform: string,
   value: number | string,
   type: 'token' | 'pair',
-  tokenPairSkip: number
+  tokenPairSkip: number,
+  ip: string
 }) {
   let data: Record<string, any> = { info: null }
 
@@ -783,29 +785,381 @@ async function getCoinInfo(params: {
     data['info'] = info;
   }
 
+  if (data['info']) {
+    await logModel.LogCoinInfoModel.create({
+      param: {
+        platform: params.platform,
+        value: params.value,
+        type: params.type
+      },
+      ip: params.ip,
+      userId: params.userId ?? null
+    });
+  }
+
   return data;
 }
 
 async function getTop100() {
   const top100 = await cgModel.CGCoinInfoModel.aggregate([
-  { $match: { market_cap_rank: { $ne: null } } },
-  { $sort: { market_cap_rank: 1 } },
-  { $limit: 100 },
-  {
-    $project: {
-      id: 1,
-      market_cap_rank: 1,
-      name: 1,
-      logo: "$image",
-      price: "$current_price",
-      change: { $round: ["$price_change_percentage_24h", 4] },
-      platform: "cg",
-      type: "token",
+    { $match: { market_cap_rank: { $ne: null } } },
+    { $sort: { market_cap_rank: 1 } },
+    { $limit: 100 },
+    {
+      $project: {
+        id: 1,
+        market_cap_rank: 1,
+        name: 1,
+        logo: "$image",
+        price: "$current_price",
+        change: { $round: ["$price_change_percentage_24h", 4] },
+        platform: "cg",
+        type: "token",
+      },
     },
-  },
-]);
+  ]);
 
   return top100;
+}
+
+async function getTopTrending10() {
+  const last24HoursTimestamp = ((new Date()).getTime()) - 24 * 60 * 60 * 1000;
+  const top10 = await logModel.LogCoinInfoModel.aggregate([
+    {
+      $match: {
+        createdAt: {$gte: new Date(last24HoursTimestamp)}
+      }
+    },
+    {
+      $group: {
+        _id: {
+          platform: "$param.platform",
+          value: "$param.value",
+          type: "$param.type",
+          ip: "$ip",
+          userId: "$userId"
+        }
+      }
+    },
+    {
+      $group: {
+        _id: {
+          platform: "$_id.platform",
+          value: "$_id.value",
+          type: "$_id.type"
+        },
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        param: {
+          platform: "$_id.platform",
+          value: "$_id.value",
+          type: "$_id.type"
+        },
+        count: 1,
+      }
+    },
+    {
+      $lookup: {
+        from :"CGInfo",
+        localField: "param.value",
+        foreignField: "id",
+        as: "CGInfo"
+      }
+    },
+    {
+      $lookup: {
+        from: "BQPair",
+        localField: "param.value",
+        foreignField: "buyCurrency.address",
+        as: "BQPair_token"
+      }
+    },
+    {
+      $lookup: {
+        from :"BQPair",
+        localField: "param.value",
+        foreignField: "smartContract.address.address",
+        as: "BQPair_pair"
+      }
+    },
+    {
+      $project: {
+        count: 1,
+        _id: {
+          $cond: [
+            {$eq: ["param.platform", "cg"]},
+            null,
+            {
+              $cond: [
+                {$eq: ["param.type", "token"]},
+                {$arrayElemAt: ["$BQPair_token.buyCurrency.address", 0]},
+                0
+              ]
+            }
+          ]
+        },
+        id: {
+          $cond: [
+            {$eq: ["param.platform", "cg"]},
+            1,
+            {
+              $cond: [
+                {$eq: ["param.type", "token"]},
+                {$arrayElemAt: ["$BQPair_token.buyCurrency.address", 0]},
+                {$arrayElemAt: ["$BQPair_pair.smartContract.address.address", 0]}
+              ]
+            }
+          ]
+        },
+        name: {
+          $cond: [
+            {$eq: ["param.platform", "cg"]},
+            1,
+            {
+              $cond: [
+                {$eq: ["param.type", "token"]},
+                {$arrayElemAt: ["$BQPair_token.buyCurrency.name", 0]},
+                {$concat: [
+                  {$arrayElemAt: ["$BQPair_pair.buyCurrency.symbol", 0]},
+                  "/",
+                  {$arrayElemAt: ["$BQPair_pair.sellCurrency.symbol", 0]}
+                ]}
+              ]
+            }
+          ]
+        },
+        coingecko_asset_platform_id: {
+          $cond: [
+            {$eq: ["param.platform", "cg"]},
+            {$arrayElemAt: ["$CGInfo.asset_platform_id", 0]},
+            null
+          ]
+        },
+        logo: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$arrayElemAt: ["$CGInfo.image", 0]},
+            null
+          ]
+        },
+        description: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$arrayElemAt: ["$CGInfo.description", 0]},
+            null
+          ]
+        },
+        price: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$arrayElemAt: ["$CGInfo.current_price", 0]},
+            {
+              $cond: [
+                {$eq: ["$param.type", "token"]},
+                {$toDouble: {$arrayElemAt: ["$BQPair_token.buyCurrencyPrice", 0]}},
+                {$toDouble: {$arrayElemAt: ["$BQPair_pair.buyCurrencyPrice", 0]}},
+              ]
+            }
+          ]
+        },
+        priceChange: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$arrayElemAt: ["$CGInfo.price_change_percentage_24h", 0]},
+            null
+          ]
+        },
+        change: null,
+        urls: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            [
+              {
+                type: "website",
+                values: {$first: "$CGInfo.links.homepage"}
+              },
+              {
+                type: "twitter",
+                values: "$CGInfo.links.twitter_screen_name"
+              },
+              {
+                type: "message_board",
+                values: "$CGInfo.links.official_forum_url"
+              },
+              {
+                type: "chat",
+                values: "$CGInfo.links.chat_url"
+              },
+              {
+                type: "facebook",
+                values: ["$CGInfo.links.facebook_username"]
+              },
+              {
+                type: "explorer",
+                values: "$CGInfo.links.blockchain_site"
+              },
+              {
+                type: "reddit",
+                values: ["$CGInfo.links.subreddit_url"]
+              },
+              {
+                type: "technical_doc",
+                values: []
+              },
+              {
+                type: "telegram",
+                values: ["$CGInfo.links.telegram_channel_identifier"]
+              },
+              {
+                type: "source_code",
+                values: {
+                  $concatArrays: [
+                    "$CGInfo.links.repos_url.github",
+                    "$CGInfo.links.repos_url.bitbucket",
+                  ],
+                }
+              },
+              {
+                type: "announcement",
+                values: "$CGInfo.links.announcement_url"
+              },
+              {
+                type: "bitcointalk",
+                values: "$CGInfo.links.bitcointalk_thread_identifier"
+              },
+            ],
+            null
+          ]
+        },
+        chart: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            [],
+            null
+          ]
+        },
+        platform: "$param.platform",
+        type: "$param.type",
+        circulating_supply: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$first: "$CGInfo.circulating_supply"},
+            null
+          ]
+        },
+        market_cap: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$first: "$CGInfo.market_cap"},
+            null
+          ]
+        },
+        total_supply: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$first: "$CGInfo.total_supply"},
+            null
+          ]
+        },
+        total_volume: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$first: "$CGInfo.total_volume"},
+            null
+          ]
+        },
+        platforms: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            {$first: "$CGInfo.platforms"},
+            null
+          ]
+        },
+        address: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
+            {$first: "$BQPair_token.buyCurrency.address"},
+            null
+          ]
+        },
+        decimals: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
+            {$first: "$BQPair_token.buyCurrency.decimals"},
+            null
+          ]
+        },
+        symbol: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
+            {$first: "$BQPair_token.buyCurrency.symbol"},
+            null
+          ]
+        },
+        tokenId: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
+            {$first: "$BQPair_token.buyCurrency.tokenId"},
+            null
+          ]
+        },
+        tokenType: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
+            {$first: "$BQPair_token.buyCurrency.tokenType"},
+            null
+          ]
+        },
+        network: {
+          $cond: [
+            {$eq: ["$param.platform", "cg"]},
+            null,
+            {
+              $cond: [
+                {$eq: ["$param.type", "token"]},
+                {$first: "$BQPair_token.network"},
+                {$first: "$BQPair_pair.network"}
+              ]
+            }
+          ]
+        },
+        updatedAt: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "pair"]}]},
+            {$first: "$BQPair_pair.updatedAt"},
+            null
+          ]
+        },
+        exchange: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "pair"]}]},
+            {$first: "$BQPair_pair.exchange.fullName"},
+            null
+          ]
+        },
+        buyCurrencyAddress: {
+          $cond: [
+            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "pair"]}]},
+            {$first: "$BQPair_pair.buyCurrency.address"},
+            null
+          ]
+        }
+      }
+    },
+    {
+      $sort: {
+        count: -1
+      }
+    },
+    {
+      $limit: 10
+    }
+  ]);
+  return top10;
 }
 
 async function getNetworks() {
@@ -845,6 +1199,7 @@ const coinService = {
   coinSearch,
   getCoinInfo,
   getTop100,
+  getTopTrending10,
   getNetworks
 };
 

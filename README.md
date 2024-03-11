@@ -229,6 +229,22 @@ Example Body:
 
 ---
 
+### Method: `listTopTrending10`
+
+Description: List top trending 10. Usage for search list without any key input.
+
+Args: none
+
+Example Body:
+
+```json
+{
+    "method": "listTopTrending10"
+}
+```
+
+---
+
 ### Method: `searchCoin`
 
 Description: Search tokens by address, name or symbol

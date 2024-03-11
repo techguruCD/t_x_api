@@ -35,7 +35,7 @@ async function publicController(
     }
 
     if (body.method === 'coinInfo') {
-      data = await coinService.getCoinInfo(body.args)
+      data = await coinService.getCoinInfo({...body.args, ip: _req.ip})
     }
 
     return _res.status(200).json(data);

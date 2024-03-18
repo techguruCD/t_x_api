@@ -14,6 +14,7 @@ import {
 
 const methods = enums([
   'search',
+  'getPairs',
   'setFavCoin',
   'getFavCoin',
   'removeFavCoin',
@@ -45,6 +46,12 @@ const SearchParams = object({
   skip: optional(number()),
   limit: optional(number()),
   network: optional(string())
+})
+
+const GetPairsParams = object({
+  coinId: string(),
+  page: optional(number()),
+  perPage: optional(number())
 })
 
 const SetFavCoinParams = object({
@@ -117,6 +124,10 @@ const RequestValidator = refine(
 
     if (method === 'search' && !is(args, SearchParams)) {
       return msg;
+    }
+
+    if (method === 'getPairs' && !is(args, GetPairsParams)) {
+      return msg
     }
 
     if (method === 'setFavCoin' && !is(args, SetFavCoinParams)) {

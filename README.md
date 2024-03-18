@@ -274,6 +274,33 @@ Example Body:
 
 ---
 
+### Method: `getPairs`
+
+Description: Search tokens by address, name or symbol
+
+Args:
+
+| Name      | Type   | Description                                              | Required |
+| --------- | ------ | -------------------------------------------------------- | -------- |
+| `coinId`  | string | `coinId` should be CoinInfo ID                           | Yes      |
+| `page`    | number | pagination parameter for page number(starts from 1)      | Yes      |
+| `perPage` | number | pagination parameter for limit per Page                  | No       |
+
+Example Body:
+
+```json
+{
+  "method": "getPairs",
+  "args": {
+    "coinId": "weth",
+    "page": 2,
+    "perPage": 10
+  }
+}
+```
+
+---
+
 ### Method: `getFavCoin`
 
 Description: Get list of favorite coins of a specific user.

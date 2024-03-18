@@ -26,6 +26,10 @@ async function controller(_req: Request, _res: Response, _next: NextFunction) {
       data = await coinService.coinSearch(body.args);
     }
 
+    if (body.method === "getPairs") {
+      data = await coinService.getPairs(body.args);
+    }
+
     if (body.method === 'getNetworks') {
       data = await coinService.getNetworks();
     }

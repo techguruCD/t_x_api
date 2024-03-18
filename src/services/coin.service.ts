@@ -102,143 +102,143 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
       { symbol: regexSearch },
       { name: regexSearch },
       { id: regexSearch },
-      {"platforms.sui": regexSearch},
-      {"platforms.kava": regexSearch},
-      {"platforms.wanchain": regexSearch},
-      {"platforms.zksync": regexSearch},
-      {"platforms.syscoin": regexSearch},
-      {"platforms.zilliqa": regexSearch},
-      {"platforms.conflux": regexSearch},
-      {"platforms.songbird": regexSearch},
-      {"platforms.evmos": regexSearch},
-      {"platforms.komodo": regexSearch},
-      {"platforms.terra-2": regexSearch},
-      {"platforms.bitkub-chain": regexSearch},
-      {"platforms.step-network": regexSearch},
-      {"platforms.bitcoin-cash": regexSearch},
-      {"platforms.hydra": regexSearch},
-      {"platforms.sora": regexSearch},
-      {"platforms.polygon-pos": regexSearch},
-      {"platforms.chiliz": regexSearch},
-      {"platforms.kujira": regexSearch},
-      {"platforms.terra": regexSearch},
-      {"platforms.empire": regexSearch},
-      {"platforms.everscale": regexSearch},
-      {"platforms.polygon-zkevm": regexSearch},
-      {"platforms.okex-chain": regexSearch},
-      {"platforms.boba": regexSearch},
-      {"platforms.meter": regexSearch},
-      {"platforms.binancecoin": regexSearch},
-      {"platforms.xdc-network": regexSearch},
-      {"platforms.elastos": regexSearch},
-      {"platforms.oasys": regexSearch},
-      {"platforms.aptos": regexSearch},
-      {"platforms.neo": regexSearch},
-      {"platforms.linea": regexSearch},
-      {"platforms.kucoin-community-chain": regexSearch},
-      {"platforms.milkomeda-cardano": regexSearch},
-      {"platforms.bitshares": regexSearch},
-      {"platforms.tron": regexSearch},
-      {"platforms.cube": regexSearch},
-      {"platforms.pulsechain": regexSearch},
-      {"platforms.energi": regexSearch},
-      {"platforms.moonriver": regexSearch},
-      {"platforms.Bitcichain": regexSearch},
-      {"platforms.kusama": regexSearch},
-      {"platforms.secret": regexSearch},
-      {"platforms.base": regexSearch},
-      {"platforms.dogechain": regexSearch},
-      {"platforms.optimistic-ethereum": regexSearch},
-      {"platforms.bitgert": regexSearch},
-      {"platforms.aurora": regexSearch},
-      {"platforms.binance-smart-chain": regexSearch},
-      {"platforms.stellar": regexSearch},
-      {"platforms.flare-network": regexSearch},
-      {"platforms.cronos": regexSearch},
-      {"platforms.tenet": regexSearch},
-      {"platforms.ronin": regexSearch},
-      {"platforms.osmosis": regexSearch},
-      {"platforms.neon-evm": regexSearch},
-      {"platforms.stacks": regexSearch},
-      {"platforms.sx-network": regexSearch},
-      {"platforms.hedera-hashgraph": regexSearch},
-      {"platforms.the-open-network": regexSearch},
-      {"platforms.mantle": regexSearch},
-      {"platforms.defi-kingdoms-blockchain": regexSearch},
-      {"platforms.klay-token": regexSearch},
-      {"platforms.velas": regexSearch},
-      {"platforms.rootstock": regexSearch},
-      {"platforms.near-protocol": regexSearch},
-      {"platforms.core": regexSearch},
-      {"platforms.godwoken": regexSearch},
-      {"platforms.celer-network": regexSearch},
-      {"platforms.iotex": regexSearch},
-      {"platforms.polkadot": regexSearch},
-      {"platforms.tomochain": regexSearch},
-      {"platforms.factom": regexSearch},
-      {"platforms.nuls": regexSearch},
-      {"platforms.fantom": regexSearch},
-      {"platforms.thundercore": regexSearch},
-      {"platforms.trustless-computer": regexSearch},
-      {"platforms.ethereumpow": regexSearch},
-      {"platforms.karura": regexSearch},
-      {"platforms.ontology": regexSearch},
-      {"platforms.telos": regexSearch},
-      {"platforms.tezos": regexSearch},
-      {"platforms.harmony-shard-0": regexSearch},
-      {"platforms.canto": regexSearch},
-      {"platforms.moonbeam": regexSearch},
-      {"platforms.thorchain": regexSearch},
-      {"platforms.qtum": regexSearch},
-      {"platforms.theta": regexSearch},
-      {"platforms.eos-evm": regexSearch},
-      {"platforms.metis-andromeda": regexSearch},
-      {"platforms.findora": regexSearch},
-      {"platforms.onus": regexSearch},
-      {"platforms.function-x": regexSearch},
-      {"platforms.ordinals": regexSearch},
-      {"platforms.ardor": regexSearch},
-      {"platforms.huobi-token": regexSearch},
-      {"platforms.algorand": regexSearch},
-      {"platforms.icon": regexSearch},
-      {"platforms.eos": regexSearch},
-      {"platforms.coinex-smart-chain": regexSearch},
-      {"platforms.arbitrum-one": regexSearch},
-      {"platforms.cosmos": regexSearch},
-      {"platforms.shiden network": regexSearch},
-      {"platforms.proof-of-memes": regexSearch},
-      {"platforms.bittorrent": regexSearch},
-      {"platforms.ethereum-classic": regexSearch},
-      {"platforms.gochain": regexSearch},
-      {"platforms.stratis": regexSearch},
-      {"platforms.cardano": regexSearch},
-      {"platforms.callisto": regexSearch},
-      {"platforms.waves": regexSearch},
-      {"platforms.exosama": regexSearch},
-      {"platforms.astar": regexSearch},
-      {"platforms.mixin-network": regexSearch},
-      {"platforms.hoo": regexSearch},
-      {"platforms.elrond": regexSearch},
-      {"platforms.wemix-network": regexSearch},
-      {"platforms.avalanche": regexSearch},
-      {"platforms.kardiachain": regexSearch},
-      {"platforms.vite": regexSearch},
-      {"platforms.nem": regexSearch},
-      {"platforms.xrp": regexSearch},
-      {"platforms.solana": regexSearch},
-      {"platforms.smartbch": regexSearch},
-      {"platforms.ethereum": regexSearch},
-      {"platforms.fuse": regexSearch},
-      {"platforms.fusion-network": regexSearch},
-      {"platforms.skale": regexSearch},
-      {"platforms.xdai": regexSearch},
-      {"platforms.vechain": regexSearch},
-      {"platforms.omni": regexSearch},
-      {"platforms.oasis": regexSearch},
-      {"platforms.tombchain": regexSearch},
-      {"platforms.rollux": regexSearch},
-      {"platforms.arbitrum-nova": regexSearch},
-      {"platforms.celo": regexSearch},
+      { "platforms.sui": regexSearch },
+      { "platforms.kava": regexSearch },
+      { "platforms.wanchain": regexSearch },
+      { "platforms.zksync": regexSearch },
+      { "platforms.syscoin": regexSearch },
+      { "platforms.zilliqa": regexSearch },
+      { "platforms.conflux": regexSearch },
+      { "platforms.songbird": regexSearch },
+      { "platforms.evmos": regexSearch },
+      { "platforms.komodo": regexSearch },
+      { "platforms.terra-2": regexSearch },
+      { "platforms.bitkub-chain": regexSearch },
+      { "platforms.step-network": regexSearch },
+      { "platforms.bitcoin-cash": regexSearch },
+      { "platforms.hydra": regexSearch },
+      { "platforms.sora": regexSearch },
+      { "platforms.polygon-pos": regexSearch },
+      { "platforms.chiliz": regexSearch },
+      { "platforms.kujira": regexSearch },
+      { "platforms.terra": regexSearch },
+      { "platforms.empire": regexSearch },
+      { "platforms.everscale": regexSearch },
+      { "platforms.polygon-zkevm": regexSearch },
+      { "platforms.okex-chain": regexSearch },
+      { "platforms.boba": regexSearch },
+      { "platforms.meter": regexSearch },
+      { "platforms.binancecoin": regexSearch },
+      { "platforms.xdc-network": regexSearch },
+      { "platforms.elastos": regexSearch },
+      { "platforms.oasys": regexSearch },
+      { "platforms.aptos": regexSearch },
+      { "platforms.neo": regexSearch },
+      { "platforms.linea": regexSearch },
+      { "platforms.kucoin-community-chain": regexSearch },
+      { "platforms.milkomeda-cardano": regexSearch },
+      { "platforms.bitshares": regexSearch },
+      { "platforms.tron": regexSearch },
+      { "platforms.cube": regexSearch },
+      { "platforms.pulsechain": regexSearch },
+      { "platforms.energi": regexSearch },
+      { "platforms.moonriver": regexSearch },
+      { "platforms.Bitcichain": regexSearch },
+      { "platforms.kusama": regexSearch },
+      { "platforms.secret": regexSearch },
+      { "platforms.base": regexSearch },
+      { "platforms.dogechain": regexSearch },
+      { "platforms.optimistic-ethereum": regexSearch },
+      { "platforms.bitgert": regexSearch },
+      { "platforms.aurora": regexSearch },
+      { "platforms.binance-smart-chain": regexSearch },
+      { "platforms.stellar": regexSearch },
+      { "platforms.flare-network": regexSearch },
+      { "platforms.cronos": regexSearch },
+      { "platforms.tenet": regexSearch },
+      { "platforms.ronin": regexSearch },
+      { "platforms.osmosis": regexSearch },
+      { "platforms.neon-evm": regexSearch },
+      { "platforms.stacks": regexSearch },
+      { "platforms.sx-network": regexSearch },
+      { "platforms.hedera-hashgraph": regexSearch },
+      { "platforms.the-open-network": regexSearch },
+      { "platforms.mantle": regexSearch },
+      { "platforms.defi-kingdoms-blockchain": regexSearch },
+      { "platforms.klay-token": regexSearch },
+      { "platforms.velas": regexSearch },
+      { "platforms.rootstock": regexSearch },
+      { "platforms.near-protocol": regexSearch },
+      { "platforms.core": regexSearch },
+      { "platforms.godwoken": regexSearch },
+      { "platforms.celer-network": regexSearch },
+      { "platforms.iotex": regexSearch },
+      { "platforms.polkadot": regexSearch },
+      { "platforms.tomochain": regexSearch },
+      { "platforms.factom": regexSearch },
+      { "platforms.nuls": regexSearch },
+      { "platforms.fantom": regexSearch },
+      { "platforms.thundercore": regexSearch },
+      { "platforms.trustless-computer": regexSearch },
+      { "platforms.ethereumpow": regexSearch },
+      { "platforms.karura": regexSearch },
+      { "platforms.ontology": regexSearch },
+      { "platforms.telos": regexSearch },
+      { "platforms.tezos": regexSearch },
+      { "platforms.harmony-shard-0": regexSearch },
+      { "platforms.canto": regexSearch },
+      { "platforms.moonbeam": regexSearch },
+      { "platforms.thorchain": regexSearch },
+      { "platforms.qtum": regexSearch },
+      { "platforms.theta": regexSearch },
+      { "platforms.eos-evm": regexSearch },
+      { "platforms.metis-andromeda": regexSearch },
+      { "platforms.findora": regexSearch },
+      { "platforms.onus": regexSearch },
+      { "platforms.function-x": regexSearch },
+      { "platforms.ordinals": regexSearch },
+      { "platforms.ardor": regexSearch },
+      { "platforms.huobi-token": regexSearch },
+      { "platforms.algorand": regexSearch },
+      { "platforms.icon": regexSearch },
+      { "platforms.eos": regexSearch },
+      { "platforms.coinex-smart-chain": regexSearch },
+      { "platforms.arbitrum-one": regexSearch },
+      { "platforms.cosmos": regexSearch },
+      { "platforms.shiden network": regexSearch },
+      { "platforms.proof-of-memes": regexSearch },
+      { "platforms.bittorrent": regexSearch },
+      { "platforms.ethereum-classic": regexSearch },
+      { "platforms.gochain": regexSearch },
+      { "platforms.stratis": regexSearch },
+      { "platforms.cardano": regexSearch },
+      { "platforms.callisto": regexSearch },
+      { "platforms.waves": regexSearch },
+      { "platforms.exosama": regexSearch },
+      { "platforms.astar": regexSearch },
+      { "platforms.mixin-network": regexSearch },
+      { "platforms.hoo": regexSearch },
+      { "platforms.elrond": regexSearch },
+      { "platforms.wemix-network": regexSearch },
+      { "platforms.avalanche": regexSearch },
+      { "platforms.kardiachain": regexSearch },
+      { "platforms.vite": regexSearch },
+      { "platforms.nem": regexSearch },
+      { "platforms.xrp": regexSearch },
+      { "platforms.solana": regexSearch },
+      { "platforms.smartbch": regexSearch },
+      { "platforms.ethereum": regexSearch },
+      { "platforms.fuse": regexSearch },
+      { "platforms.fusion-network": regexSearch },
+      { "platforms.skale": regexSearch },
+      { "platforms.xdai": regexSearch },
+      { "platforms.vechain": regexSearch },
+      { "platforms.omni": regexSearch },
+      { "platforms.oasis": regexSearch },
+      { "platforms.tombchain": regexSearch },
+      { "platforms.rollux": regexSearch },
+      { "platforms.arbitrum-nova": regexSearch },
+      { "platforms.celo": regexSearch },
     ]
   };
   const bqMatch: Record<string, any> = {
@@ -434,7 +434,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
         $project: {
           _id: 0,
           id: "$smartContract.address.address",
-          name: { $concat: [ "$buyCurrency.symbol", "/", "$sellCurrency.symbol" ] },
+          name: { $concat: ["$buyCurrency.symbol", "/", "$sellCurrency.symbol"] },
           logo: null,
           price: {
             $toDouble: "$buyCurrencyPrice"
@@ -513,7 +513,7 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
 
   results.forEach(result => {
     const contracts = result.contracts
-    
+
     if (contracts) {
       Object.values(contracts).forEach(contract => {
         contractsSet.add(contract)
@@ -524,6 +524,211 @@ async function coinSearch(params: { searchTerm: string, skip?: number, limit?: n
   const filteredResults = results.filter(result => !contractsSet.has(result.id));
 
   return filteredResults;
+}
+
+async function getPairs(params: { coinId: string, page?: number, perPage?: number }) {
+  if (params.page === undefined) {
+    params.page = 1;
+  }
+  if (params.perPage === undefined) {
+    params.perPage = 10;
+  }
+
+  const results = await cgModel.CGCoinInfoModel.aggregate([
+    {
+      $match: {
+        id: "weth",
+      },
+    },
+    {
+      $project: {
+        platformsArray: {
+          $objectToArray: "$platforms",
+        },
+        platforms: 1,
+      },
+    },
+    {
+      $unwind: "$platformsArray",
+    },
+    {
+      $project: {
+        address: "$platformsArray.v",
+        networkForBq: {
+          $cond: [
+            {
+              $eq: [
+                "$platformsArray.k",
+                "binance-smart-chain",
+              ],
+            },
+            "bsc",
+            {
+              $cond: [
+                {
+                  $eq: [
+                    "$platformsArray.k",
+                    "celo",
+                  ],
+                },
+                "celo_mainnet",
+                {
+                  $cond: [
+                    {
+                      $eq: [
+                        "$platformsArray.k",
+                        "klay-token",
+                      ],
+                    },
+                    "klaytn",
+                    {
+                      $cond: [
+                        {
+                          $eq: [
+                            "$platformsArray.k",
+                            "polygon-pos",
+                          ],
+                        },
+                        "matic",
+                        "$platformsArray.k",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "BQPair",
+        let: {
+          address: "$address",
+          network: "$networkForBq",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $or: [
+                      {
+                        $eq: [
+                          "$buyCurrency.address",
+                          "$$address",
+                        ],
+                      },
+                      {
+                        $eq: [
+                          "$sellCurrency.address",
+                          "$$address",
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    $eq: ["$network", "$$network"],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "BQPairArray",
+      },
+    },
+    {
+      $unwind: "$BQPairArray",
+    },
+    {
+      $lookup: {
+        from: "CGExchangeTickers",
+        let: {
+          buyCurrency: "$BQPairArray.buyCurrency",
+          sellCurrency: "$BQPairArray.sellCurrency",
+          smartContract:
+            "$BQPairArray.smartContract",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $cond: {
+                  if: {
+                    $and: [
+                      {
+                        $regexMatch: {
+                          input: "$base",
+                          regex: {
+                            $toString:
+                              "$$buyCurrency.address",
+                          },
+                          options: "i",
+                        },
+                      },
+                      {
+                        $regexMatch: {
+                          input: "$target",
+                          regex: {
+                            $toString:
+                              "$$sellCurrency.address",
+                          },
+                          options: "i",
+                        },
+                      },
+                    ],
+                  },
+                  then: true,
+                  else: false
+                },
+              },
+            },
+          },
+        ],
+        as: "result",
+      },
+    },
+    {
+      $project: {
+        address: 1,
+        BQPairArray: 1,
+        CGTicker: { $first: "$result" },
+      },
+    },
+    {
+      $project: {
+        name: {
+          $concat: [
+            "$BQPairArray.buyCurrency.symbol",
+            "/",
+            "$BQPairArray.sellCurrency.symbol",
+          ],
+        },
+        address: 1,
+        protocol: "$BQPairArray.smartContract.protocolType",
+        price: {
+          $cond: [
+            { $eq: ["$address", "$BQPairArray.buyCurrency.address"] },
+            {
+              $toDouble:
+                "$BQPairArray.buyCurrencyPrice",
+            },
+            {
+              $toDouble:
+                "$BQPairArray.sellCurrencyPrice",
+            },
+          ],
+        },
+        network: "$BQPairArray.network",
+        logo: "$CGTicker.market.logo"
+      },
+    }
+  ]).skip((params.page - 1) * params.perPage).limit(params.perPage);
+  
+  return results;
 }
 
 async function getCoinInfo(params: {
@@ -620,7 +825,7 @@ async function getCoinInfo(params: {
     if (cgCoin.length < 1) {
       return data;
     }
-    
+
     data['info'] = cgCoin[0];
     data['info'].urls = parseUrl(data['info'].urls);
 
@@ -768,7 +973,7 @@ async function getCoinInfo(params: {
     if (info['network'].network === 'matic') {
       info['coingecko_asset_platform_id'] = 'polygon-pos'
     }
-    
+
     if (bqPair[1]) {
       info['sell'] = {
         name: bqPair[1].name,
@@ -781,7 +986,7 @@ async function getCoinInfo(params: {
       const isFav = await favCoinsModel.exists({ platform: 'DEX', value: params.value, userId: params.userId }).lean();
       info['isFav'] = isFav?._id.toString() ?? null;
     }
-    
+
     data['info'] = info;
   }
 
@@ -827,7 +1032,7 @@ async function getTopTrending10() {
   const top10 = await logModel.LogCoinInfoModel.aggregate([
     {
       $match: {
-        createdAt: {$gte: new Date(last24HoursTimestamp)}
+        createdAt: { $gte: new Date(last24HoursTimestamp) }
       }
     },
     {
@@ -864,7 +1069,7 @@ async function getTopTrending10() {
     },
     {
       $lookup: {
-        from :"CGInfo",
+        from: "CGInfo",
         localField: "param.value",
         foreignField: "id",
         as: "CGInfo"
@@ -880,7 +1085,7 @@ async function getTopTrending10() {
     },
     {
       $lookup: {
-        from :"BQPair",
+        from: "BQPair",
         localField: "param.value",
         foreignField: "smartContract.address.address",
         as: "BQPair_pair"
@@ -891,12 +1096,12 @@ async function getTopTrending10() {
         count: 1,
         _id: {
           $cond: [
-            {$eq: ["param.platform", "cg"]},
+            { $eq: ["param.platform", "cg"] },
             null,
             {
               $cond: [
-                {$eq: ["param.type", "token"]},
-                {$arrayElemAt: ["$BQPair_token.buyCurrency.address", 0]},
+                { $eq: ["param.type", "token"] },
+                { $arrayElemAt: ["$BQPair_token.buyCurrency.address", 0] },
                 0
               ]
             }
@@ -904,83 +1109,85 @@ async function getTopTrending10() {
         },
         id: {
           $cond: [
-            {$eq: ["param.platform", "cg"]},
+            { $eq: ["param.platform", "cg"] },
             1,
             {
               $cond: [
-                {$eq: ["param.type", "token"]},
-                {$arrayElemAt: ["$BQPair_token.buyCurrency.address", 0]},
-                {$arrayElemAt: ["$BQPair_pair.smartContract.address.address", 0]}
+                { $eq: ["param.type", "token"] },
+                { $arrayElemAt: ["$BQPair_token.buyCurrency.address", 0] },
+                { $arrayElemAt: ["$BQPair_pair.smartContract.address.address", 0] }
               ]
             }
           ]
         },
         name: {
           $cond: [
-            {$eq: ["param.platform", "cg"]},
+            { $eq: ["param.platform", "cg"] },
             1,
             {
               $cond: [
-                {$eq: ["param.type", "token"]},
-                {$arrayElemAt: ["$BQPair_token.buyCurrency.name", 0]},
-                {$concat: [
-                  {$arrayElemAt: ["$BQPair_pair.buyCurrency.symbol", 0]},
-                  "/",
-                  {$arrayElemAt: ["$BQPair_pair.sellCurrency.symbol", 0]}
-                ]}
+                { $eq: ["param.type", "token"] },
+                { $arrayElemAt: ["$BQPair_token.buyCurrency.name", 0] },
+                {
+                  $concat: [
+                    { $arrayElemAt: ["$BQPair_pair.buyCurrency.symbol", 0] },
+                    "/",
+                    { $arrayElemAt: ["$BQPair_pair.sellCurrency.symbol", 0] }
+                  ]
+                }
               ]
             }
           ]
         },
         coingecko_asset_platform_id: {
           $cond: [
-            {$eq: ["param.platform", "cg"]},
-            {$arrayElemAt: ["$CGInfo.asset_platform_id", 0]},
+            { $eq: ["param.platform", "cg"] },
+            { $arrayElemAt: ["$CGInfo.asset_platform_id", 0] },
             null
           ]
         },
         logo: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$arrayElemAt: ["$CGInfo.image", 0]},
+            { $eq: ["$param.platform", "cg"] },
+            { $arrayElemAt: ["$CGInfo.image", 0] },
             null
           ]
         },
         description: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$arrayElemAt: ["$CGInfo.description", 0]},
+            { $eq: ["$param.platform", "cg"] },
+            { $arrayElemAt: ["$CGInfo.description", 0] },
             null
           ]
         },
         price: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$arrayElemAt: ["$CGInfo.current_price", 0]},
+            { $eq: ["$param.platform", "cg"] },
+            { $arrayElemAt: ["$CGInfo.current_price", 0] },
             {
               $cond: [
-                {$eq: ["$param.type", "token"]},
-                {$toDouble: {$arrayElemAt: ["$BQPair_token.buyCurrencyPrice", 0]}},
-                {$toDouble: {$arrayElemAt: ["$BQPair_pair.buyCurrencyPrice", 0]}},
+                { $eq: ["$param.type", "token"] },
+                { $toDouble: { $arrayElemAt: ["$BQPair_token.buyCurrencyPrice", 0] } },
+                { $toDouble: { $arrayElemAt: ["$BQPair_pair.buyCurrencyPrice", 0] } },
               ]
             }
           ]
         },
         priceChange: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$arrayElemAt: ["$CGInfo.price_change_percentage_24h", 0]},
+            { $eq: ["$param.platform", "cg"] },
+            { $arrayElemAt: ["$CGInfo.price_change_percentage_24h", 0] },
             null
           ]
         },
         change: null,
         urls: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
+            { $eq: ["$param.platform", "cg"] },
             [
               {
                 type: "website",
-                values: {$first: "$CGInfo.links.homepage"}
+                values: { $first: "$CGInfo.links.homepage" }
               },
               {
                 type: "twitter",
@@ -1037,7 +1244,7 @@ async function getTopTrending10() {
         },
         chart: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
+            { $eq: ["$param.platform", "cg"] },
             [],
             null
           ]
@@ -1046,105 +1253,105 @@ async function getTopTrending10() {
         type: "$param.type",
         circulating_supply: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$first: "$CGInfo.circulating_supply"},
+            { $eq: ["$param.platform", "cg"] },
+            { $first: "$CGInfo.circulating_supply" },
             null
           ]
         },
         market_cap: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$first: "$CGInfo.market_cap"},
+            { $eq: ["$param.platform", "cg"] },
+            { $first: "$CGInfo.market_cap" },
             null
           ]
         },
         total_supply: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$first: "$CGInfo.total_supply"},
+            { $eq: ["$param.platform", "cg"] },
+            { $first: "$CGInfo.total_supply" },
             null
           ]
         },
         total_volume: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$first: "$CGInfo.total_volume"},
+            { $eq: ["$param.platform", "cg"] },
+            { $first: "$CGInfo.total_volume" },
             null
           ]
         },
         platforms: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
-            {$first: "$CGInfo.platforms"},
+            { $eq: ["$param.platform", "cg"] },
+            { $first: "$CGInfo.platforms" },
             null
           ]
         },
         address: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
-            {$first: "$BQPair_token.buyCurrency.address"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "token"] }] },
+            { $first: "$BQPair_token.buyCurrency.address" },
             null
           ]
         },
         decimals: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
-            {$first: "$BQPair_token.buyCurrency.decimals"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "token"] }] },
+            { $first: "$BQPair_token.buyCurrency.decimals" },
             null
           ]
         },
         symbol: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
-            {$first: "$BQPair_token.buyCurrency.symbol"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "token"] }] },
+            { $first: "$BQPair_token.buyCurrency.symbol" },
             null
           ]
         },
         tokenId: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
-            {$first: "$BQPair_token.buyCurrency.tokenId"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "token"] }] },
+            { $first: "$BQPair_token.buyCurrency.tokenId" },
             null
           ]
         },
         tokenType: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "token"]}]},
-            {$first: "$BQPair_token.buyCurrency.tokenType"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "token"] }] },
+            { $first: "$BQPair_token.buyCurrency.tokenType" },
             null
           ]
         },
         network: {
           $cond: [
-            {$eq: ["$param.platform", "cg"]},
+            { $eq: ["$param.platform", "cg"] },
             null,
             {
               $cond: [
-                {$eq: ["$param.type", "token"]},
-                {$first: "$BQPair_token.network"},
-                {$first: "$BQPair_pair.network"}
+                { $eq: ["$param.type", "token"] },
+                { $first: "$BQPair_token.network" },
+                { $first: "$BQPair_pair.network" }
               ]
             }
           ]
         },
         updatedAt: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "pair"]}]},
-            {$first: "$BQPair_pair.updatedAt"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "pair"] }] },
+            { $first: "$BQPair_pair.updatedAt" },
             null
           ]
         },
         exchange: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "pair"]}]},
-            {$first: "$BQPair_pair.exchange.fullName"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "pair"] }] },
+            { $first: "$BQPair_pair.exchange.fullName" },
             null
           ]
         },
         buyCurrencyAddress: {
           $cond: [
-            {$and: [{$eq: ["$param.platform", "DEX"]}, {$eq: ["$param.type", "pair"]}]},
-            {$first: "$BQPair_pair.buyCurrency.address"},
+            { $and: [{ $eq: ["$param.platform", "DEX"] }, { $eq: ["$param.type", "pair"] }] },
+            { $first: "$BQPair_pair.buyCurrency.address" },
             null
           ]
         }
@@ -1198,6 +1405,7 @@ async function getNetworks() {
 const coinService = {
   coinSearch,
   getCoinInfo,
+  getPairs,
   getTop100,
   getTopTrending10,
   getNetworks
